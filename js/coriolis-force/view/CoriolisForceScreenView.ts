@@ -54,6 +54,8 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     super( options );
 
+    this.layoutBounds.maxX = 1400
+
     const resetAllButton = new ResetAllButton( {
       listener: () => {
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
@@ -232,6 +234,12 @@ export default class CoriolisForceScreenView extends ScreenView {
     buttonV_x.lazyLink(() => { model.v_xProp.value = Number(window.prompt("Enter value for v_x:")); this.reset(); })
     buttonV_y.lazyLink(() => { model.v_yProp.value = Number(window.prompt("Enter value for v_y:")); this.reset(); })
     buttonOmega.lazyLink(() => { model.omegaProp.value = Number(window.prompt("Enter value for ω:")); this.reset(); })
+
+    window.addEventListener("keypress", (event) => {
+      if (event.key == "r"){
+        this.reset()
+      }
+    })
 
     this.model = model;
     this.addChild( resetAllButton );
