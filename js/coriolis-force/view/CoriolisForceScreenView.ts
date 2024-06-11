@@ -105,24 +105,27 @@ export default class CoriolisForceScreenView extends ScreenView {
         omega
       ]
     })
-    
+    console.log("YYYYPROP",model.yProp.value)
+
     const constantSliders = new VBox({
       align: "center", children: [
         massSlider,
         new Rectangle(0, 0, 0, 10),
         new HSlider(model.kProp, new Range(0, 10)),
         new Rectangle(0, 0, 0, 10),
-        new HSlider(model.xProp, new Range(0, 10)),
+        new HSlider(model.xProp, new Range(0, 200)),
         new Rectangle(0, 0, 0, 10),
-        new HSlider(model.yProp, new Range(0, 10)),
+        new HSlider(model.yProp, new Range(0, 200)),
         new Rectangle(0, 0, 0, 10),
-        new HSlider(model.v_xProp, new Range(0, 10)),
+        new HSlider(model.v_xProp, new Range(0, 200)),
         new Rectangle(0, 0, 0, 10),
-        new HSlider(model.v_yProp, new Range(0, 10)),
+        new HSlider(model.v_yProp, new Range(0, 200)),
         new Rectangle(0, 0, 0, 10),
         new HSlider(model.omegaProp, new Range(0, 10)),
       ]
     })
+    model.yProp.value= model.y;
+    console.log("YYYYPROP",model.yProp.value)
     
     var toggleRadius = 11;
     const buttonVBoxConstants = new VBox({
@@ -276,12 +279,12 @@ export default class CoriolisForceScreenView extends ScreenView {
     const puckI = new THREE.Mesh(puckGeometry, puckMaterial);
     this.puckI = puckI;
     scene.add(puckI)
-    puckI.position.set(this.iOffset,0,0)
+    puckI.position.set(this.iOffset+this.model.x,this.model.y,0)
     
     const puckRef = new THREE.Mesh(puckGeometry, puckMaterial);
     this.puckRef = puckRef;
     scene.add(puckRef)
-    puckRef.position.set(this.refOffset,0,0)
+    puckRef.position.set(this.refOffset+this.model.x,this.model.y,0)
 
     const diskRef = new THREE.Mesh(diskGeometry, iceMaterial);
     this.diskRef = diskRef;

@@ -148,30 +148,58 @@ function derivsEval(drag, y, dydt, equations) {
     return dydt;
 }
 
-function derivs(drag, y, dydt, g, k, m, omega) {
-    // console.log("Input to derivs:", {drag, y, g, k, m, omega});
+// function derivs(drag, y, dydt, g, k, m, omega) {
+//     // console.log("Input to derivs:", {drag, y, g, k, m, omega});
 
-    let coriolis_x = 2 * m * y[3] * omega; 
-    let coriolis_y = -2 * m * y[2] * omega;
+//     let coriolis_x = 2 * m * y[3] * omega; 
+//     let coriolis_y = -2 * m * y[2] * omega;
 
+//     let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
+//     // console.log("Calculated speed:", speed);
+
+//     if (drag) {
+//         dydt[0] = y[2]; 
+//         dydt[1] = y[3]; 
+//         dydt[2] = -(k / m) * y[2] * speed + coriolis_x / m;
+//         dydt[3] = -g - (k / m) * y[3] * speed + coriolis_y / m;
+//     } else {
+//         dydt[0] = y[2]; 
+//         dydt[1] = y[3];
+//         dydt[2] = -(k / m) * y[2] + coriolis_x / m; 
+//         dydt[3] = -g - (k / m) * y[3] + coriolis_y / m; 
+//     }
+
+//     // console.log("Output from derivs (dydt):", dydt);
+//     return dydt;
+// }
+function derivs(drag, y, dydt, g,k, m) {
     let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
-    // console.log("Calculated speed:", speed);
 
     if (drag) {
         dydt[0] = y[2]; 
         dydt[1] = y[3]; 
-        dydt[2] = -(k / m) * y[2] * speed + coriolis_x / m;
-        dydt[3] = -g - (k / m) * y[3] * speed + coriolis_y / m;
+        dydt[2] = -(k / m) * y[2] * speed;
+        dydt[3] = -(k / m) * y[3] * speed;
     } else {
         dydt[0] = y[2]; 
         dydt[1] = y[3];
-        dydt[2] = -(k / m) * y[2] + coriolis_x / m; 
-        dydt[3] = -g - (k / m) * y[3] + coriolis_y / m; 
+        dydt[2] = -(k / m) * y[2]; 
+        dydt[3] = -(k / m) * y[3]; 
     }
 
-    // console.log("Output from derivs (dydt):", dydt);
     return dydt;
 }
+
+
+// function derivs(y, dydt, m, omega, t) {
+//     // Initial conditions (after throw, the ball moves under inertia)
+//     dydt[0] = y[2]; // dx/dt = vx
+//     dydt[1] = y[3]; // dy/dt = vy
+//     dydt[2] = 0; // dvx/dt = 0 (no forces after throw)
+//     dydt[3] = 0; // dvy/dt = 0 (no forces after throw)
+
+//     return dydt;
+// }
 
 function rk4(drag, y, N, x, h, ynew, g, k, m, omega, equations, useEval) {
     let h6 = h / 6.0;
@@ -226,15 +254,16 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
     const N = 4;  
     let h = dt; 
     let t = time;
-
-    let y = [xinit, yinit, xdot, ydot];  
+    let xx = xinit;
+    let yy= yinit;
+    let y = [xx, yy, xdot, ydot];  
     let ynew = [...y];
 
     console.log(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega, equations, useEval, graphLen, graphVals, time);
     while (t < 10) {  
         let theta = omega*t*2*Math.PI;
         let [xInertial,yInertial] = transformToInertial(ynew[0],ynew[1],theta)
-        graphVals.insert(t, ynew[0], ynew[1], ynew[2], ynew[3],xInertial,yInertial);
+        graphVals.insert(t,xInertial,yInertial, ynew[2], ynew[3], ynew[0], ynew[1]);
         ynew = rk4(drag, y, N, t, h, ynew, g, k, m, omega, equations, useEval);
         y = [...ynew];
         t = t + h;

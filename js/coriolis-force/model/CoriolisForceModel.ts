@@ -47,11 +47,11 @@ export default class CoriolisForceModel implements TModel {
   xProp: Property<number>;
 
   public constructor( providedOptions: CoriolisForceModelOptions ) {
-    this.k = .05;
+    this.k = 0;
     this.gravity = 9.8;
     this.x = 0;
-    this.y = 0;
-    this.v_x = 100;
+    this.y = -200;
+    this.v_x = 0;
     this.v_y = 100;
     this.omega = .5;
     this.mass = 1;
@@ -73,7 +73,7 @@ export default class CoriolisForceModel implements TModel {
     this.simSpeedProp = new Property(this.simSpeed);
     console.log(this.graphData)
     this.graphData = getGraphData(this.quadraticDrag,this.graphUpdateInterval,this.x,this.y,this.v_x,this.v_y,this.gravity,this.k,this.mass,this.omega,{},false,this.graphLen,this.graphData,this.timer);
-    console.log(this.graphData)
+    console.log(this.y)
 
     
 
@@ -83,6 +83,8 @@ export default class CoriolisForceModel implements TModel {
    * Resets the model.
    */
   public reset(): void {
+    console.log(this.y)
+    console.log(this.yProp.value)
     this.k = this.kProp.value;
     this.x = this.xProp.value;
     this.y = this.yProp.value;
