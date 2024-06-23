@@ -91,9 +91,9 @@ export default class CoriolisForceModel implements TModel {
     this.massProp = new Property(this.mass);
     this.graphData = new simData(this.graphUpdateInterval);
     this.simSpeedProp = new Property(this.simSpeed);
-    console.log(this.graphData)
     this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
-    console.log(this.y)
+    console.log(this.graphData)
+    // console.log(this.y)
     let prevX = this.x
     let prevY = -200
     // this.xProp.link((val) => {

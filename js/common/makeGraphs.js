@@ -5,8 +5,10 @@ export function drawDistance(globalData, graphLen, divID, type, size, testData, 
   const margin = { top: size / 35, right: 30, bottom: size / (35 / 3), left: 60 };
   const width = size - margin.left - margin.right;
   const height = size - margin.top - margin.bottom;
-  const minX = d3.min(globalData.data, (d) => d.v_x)
-  const maxX = d3.max(globalData.data, (d) => d.v_x)
+  const minX = d3.min(globalData.data, (d) => d.distance)
+  const maxX = d3.max(globalData.data, (d) => d.distance)
+  console.log("Look at this")
+  console.log(graphLen)
   const minXTest = d3.min(testData.data, (d) => d.v_x)
   const maxXTest = d3.max(testData.data, (d) => d.v_x)
   // Declare the x (horizontal position) scale.
@@ -50,7 +52,7 @@ export function drawDistance(globalData, graphLen, divID, type, size, testData, 
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.v_x) })
+      .y(function (d) { return y(d.distance) })
     )
   svg
     .append("path")
@@ -60,7 +62,7 @@ export function drawDistance(globalData, graphLen, divID, type, size, testData, 
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.v_x) })
+      .y(function (d) { return y(d.distance) })
     )
   svg.append("text")
     .attr("transform", "rotate(-90)")
@@ -212,7 +214,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
     .style("font-size", "20px")
     .style("font-style", "italic")
     // .text("v<sub>x<sub>0</sub></sub>")
-    .text("V")
+    .text("v")
   // .html("<li>x</li>")
 
   svg.append("text")

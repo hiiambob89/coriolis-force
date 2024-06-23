@@ -97,7 +97,7 @@
 
 
 // export function getGraphData(drag,dt,xinit,yinit,xdot,ydot ,g, k, m, equations, useEval, graphLen, graphVals, time){
-    
+
 //     const N = 6;
 //     let h = dt; 
 //     let t = time;
@@ -115,32 +115,32 @@
 
 //         t = t + h;
 
-        
+
 //     }
 //     return graphVals;
-    
+
 // }
 function derivsEval(drag, y, dydt, equations) {
     try {
-        dydt[0] = equations.xdot({x: y[0], y: y[1], v_x: y[2], v_y: y[3]});
+        dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
         console.log("Error in xdot:", err);
     }
 
     try {
-        dydt[1] = equations.ydot({x: y[0], y: y[1], v_x: y[2], v_y: y[3]});
+        dydt[1] = equations.ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
         console.log("Error in ydot:", err);
     }
 
     try {
-        dydt[2] = equations.v_xdot({x: y[0], y: y[1], v_x: y[2], v_y: y[3]});
+        dydt[2] = equations.v_xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
         console.log("Error in v_xdot:", err);
     }
 
     try {
-        dydt[3] = equations.v_ydot({x: y[0], y: y[1], v_x: y[2], v_y: y[3]});
+        dydt[3] = equations.v_ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
         console.log("Error in v_ydot:", err);
     }
@@ -172,19 +172,19 @@ function derivsEval(drag, y, dydt, equations) {
 //     // console.log("Output from derivs (dydt):", dydt);
 //     return dydt;
 // }
-function derivs(drag, y, dydt, g,k, m) {
+function derivs(drag, y, dydt, g, k, m) {
     let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
 
     if (drag) {
-        dydt[0] = y[2]; 
-        dydt[1] = y[3]; 
+        dydt[0] = y[2];
+        dydt[1] = y[3];
         dydt[2] = -(k / m) * y[2] * speed;
         dydt[3] = -(k / m) * y[3] * speed;
     } else {
-        dydt[0] = y[2]; 
+        dydt[0] = y[2];
         dydt[1] = y[3];
-        dydt[2] = -(k / m) * y[2]; 
-        dydt[3] = -(k / m) * y[3]; 
+        dydt[2] = -(k / m) * y[2];
+        dydt[3] = -(k / m) * y[3];
     }
 
     return dydt;
@@ -250,23 +250,27 @@ function transformToInertial(x_r, y_r, theta) {
     return [x_i, y_i];
 }
 
+function findDistance(x, y){
+    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
+}
+
 export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega, equations, useEval, graphLen, graphVals, time) {
-    const N = 4;  
-    let h = dt; 
+    const N = 4;
+    let h = dt;
     let t = time;
     let xx = xinit;
-    let yy= yinit;
-    let y = [xx, yy, xdot, ydot];  
+    let yy = yinit;
+    let y = [xx, yy, xdot, ydot];
     let ynew = [...y];
 
     console.log(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega, equations, useEval, graphLen, graphVals, time);
-    while (t < 10) {  
-        let theta = omega*t*2*Math.PI;
-        let [xInertial,yInertial] = transformToInertial(ynew[0],ynew[1],theta)
-        graphVals.insert(t,xInertial,yInertial, ynew[2], ynew[3], ynew[0], ynew[1]);
+    while (t < 10) {
+        let theta = omega * t * 2 * Math.PI;
+        let [xInertial, yInertial] = transformToInertial(ynew[0], ynew[1], theta)
+        graphVals.insert(t, xInertial, yInertial, ynew[2], ynew[3], ynew[0], ynew[1], findDistance(xInertial, yInertial));
         ynew = rk4(drag, y, N, t, h, ynew, g, k, m, omega, equations, useEval);
         y = [...ynew];
-        // console.log(y)
+        // console.log(findDistance(xInertial, yInertial))
         t = t + h;
     }
     return graphVals;
