@@ -16,14 +16,17 @@ import Panel from '../../../../sun/js/Panel.js';
 import { Color, HBox, Rectangle, RichText, VBox } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import HSlider from '../../../../sun/js/HSlider.js';
+import EquationInput from './EquationInput.js';
 import Range from '../../../../dot/js/Range.js';
 import RoundToggleButton from '../../../../sun/js/buttons/RoundToggleButton.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import { drawDistance, drawTV } from '../../common/makeGraphs.js';
+import { verifyEq } from '../../common/verifyEq.js';
 
 
 type SelfOptions = {
- //TODO add options that are specific to CoriolisForceScreenView here
+  //TODO add options that are specific to CoriolisForceScreenView here
 };
 
 type CoriolisForceScreenViewOptions = SelfOptions & ScreenViewOptions;
@@ -42,21 +45,33 @@ export default class CoriolisForceScreenView extends ScreenView {
   pathIRef: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Path;
   lineIRef: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Line<import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").BufferGeometry, import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").LineBasicMaterial>;
   scene: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Scene;
+  rootNode: any;
+  refDistanceCenterGraph: any;
+  testDistanceCenterGraph: any;
+  passedStart: boolean;
+  refTangentialVelocityGraph: any;
+  // testTangentialVelocityGraph: { node: any; x: any; y: any; };
+  graphSize: number;
+  focusedEq: any;
+  yScaleD: any;
+  xScaleD: any;
+  yScaleTv: any;
+  xScaleTv: any;
 
-  public constructor( model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions ) {
+  public constructor(model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions) {
 
-    const options = optionize<CoriolisForceScreenViewOptions, SelfOptions, ScreenViewOptions>()( {
+    const options = optionize<CoriolisForceScreenViewOptions, SelfOptions, ScreenViewOptions>()({
 
       //TODO add default values for optional SelfOptions here
 
       //TODO add default values for optional ScreenViewOptions here
-    }, providedOptions );
+    }, providedOptions);
 
-    super( options );
+    super(options);
 
     this.layoutBounds.maxX = 1400
 
-    const resetAllButton = new ResetAllButton( {
+    const resetAllButton = new ResetAllButton({
       listener: () => {
         this.interruptSubtreeInput(); // cancel interactions that may be in progress
         model.reset();
@@ -64,23 +79,97 @@ export default class CoriolisForceScreenView extends ScreenView {
       },
       right: this.layoutBounds.maxX - CoriolisForceConstants.SCREEN_VIEW_X_MARGIN,
       bottom: this.layoutBounds.maxY - CoriolisForceConstants.SCREEN_VIEW_Y_MARGIN,
-      tandem: options.tandem.createTandem( 'resetAllButton' )
-    } );
+      tandem: options.tandem.createTandem('resetAllButton')
+    });
+
+    this.graphSize = this.layoutBounds.maxX / 7;
+
+    const refDistanceCenterGraph = document.createElement('div');
+    document.body.appendChild(refDistanceCenterGraph)
+    const refTangentialVelocityGraph = document.createElement('div');
+    document.body.appendChild(refTangentialVelocityGraph)
+    const testDistanceCenterGraph = document.createElement('div');
+    document.body.appendChild(testDistanceCenterGraph)
+    const testTangentialVelocityGraph = document.createElement('div');
+    document.body.appendChild(testTangentialVelocityGraph)
+
+    this.rootNode = new phet.scenery.Node();
+    const displayGraphs = new phet.scenery.Display(this.rootNode);
+    displayGraphs.updateOnRequestAnimationFrame();
+    displayGraphs.resizeOnWindowResize();
+    document.body.appendChild(displayGraphs.domElement);
+
+    refDistanceCenterGraph.id = 'staticSim-dist';
+    this.refDistanceCenterGraph = drawDistance(model.graphData, model.graphLen, 'staticSim-dist', 'reference', this.graphSize, model.graphDataTest, model.graphLenTest);
+    this.yScaleD = this.refDistanceCenterGraph.y
+    this.xScaleD = this.refDistanceCenterGraph.x
+
+    refTangentialVelocityGraph.id = 'staticSim-tv';
+    this.refTangentialVelocityGraph = drawTV(model.graphData, model.graphLen, 'staticSim-tv', 'reference', this.graphSize, model.graphDataTest, model.graphLenTest);
+    this.yScaleTv = this.refTangentialVelocityGraph.y
+    this.xScaleTv = this.refTangentialVelocityGraph.x
+
+
+
+    // refTangentialVelocityGraph.id = 'variableSim-distTest';
+    // this.refTangentialVelocityGraph = drawTV(model.graphData, model.graphLen, 'variableSim-ydot', 'test', this.graphSize, model.graphDataTest, model.graphLenTest);
+    // this.yScalevy = this.refYdotGraph.y
+    // this.xScalevy = this.refYdotGraph.x
+    // this.refYdotGraph = new phet.scenery.DOM(this.refYdotGraph.node);
+    // this.addChild(this.refYdotGraph);
+
+    // testDistanceCenterGraph.id = 'staticSim-x';
+    // this.testDistanceCenterGraph = drawDistance(model.graphData, model.graphLen, 'staticSim-x', 'reference', this.graphSize, model.graphDataTest, model.graphLenTest);
+    // this.yScalex = this.refXGraph.y
+    // this.xScalex = this.refXGraph.x
+    // this.refXGraph = new phet.scenery.DOM(this.refXGraph.node);
+    // // this.addChild(this.refXGraph);
+
+    // testTangentialVelocityGraph.id = 'variableSim-y';
+    // this.testTangentialVelocityGraph = drawTV(model.graphData, model.graphLen, 'variableSim-y', 'test', this.graphSize, model.graphDataTest, model.graphLenTest);
+    // this.yScaley = this.refYGraph.y
+    // this.xScaley = this.refYGraph.x
+    // this.refYGraph = new phet.scenery.DOM(this.refYGraph.node);
+
+
+
+
+
+    this.refDistanceCenterGraph = new phet.scenery.DOM(this.refDistanceCenterGraph.node);
+    this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(0));
+    this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(model.graphData.getV_X(0)));
+    if (model.graphDataTest.data.length > 10) {
+      this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(0));
+      this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(model.graphDataTest.getV_X(0)));
+    }
+    this.addChild(this.refDistanceCenterGraph)
+    this.refDistanceCenterGraph.leftTop = new Vector2(1050, 50)
+
+    this.refTangentialVelocityGraph = new phet.scenery.DOM(this.refTangentialVelocityGraph.node);
+    this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(0));
+    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(model.graphData.getV_X(0)));
+    if (model.graphDataTest.data.length > 10) {
+      this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(0));
+      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(model.graphDataTest.getV_X(0)));
+    }
+    this.addChild(this.refTangentialVelocityGraph)
+    this.refTangentialVelocityGraph.leftTop = new Vector2(1225, 50)
+
 
     const buttonMass = new Property<boolean>(false);
     const buttonFriction = new Property<boolean>(false);
     const buttonV_x = new Property<boolean>(false);
     const buttonV_y = new Property<boolean>(false);
-    const buttonX =  new Property<boolean>(false);
-    const buttonY =  new Property<boolean>(false);
-    const buttonOmega =  new Property<boolean>(false);
+    const buttonX = new Property<boolean>(false);
+    const buttonY = new Property<boolean>(false);
+    const buttonOmega = new Property<boolean>(false);
 
     const simSpeedSlider = new HSlider(model.simSpeedProp, new Range(0, Number(3)), { helpText: 'Simulation Speed' });
     const panelSizer = new Rectangle(10, 10, 200, 30);
     const sliderGap = new Rectangle(0, 0, 0, 10);
 
     const massSlider = new HSlider(model.massProp, new Range(0, 10));
-    const mass = new RichText("m");
+    const mass = new RichText("<em>m</em>");
     const k = new RichText("<em>k</em>");
     const x = new RichText("<em>x<sub>0</sub></em>")
     const y = new RichText("<em>y<sub>0</sub></em>")
@@ -105,7 +194,7 @@ export default class CoriolisForceScreenView extends ScreenView {
         omega
       ]
     })
-    console.log("YYYYPROP",model.yProp.value)
+    console.log("YYYYPROP", model.yProp.value)
 
     const constantSliders = new VBox({
       align: "center", children: [
@@ -113,9 +202,9 @@ export default class CoriolisForceScreenView extends ScreenView {
         new Rectangle(0, 0, 0, 10),
         new HSlider(model.kProp, new Range(0, 10)),
         new Rectangle(0, 0, 0, 10),
-        new HSlider(model.xProp, new Range(0, 200)),
+        new HSlider(model.xProp, new Range(-200, 200)),
         new Rectangle(0, 0, 0, 10),
-        new HSlider(model.yProp, new Range(0, 200)),
+        new HSlider(model.yProp, new Range(-200, 200)),
         new Rectangle(0, 0, 0, 10),
         new HSlider(model.v_xProp, new Range(0, 200)),
         new Rectangle(0, 0, 0, 10),
@@ -124,9 +213,9 @@ export default class CoriolisForceScreenView extends ScreenView {
         new HSlider(model.omegaProp, new Range(0, 10)),
       ]
     })
-    model.yProp.value= model.y;
-    console.log("YYYYPROP",model.yProp.value)
-    
+    model.yProp.value = model.y;
+    console.log("YYYYPROP", model.yProp.value)
+
     var toggleRadius = 11;
     const buttonVBoxConstants = new VBox({
       children: [
@@ -160,19 +249,19 @@ export default class CoriolisForceScreenView extends ScreenView {
 
       ]
     })
-    
+
     const constantMeasure = new VBox({
       align: "left", children: [
         new Rectangle(0, 0, 50, 0),
         new phet.scenery.Text(new DerivedProperty([model.massProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new phet.scenery.Text(new DerivedProperty([model.kProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
-        
+
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new phet.scenery.Text(new DerivedProperty([model.xProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new phet.scenery.Text(new DerivedProperty([model.yProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
-  
+
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new phet.scenery.Text(new DerivedProperty([model.v_xProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
         // new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
@@ -182,7 +271,7 @@ export default class CoriolisForceScreenView extends ScreenView {
         new phet.scenery.Text(new DerivedProperty([model.omegaProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
       ]
     })
-    
+
     const measureText = new VBox({
       align: "left", children: [
         // new RichText("<span style='font-family: Roman;'>kg</span>"),
@@ -191,9 +280,9 @@ export default class CoriolisForceScreenView extends ScreenView {
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new RichText("<span style='font-family: Roman;'>1/m</span>"),
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
-        new RichText("<span style='font-family: Roman;'></span>"),
+        new RichText("<span style='font-family: Roman;'>m</span>"),
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
-        new RichText("<span style='font-family: Roman;'></span>"),
+        new RichText("<span style='font-family: Roman;'>m</span>"),
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new RichText("<span style='font-family: Roman;'>m/s</span>"),
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
@@ -218,17 +307,165 @@ export default class CoriolisForceScreenView extends ScreenView {
       })]
     }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
 
+
+
     const speedPanel = new Panel(new VBox({
-      align: "center", children: [new RichText("Components"), new Rectangle(0, 0, 350, 15), new HBox({
+      align: "center", children: [new RichText("Components"), new Rectangle(0, 0, 350, 20), new HBox({
         align: "center", children: [
-          new RichText('simSpeed'),simSpeedSlider, new phet.scenery.Text(new DerivedProperty([model.simSpeedProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 })
+          new RichText('simSpeed'), simSpeedSlider, new phet.scenery.Text(new DerivedProperty([model.simSpeedProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
+          new Rectangle(0, 0, 20, 50),
+          resetAllButton
         ]
       })]
     }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+
+    const xdotDOM = document.createElement('span')
+    const ydotDOM = document.createElement('span')
+    const v_xdotDOM = document.createElement('span')
+    const v_ydotDOM = document.createElement('span')
+    xdotDOM.classList.add("my-mathquill-input");
+    ydotDOM.classList.add("my-mathquill-input");
+    v_xdotDOM.classList.add("my-mathquill-input");
+    v_ydotDOM.classList.add("my-mathquill-input");
+
+    const xdotField = new EquationInput(xdotDOM,
+      {
+        initialText: model.xEQ,
+        model: model,
+        equation: 'xEQ',
+        verifyEq: verifyEq,
+        dom: xdotDOM,
+        focusedEq: this.focusedEq,
+        xdotElement: xdotDOM,
+        ydotElement: ydotDOM,
+        v_ydotElement: v_ydotDOM,
+        v_xdotElement: v_xdotDOM,
+      }
+
+    );
+
+
+    const ydotField = new EquationInput(ydotDOM,
+      {
+        initialText: model.yEQ,
+        model: model,
+        equation: 'yEQ',
+        verifyEq: verifyEq,
+        dom: ydotDOM,
+        focusedEq: this.focusedEq,
+        xdotElement: xdotDOM,
+        ydotElement: ydotDOM,
+        v_ydotElement: v_ydotDOM,
+        v_xdotElement: v_xdotDOM,
+      }
+
+    );
+
+    const v_xdotField = new EquationInput(v_xdotDOM,
+      {
+        initialText: model.v_xEQ,
+        model: model,
+        equation: 'v_xEQ',
+        verifyEq: verifyEq,
+        dom: v_xdotDOM,
+        focusedEq: this.focusedEq,
+        xdotElement: xdotDOM,
+        ydotElement: ydotDOM,
+        v_ydotElement: v_ydotDOM,
+        v_xdotElement: v_xdotDOM,
+      }
+
+    );
+
+    const v_ydotField = new EquationInput(v_ydotDOM,
+      {
+        initialText: model.v_yEQ,
+        model: model,
+        equation: 'v_yEQ',
+        verifyEq: verifyEq,
+        dom: v_ydotDOM,
+        focusedEq: this.focusedEq,
+        xdotElement: xdotDOM,
+        ydotElement: ydotDOM,
+        v_ydotElement: v_ydotDOM,
+        v_xdotElement: v_xdotDOM,
+      }
+
+    );
+    this.focusedEq = [model.xEQ, xdotField, xdotField.writeToEquation];
+    const focusedEq = [this.focusedEq]
+    const xdotBox = new HBox({ preferredWidth: 30, children: [xdotField] })
+    xdotBox.addInputListener({
+
+      down: function (event) {
+        xdotField.mathField.focus()
+        focusedEq[0][0] = model.xEQ
+        focusedEq[0][1] = xdotField
+        console.log('xdot detected')
+      }
+    })
+    const ydotBox = new HBox({ preferredWidth: 30, children: [ydotField] })
+    ydotBox.addInputListener({
+
+      down: function (event) {
+        ydotField.mathField.focus()
+        focusedEq[0][0] = model.yEQ
+        focusedEq[0][1] = ydotField
+        console.log('ydot detected')
+
+      }
+    })
+    const v_xdotBox = new HBox({ preferredWidth: 30, children: [v_xdotField] })
+    v_xdotBox.addInputListener({
+
+      down: function (event) {
+        v_xdotField.mathField.focus()
+        focusedEq[0][0] = model.v_xEQ
+        focusedEq[0][1] = v_xdotField
+        console.log('v_xdot detected')
+
+      }
+    })
+    const v_ydotBox = new HBox({ preferredWidth: 30, children: [v_ydotField] })
+    v_ydotBox.addInputListener({
+
+      down: function (event) {
+        v_ydotField.mathField.focus()
+        focusedEq[0][0] = model.v_yEQ
+        focusedEq[0][1] = v_ydotField
+        console.log('v_ydot detected')
+
+      }
+    })
+
+
+
+
     this.addChild(speedPanel);
-    speedPanel.leftTop = new Vector2(constantPanel.leftBottom.x,constantPanel.leftBottom.y+5)
-    model.simSpeedProp.link((val)=>model.simSpeed=val)
+    
+    model.simSpeedProp.link((val) => model.simSpeed = val)
     this.addChild(constantPanel);
+
+    const equationPanel = new Panel(new VBox({
+      align: "center", children: [
+        new RichText("Test Equations"),
+        new Rectangle(0, 0, 350, 15),
+
+        // new HBox({ align: "center", children: [xdotLabel, xdotBox] }), 
+        new HBox({ align: "center", children: [new RichText("<em>x=</em>  "), xdotBox] }),
+        new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+        new HBox({ align: "center", children: [new RichText("<em>y=</em>  "), ydotBox] }),
+        new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+        new HBox({ align: "center", children: [new RichText("<em>v<sub>x</sub>=</em>  "), v_xdotBox] }),
+        new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+        new HBox({ align: "center", children: [new RichText("<em>v<sub>y</sub>=</em>  "), v_ydotBox] }),
+      ]
+    }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+
+    this.addChild(equationPanel)
+    equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 10)
+    // resetAllButton.leftTop = new Vector2(equationPanel.rightBottom.x - 50, equationPanel.rightBottom.y + 10)
+    speedPanel.leftTop = new Vector2(equationPanel.leftBottom.x, equationPanel.leftBottom.y + 5)
 
     buttonMass.lazyLink(() => { model.massProp.value = Number(window.prompt("Enter value for mass:")); this.reset(); })
     buttonFriction.lazyLink(() => { model.kProp.value = Number(window.prompt("Enter value for k:")); this.reset(); })
@@ -239,13 +476,13 @@ export default class CoriolisForceScreenView extends ScreenView {
     buttonOmega.lazyLink(() => { model.omegaProp.value = Number(window.prompt("Enter value for ω:")); this.reset(); })
 
     window.addEventListener("keypress", (event) => {
-      if (event.key == "r"){
+      if (event.key == "r") {
         this.reset()
       }
     })
 
     this.model = model;
-    this.addChild( resetAllButton );
+    // this.addChild(resetAllButton);
     this.iOffset = -200;
     this.refOffset = 200;
 
@@ -255,7 +492,7 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     // set up a scene with three.js
     const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-this.layoutBounds.maxX/2,this.layoutBounds.maxX/2,-this.layoutBounds.maxY/2,this.layoutBounds.maxY/2);
+    const camera = new THREE.OrthographicCamera(-this.layoutBounds.maxX / 2, this.layoutBounds.maxX / 2, -this.layoutBounds.maxY / 2, this.layoutBounds.maxY / 2);
     camera.position.set(0, 0, 0)
     camera.position.z = 1;
     const diskGeometry = new THREE.SphereGeometry(200, 32, 32);
@@ -268,7 +505,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     const disk = new THREE.Mesh(diskGeometry, iceMaterial);
     this.disk = disk;
     scene.add(disk);
-    disk.position.set(this.iOffset,0,0);
+    disk.position.set(this.iOffset, 0, 0);
 
 
 
@@ -279,46 +516,46 @@ export default class CoriolisForceScreenView extends ScreenView {
     const puckI = new THREE.Mesh(puckGeometry, puckMaterial);
     this.puckI = puckI;
     scene.add(puckI)
-    puckI.position.set(this.iOffset+this.model.x,this.model.y,0)
-    
+    puckI.position.set(this.iOffset + this.model.x, this.model.y, 0)
+
     const puckRef = new THREE.Mesh(puckGeometry, puckMaterial);
     this.puckRef = puckRef;
     scene.add(puckRef)
-    puckRef.position.set(this.refOffset+this.model.x,this.model.y,0)
+    puckRef.position.set(this.refOffset + this.model.x, this.model.y, 0)
 
     const diskRef = new THREE.Mesh(diskGeometry, iceMaterial);
     this.diskRef = diskRef;
     scene.add(diskRef);
-    diskRef.position.set(this.refOffset,0,0)
+    diskRef.position.set(this.refOffset, 0, 0)
 
-    
+
 
     this.pathRefRef = new THREE.Path();
     this.pathRefRef.currentPoint = new THREE.Vector2(puckRef.position.x, puckRef.position.y)
-  
+
     const points = [new THREE.Vector2(puckRef.position.x, puckRef.position.y)];
-  
-    const geometryPath = new THREE.BufferGeometry().setFromPoints( points );
-    const materialPath = new THREE.LineBasicMaterial( { color: 0xff0000, transparent: true } );
-  
-    this.lineRefRef = new THREE.Line( geometryPath, materialPath );
-    
-    scene.add( this.lineRefRef );
+
+    const geometryPath = new THREE.BufferGeometry().setFromPoints(points);
+    const materialPath = new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true });
+
+    this.lineRefRef = new THREE.Line(geometryPath, materialPath);
+
+    scene.add(this.lineRefRef);
 
     this.pathIRef = new THREE.Path();
     this.pathIRef.currentPoint = new THREE.Vector2(puckI.position.x, puckI.position.y)
-  
+
     const pointsI = [new THREE.Vector2(puckI.position.x, puckI.position.y)];
-  
-    const geometryPathI = new THREE.BufferGeometry().setFromPoints( pointsI );
-    const materialPathI = new THREE.LineBasicMaterial( { color: 0xff0000, transparent: true } );
-  
-    this.lineIRef = new THREE.Line( geometryPathI, materialPathI );
-    
-    scene.add( this.lineIRef );
+
+    const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
+    const materialPathI = new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true });
+
+    this.lineIRef = new THREE.Line(geometryPathI, materialPathI);
+
+    scene.add(this.lineIRef);
     this.scene = scene;
 
-    var renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setClearColor(0x000000, 0);
     renderer.setClearAlpha(0);
     renderer.setSize(this.layoutBounds.maxX, this.layoutBounds.maxY);
@@ -326,12 +563,19 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     const domNode = new phet.scenery.DOM(renderer.domElement);
     this.domNode = domNode;
-    
+
     this.domNode._container.style.position = ""
     this.addChild(domNode);
     display.updateOnRequestAnimationFrame(() => {
       renderer.render(scene, camera);
     });
+    this.passedStart = false
+  }
+  yScalevx(arg0: any): any {
+    throw new Error('Method not implemented.');
+  }
+  xScalevx(arg0: number): any {
+    throw new Error('Method not implemented.');
   }
 
   /**
@@ -341,93 +585,152 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.model.reset()
 
 
-    this.puckRef.position.x=this.refOffset+this.model.x
+    this.puckRef.position.x = this.refOffset + this.model.x
     this.puckRef.position.y = this.model.y;
-    this.puckI.position.x=this.iOffset+this.model.x
+    this.puckI.position.x = this.iOffset + this.model.x
     this.puckI.position.y = this.model.y;
     this.pathRefRef = new THREE.Path();
     this.pathRefRef.currentPoint = new THREE.Vector2(this.puckRef.position.x, this.puckRef.position.y)
-  
+
     const points = [new THREE.Vector2(this.puckRef.position.x, this.puckRef.position.y)];
-  
-    const geometryPath = new THREE.BufferGeometry().setFromPoints( points );
-    const materialPath = new THREE.LineBasicMaterial( { color: 0xff0000, transparent: true } );
-    this.scene.remove( this.lineRefRef );
-    this.lineRefRef = new THREE.Line( geometryPath, materialPath );
-    
-    this.scene.add( this.lineRefRef );
+
+    const geometryPath = new THREE.BufferGeometry().setFromPoints(points);
+    const materialPath = new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true });
+    this.scene.remove(this.lineRefRef);
+    this.lineRefRef = new THREE.Line(geometryPath, materialPath);
+
+    this.scene.add(this.lineRefRef);
 
     this.pathIRef = new THREE.Path();
     this.pathIRef.currentPoint = new THREE.Vector2(this.puckI.position.x, this.puckI.position.y)
-  
-    const pointsI = [new THREE.Vector2(this.puckI.position.x, this.puckI.position.y)];
-  
-    const geometryPathI = new THREE.BufferGeometry().setFromPoints( pointsI );
-    const materialPathI = new THREE.LineBasicMaterial( { color: 0xff0000, transparent: true } );
-  
-    this.scene.remove( this.lineIRef );
 
-    this.lineIRef = new THREE.Line( geometryPathI, materialPathI );
-    
-    this.scene.add( this.lineIRef );
+    const pointsI = [new THREE.Vector2(this.puckI.position.x, this.puckI.position.y)];
+
+    const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
+    const materialPathI = new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true });
+
+    this.scene.remove(this.lineIRef);
+
+    this.lineIRef = new THREE.Line(geometryPathI, materialPathI);
+
+    this.scene.add(this.lineIRef);
+    this.passedStart = false
   }
 
   /**
    * Steps the view.
    * @param dt - time step, in seconds
    */
-  public override step( dt: number ): void {
-    if (this.model.timer<=10){
-      this.disk.rotateZ(dt*2*Math.PI*this.model.omega*this.model.simSpeed);
-      const bufferXRef = this.puckRef.position.x;
-      const bufferYRef = this.puckRef.position.y;
-      const bufferXI = this.puckI.position.x;
-      const bufferYI = this.puckI.position.y;
+  public override step(dt: number): void {
+    if (this.model.timer <= 10) {
+      const updatePuckAndPath = () => {
+        this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
 
-      this.puckI.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
-      this.puckI.position.y = this.model.graphData.getYI(this.model.timer);
-      this.pathIRef.quadraticCurveTo( bufferXI, bufferYI, this.puckI.position.x, this.puckI.position.y );
+        const bufferXRef = this.puckRef.position.x;
+        const bufferYRef = this.puckRef.position.y;
+        const bufferXI = this.puckI.position.x;
+        const bufferYI = this.puckI.position.y;
 
-      
-      const pointsI = this.pathIRef.getPoints();
-    
-      const geometryPathI = new THREE.BufferGeometry().setFromPoints( pointsI );
-      const materialPath = new THREE.LineDashedMaterial({
-        color: 0xff0000,
-        linewidth: 1,
-        scale: .5,
-        dashSize: 2,
-        gapSize: 2,
-        transparent: false
-      });
-      
-      this.scene.remove(this.lineIRef);
-      this.lineIRef = new THREE.Line( geometryPathI, materialPath );
-      this.lineIRef.computeLineDistances();
-      this.scene.add( this.lineIRef );
+        this.puckI.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
+        this.puckI.position.y = this.model.graphData.getYI(this.model.timer);
+        this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckI.position.x, this.puckI.position.y);
 
-      this.puckRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
-      this.puckRef.position.y = this.model.graphData.getY(this.model.timer);
-      this.pathRefRef.quadraticCurveTo( bufferXRef, bufferYRef, this.puckRef.position.x, this.puckRef.position.y );
-    
-      const points = this.pathRefRef.getPoints();
-    
-      const geometryPathRef = new THREE.BufferGeometry().setFromPoints( points );
-      // const materialPath = new THREE.LineDashedMaterial({
-      //   color: 0xff0000,
-      //   linewidth: 1,
-      //   scale: .5,
-      //   dashSize: 1,
-      //   gapSize: 1,
-      //   transparent: false
-      // });
-      
-      this.scene.remove(this.lineRefRef);
-      this.lineRefRef = new THREE.Line( geometryPathRef, materialPath );
-      this.lineRefRef.computeLineDistances();
-      this.scene.add( this.lineRefRef );
+        const pointsI = this.pathIRef.getPoints();
+        const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
+        const materialPath = new THREE.LineDashedMaterial({
+          color: 0xff0000,
+          linewidth: 1,
+          scale: .5,
+          dashSize: 2,
+          gapSize: 2,
+          transparent: false
+        });
+
+        this.scene.remove(this.lineIRef);
+        this.lineIRef = new THREE.Line(geometryPathI, materialPath);
+        this.lineIRef.computeLineDistances();
+        this.scene.add(this.lineIRef);
+
+        this.puckRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
+        this.puckRef.position.y = this.model.graphData.getY(this.model.timer);
+        this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRef.position.x, this.puckRef.position.y);
+
+        // console.log(Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)));
+
+        const points = this.pathRefRef.getPoints();
+        const geometryPathRef = new THREE.BufferGeometry().setFromPoints(points);
+
+        this.scene.remove(this.lineRefRef);
+        this.lineRefRef = new THREE.Line(geometryPathRef, materialPath);
+        this.lineRefRef.computeLineDistances();
+        this.scene.add(this.lineRefRef);
+      };
+
+      if (!this.passedStart) {
+        updatePuckAndPath();
+        this.passedStart = true;
+      } else if (Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)) < 200 || Math.sqrt(Math.pow(this.puckI.position.x - this.iOffset, 2) + Math.pow(this.puckI.position.y, 2)) < 200) {
+        updatePuckAndPath();
+      }
     }
+    // if (this.model.timer <= 10) {
+    //   if (this.passedStart === false) {
+    //     this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
+    //     const bufferXRef = this.puckRef.position.x;
+    //     const bufferYRef = this.puckRef.position.y;
+    //     const bufferXI = this.puckI.position.x;
+    //     const bufferYI = this.puckI.position.y;
+
+    //     this.puckI.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
+    //     this.puckI.position.y = this.model.graphData.getYI(this.model.timer);
+    //     this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckI.position.x, this.puckI.position.y);
+
+
+    //     const pointsI = this.pathIRef.getPoints();
+
+    //     const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
+    //     const materialPath = new THREE.LineDashedMaterial({
+    //       color: 0xff0000,
+    //       linewidth: 1,
+    //       scale: .5,
+    //       dashSize: 2,
+    //       gapSize: 2,
+    //       transparent: false
+    //     });
+
+    //     this.scene.remove(this.lineIRef);
+    //     this.lineIRef = new THREE.Line(geometryPathI, materialPath);
+    //     this.lineIRef.computeLineDistances();
+    //     this.scene.add(this.lineIRef);
+
+    //     this.puckRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
+    //     this.puckRef.position.y = this.model.graphData.getY(this.model.timer);
+    //     this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRef.position.x, this.puckRef.position.y);
+    //     console.log(Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)))
+
+
+    //     const points = this.pathRefRef.getPoints();
+
+    //     const geometryPathRef = new THREE.BufferGeometry().setFromPoints(points);
+    //     // const materialPath = new THREE.LineDashedMaterial({
+    //     //   color: 0xff0000,
+    //     //   linewidth: 1,
+    //     //   scale: .5,
+    //     //   dashSize: 1,
+    //     //   gapSize: 1,
+    //     //   transparent: false
+    //     // });
+
+    //     this.scene.remove(this.lineRefRef);
+    //     this.lineRefRef = new THREE.Line(geometryPathRef, materialPath);
+    //     this.lineRefRef.computeLineDistances();
+    //     this.scene.add(this.lineRefRef);
+    //     this.passedStart = true
+    //   }
+
+
+    // }
   }
 }
 
-coriolisForce.register( 'CoriolisForceScreenView', CoriolisForceScreenView );
+coriolisForce.register('CoriolisForceScreenView', CoriolisForceScreenView);

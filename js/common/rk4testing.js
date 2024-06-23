@@ -266,6 +266,7 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
         graphVals.insert(t,xInertial,yInertial, ynew[2], ynew[3], ynew[0], ynew[1]);
         ynew = rk4(drag, y, N, t, h, ynew, g, k, m, omega, equations, useEval);
         y = [...ynew];
+        // console.log(y)
         t = t + h;
     }
     return graphVals;
