@@ -149,7 +149,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
   const minX = d3.min(globalData.data, (d) => d.tv)
   const maxX = d3.max(globalData.data, (d) => d.tv)
   console.log(`look at this 2: `)
-  console.log(maxX)
+  console.log(globalData)
   const minXTest = d3.min(testData.data, (d) => d.x)
   const maxXTest = d3.max(testData.data, (d) => d.x)
   // Declare the x (horizontal position) scale.

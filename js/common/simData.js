@@ -50,7 +50,9 @@ export class simData {
             // return 0;
         }
         // console.log(Math.sqrt(Math.pow(this.data[dataIndex].y, 2) + Math.pow(this.data[dataIndex].x, 2)))
-        return this.data[dataIndex].omega * 200
+        // console.log(this.data[dataIndex])
+        // console.log(this.data[dataIndex].omega * 200)
+        return this.data[dataIndex].tv
     }
     getXI(time) {
         let dataIndex = (time / this.interval).toFixed(0);
@@ -108,7 +110,7 @@ class dataPoint {
         this.xI = xI;
         this.yI = yI;
         this.distance = distance;
-        this.tv = tv;
+        this.tv = tv
 
     }
 }

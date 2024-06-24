@@ -730,8 +730,10 @@ export default class CoriolisForceScreenView extends ScreenView {
       } else if (this.model.graphData.getDistance(this.model.timer) <= 200) {
         this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
         this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getDistance(this.model.timer)));
-        // this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
-        // this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getY(this.model.timer)));
+        this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
+        // console.log("look at this 3:")
+        console.log(this.model.graphData.getTV(this.model.timer))
+        this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getTV(this.model.timer)));
         updatePuckAndPath();
       }
     }

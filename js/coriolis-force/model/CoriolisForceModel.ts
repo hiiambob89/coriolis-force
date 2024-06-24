@@ -176,6 +176,7 @@ export default class CoriolisForceModel implements TModel {
 
 
     this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
+    console.log(this.graphData)
     this.graphLenTest = this.graphDataTest.data.length * this.graphUpdateInterval;
     this.graphLen = this.graphData.data.length * this.graphUpdateInterval;
   }
