@@ -146,8 +146,10 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
   const margin = { top: size / 35, right: 30, bottom: size / (35 / 3), left: 60 };
   const width = size - margin.left - margin.right;
   const height = size - margin.top - margin.bottom;
-  const minX = d3.min(globalData.data, (d) => d.x)
-  const maxX = d3.max(globalData.data, (d) => d.x)
+  const minX = d3.min(globalData.data, (d) => d.tv)
+  const maxX = d3.max(globalData.data, (d) => d.tv)
+  console.log(`look at this 2: `)
+  console.log(maxX)
   const minXTest = d3.min(testData.data, (d) => d.x)
   const maxXTest = d3.max(testData.data, (d) => d.x)
   // Declare the x (horizontal position) scale.
@@ -193,7 +195,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.x) })
+      .y(function (d) { return y(d.tv) })
     )
   svg
     .append("path")
@@ -203,7 +205,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.x) })
+      .y(function (d) { return y(d.tv) })
     )
   svg.append("text")
     .attr("transform", "rotate(-90)")

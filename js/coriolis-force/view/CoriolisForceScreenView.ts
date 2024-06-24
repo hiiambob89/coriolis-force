@@ -147,10 +147,10 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     this.refTangentialVelocityGraph = new phet.scenery.DOM(this.refTangentialVelocityGraph.node);
     this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(0));
-    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(model.graphData.getV_X(0)));
+    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(model.graphData.getTV(0)));
     if (model.graphDataTest.data.length > 10) {
       this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(0));
-      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(model.graphDataTest.getV_X(0)));
+      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(model.graphDataTest.getTV(0)));
     }
     this.addChild(this.refTangentialVelocityGraph)
     this.refTangentialVelocityGraph.leftTop = new Vector2(1225, 50)
@@ -319,6 +319,17 @@ export default class CoriolisForceScreenView extends ScreenView {
         ]
       })]
     }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+    // const reset = () => {
+    //   // model.reset()
+    //   reset()
+    // }
+    window.addEventListener("keypress", (event) => {
+      if (event.key == "r") {
+        this.reset()
+      }
+    })
+    
+    // reset()
 
     const xdotDOM = document.createElement('span')
     const ydotDOM = document.createElement('span')
@@ -476,12 +487,8 @@ export default class CoriolisForceScreenView extends ScreenView {
     buttonV_y.lazyLink(() => { model.v_yProp.value = Number(window.prompt("Enter value for v_y:")); this.reset(); })
     buttonOmega.lazyLink(() => { model.omegaProp.value = Number(window.prompt("Enter value for ω:")); this.reset(); })
 
-    window.addEventListener("keypress", (event) => {
-      if (event.key == "r") {
-        this.reset()
-      }
-    })
 
+    
     this.model = model;
     // this.addChild(resetAllButton);
     this.iOffset = -200;
@@ -528,6 +535,8 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.diskRef = diskRef;
     scene.add(diskRef);
     diskRef.position.set(this.refOffset, 0, 0)
+    // this.reset()
+    
 
 
 
@@ -571,6 +580,13 @@ export default class CoriolisForceScreenView extends ScreenView {
       renderer.render(scene, camera);
     });
     this.passedStart = false
+    const reset = () => {
+      
+      model.reset()
+      this.reset()
+    }
+    reset()
+    
   }
   yScalevx(arg0: any): any {
     throw new Error('Method not implemented.');
@@ -648,10 +664,10 @@ export default class CoriolisForceScreenView extends ScreenView {
       this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getDistance(0)));
     }
     this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(0));
-    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getY(0)));
+    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getTV(0)));
     if (this.model.graphDataTest.data.length > 10) {
       this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(0));
-      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getY(0)));
+      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getTV(0)));
     }
   }
 

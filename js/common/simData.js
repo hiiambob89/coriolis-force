@@ -6,9 +6,9 @@ export class simData {
     }
 
 
-    insert(time, x, y, v_x, v_y, xI, yI, distance) {
+    insert(time, x, y, v_x, v_y, xI, yI, distance, tv) {
         // console.log(time,x,y,v_x,v_y)
-        this.data.push(new dataPoint(time, x, y, v_x, v_y, xI, yI, distance));
+        this.data.push(new dataPoint(time, x, y, v_x, v_y, xI, yI, distance, tv));
     }
     getX(time) {
         let dataIndex = (time / this.interval).toFixed(0);
@@ -41,6 +41,16 @@ export class simData {
         }
         // console.log(Math.sqrt(Math.pow(this.data[dataIndex].y, 2) + Math.pow(this.data[dataIndex].x, 2)))
         return Math.sqrt(Math.pow(this.data[dataIndex].y, 2) + Math.pow(this.data[dataIndex].x, 2));
+    }
+    getTV(time){
+        let dataIndex = (time / this.interval).toFixed(0);
+
+        if (dataIndex > this.data.length - 1) {
+            dataIndex = this.data.length - 1;
+            // return 0;
+        }
+        // console.log(Math.sqrt(Math.pow(this.data[dataIndex].y, 2) + Math.pow(this.data[dataIndex].x, 2)))
+        return this.data[dataIndex].omega * 200
     }
     getXI(time) {
         let dataIndex = (time / this.interval).toFixed(0);
@@ -89,7 +99,7 @@ export class simData {
 }
 
 class dataPoint {
-    constructor(time, x, y, v_x, v_y, xI, yI, distance) {
+    constructor(time, x, y, v_x, v_y, xI, yI, distance, tv) {
         this.time = time;
         this.x = x;
         this.y = y;
@@ -97,7 +107,8 @@ class dataPoint {
         this.v_y = v_y;
         this.xI = xI;
         this.yI = yI;
-        this.distance = distance
+        this.distance = distance;
+        this.tv = tv;
 
     }
 }

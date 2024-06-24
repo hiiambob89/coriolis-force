@@ -254,6 +254,10 @@ function findDistance(x, y){
     return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
 }
 
+function tv(omega){
+    return omega * 200
+}
+
 export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega, equations, useEval, graphLen, graphVals, time) {
     const N = 4;
     let h = dt;
@@ -267,7 +271,7 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
     while (t < 10) {
         let theta = omega * t * 2 * Math.PI;
         let [xInertial, yInertial] = transformToInertial(ynew[0], ynew[1], theta)
-        graphVals.insert(t, xInertial, yInertial, ynew[2], ynew[3], ynew[0], ynew[1], findDistance(xInertial, yInertial));
+        graphVals.insert(t, xInertial, yInertial, ynew[2], ynew[3], ynew[0], ynew[1], findDistance(xInertial, yInertial), tv(omega));
         ynew = rk4(drag, y, N, t, h, ynew, g, k, m, omega, equations, useEval);
         y = [...ynew];
         // console.log(findDistance(xInertial, yInertial))
