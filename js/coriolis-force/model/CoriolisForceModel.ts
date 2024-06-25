@@ -52,7 +52,7 @@ export default class CoriolisForceModel implements TModel {
     this.x = 0;
     this.y = -200;
     this.v_x = 0;
-    this.v_y = 100;
+    this.v_y = 1000;
     this.omega = .5;
     this.mass = 1;
     this.timer = 0;

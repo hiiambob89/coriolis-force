@@ -148,38 +148,15 @@ function derivsEval(drag, y, dydt, equations) {
     return dydt;
 }
 
-// function derivs(drag, y, dydt, g, k, m, omega) {
-//     // console.log("Input to derivs:", {drag, y, g, k, m, omega});
 
-//     let coriolis_x = 2 * m * y[3] * omega; 
-//     let coriolis_y = -2 * m * y[2] * omega;
-
-//     let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
-//     // console.log("Calculated speed:", speed);
-
-//     if (drag) {
-//         dydt[0] = y[2]; 
-//         dydt[1] = y[3]; 
-//         dydt[2] = -(k / m) * y[2] * speed + coriolis_x / m;
-//         dydt[3] = -g - (k / m) * y[3] * speed + coriolis_y / m;
-//     } else {
-//         dydt[0] = y[2]; 
-//         dydt[1] = y[3];
-//         dydt[2] = -(k / m) * y[2] + coriolis_x / m; 
-//         dydt[3] = -g - (k / m) * y[3] + coriolis_y / m; 
-//     }
-
-//     // console.log("Output from derivs (dydt):", dydt);
-//     return dydt;
-// }
 function derivs(drag, y, dydt, g,k, m) {
     let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
 
     if (drag) {
         dydt[0] = y[2]; 
         dydt[1] = y[3]; 
-        dydt[2] = -(k / m) * y[2] * speed;
-        dydt[3] = -(k / m) * y[3] * speed;
+        dydt[2] = -((k / m) * y[2] * speed);
+        dydt[3] = -((k / m) * y[3] * speed);
     } else {
         dydt[0] = y[2]; 
         dydt[1] = y[3];
@@ -189,6 +166,7 @@ function derivs(drag, y, dydt, g,k, m) {
 
     return dydt;
 }
+
 
 
 // function derivs(y, dydt, m, omega, t) {

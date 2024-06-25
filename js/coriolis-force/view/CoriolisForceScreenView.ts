@@ -20,6 +20,7 @@ import Range from '../../../../dot/js/Range.js';
 import RoundToggleButton from '../../../../sun/js/buttons/RoundToggleButton.js';
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import { getGraphData } from '../../common/rk4testing.js';
 
 
 type SelfOptions = {
@@ -117,9 +118,9 @@ export default class CoriolisForceScreenView extends ScreenView {
         new Rectangle(0, 0, 0, 10),
         new HSlider(model.yProp, new Range(0, 200)),
         new Rectangle(0, 0, 0, 10),
-        new HSlider(model.v_xProp, new Range(0, 200)),
+        new HSlider(model.v_xProp, new Range(0, 2000)),
         new Rectangle(0, 0, 0, 10),
-        new HSlider(model.v_yProp, new Range(0, 200)),
+        new HSlider(model.v_yProp, new Range(0, 2000)),
         new Rectangle(0, 0, 0, 10),
         new HSlider(model.omegaProp, new Range(0, 10)),
       ]
