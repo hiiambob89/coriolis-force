@@ -12,7 +12,7 @@ import PickRequired from '../../../../phet-core/js/types/PickRequired.js';
 import TModel from '../../../../joist/js/TModel.js';
 import Property from '../../../../axon/js/Property.js';
 import { simData } from '../../../../coriolis-force/js/common/simData.js';
-import {getGraphData} from '../../common/rk4testing.js'
+import { getGraphData } from '../../common/rk4testing.js'
 
 type SelfOptions = {
   //TODO add options that are specific to CoriolisForceModel here
@@ -46,7 +46,24 @@ export default class CoriolisForceModel implements TModel {
   simSpeedProp: Property<number>;
   xProp: Property<number>;
 
-  public constructor( providedOptions: CoriolisForceModelOptions ) {
+
+
+  public xEQ: string;
+  public yEQ: string;
+  public v_xEQ: string;
+  public v_yEQ: string;
+  public xFunc;
+  public yFunc;
+  public v_xFunc;
+  public v_yFunc;
+  public graphData: simData;
+  public graphDataTest: simData;
+  public graphLen: number;
+  public graphUpdateInterval: number;
+  public graphLenTest: number;
+  public prevX: number
+
+  public constructor(providedOptions: CoriolisForceModelOptions) {
     this.k = 0;
     this.gravity = 9.8;
     this.x = 0;
@@ -61,6 +78,9 @@ export default class CoriolisForceModel implements TModel {
     this.originalLen = 0;
     this.graphUpdateInterval = .001;
     this.simSpeed = 1;
+    this.graphUpdateInterval = .001;
+    this.graphData = new simData(this.graphUpdateInterval)
+    this.graphDataTest = new simData(this.graphUpdateInterval)
 
     this.kProp = new Property(this.k);
     this.xProp = new Property(this.x);
@@ -71,11 +91,65 @@ export default class CoriolisForceModel implements TModel {
     this.massProp = new Property(this.mass);
     this.graphData = new simData(this.graphUpdateInterval);
     this.simSpeedProp = new Property(this.simSpeed);
+    this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
     console.log(this.graphData)
-    this.graphData = getGraphData(this.quadraticDrag,this.graphUpdateInterval,this.x,this.y,this.v_x,this.v_y,this.gravity,this.k,this.mass,this.omega,{},false,this.graphLen,this.graphData,this.timer);
-    console.log(this.y)
-
+    // console.log(this.y)
+    let prevX = this.x
+    let prevY = -200
+    // this.xProp.link((val) => {
+    //   if (Math.sqrt(Math.pow(val - 200, 2) + Math.pow(this.yProp.value, 2)) <= 200) {
+    //     prevX = val
+    //     this.xProp.value = val
+    //     this.x = val
+    //   } else {
+    //     this.xProp.value = prevX
+    //     this.x = this.xProp.value
+    //   }
+    // });
+    // this.yProp.link((val) => {
+    //   if (Math.sqrt(Math.pow(this.xProp.value - 200, 2) + Math.pow(val, 2)) <= 200) {
+    //     prevY = val
+    //     this.yProp.value = val
+    //     this.y = val
+    //   } else {
+    //     this.yProp.value = this.y
+    //     this.y = this.yProp.value
+    //   }
+    // });
     
+
+
+
+
+
+    if (new URL(window.location.href).searchParams.get("formula") === 'true') {
+      this.xEQ = 'v_x'
+      this.yEQ = 'v_y'
+      this.v_xEQ = '-k\\cdot v_x\\cdot\\sqrt{v_x^2+v_y^2}'
+      this.v_yEQ = '-g-k\\cdot v_y\\cdot\\sqrt{v_x^2+v_y^2}'
+      // this.v_xEQ = '-\\frac{k}{m}\\cdot v_x\\cdot\\sqrt{v_x^2+v_y^2}'
+      // this.v_yEQ = '-g-\\frac{k}{m}\\cdot v_y\\cdot\\sqrt{v_x^2+v_y^2}'
+
+      this.xFunc = globalThis.window.evaluatex(this.xEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
+      this.yFunc = globalThis.window.evaluatex(this.yEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
+      this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
+      this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
+
+      this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
+
+    } else {
+      this.xEQ = ''
+      this.yEQ = ''
+      this.v_xEQ = ''
+      this.v_yEQ = ''
+      this.graphDataTest = new simData(this.graphUpdateInterval)
+      this.graphDataTest.insert(0, 0, 0, 0, 0, 0, 0)
+
+
+    }
+    this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
+    this.graphLen = this.graphData.data.length * this.graphUpdateInterval;
+    this.graphLenTest = this.graphDataTest.data.length * this.graphUpdateInterval;
 
   }
 
@@ -101,18 +175,20 @@ export default class CoriolisForceModel implements TModel {
     this.graphData = new simData(this.graphUpdateInterval);
 
 
-    this.graphData = getGraphData(this.quadraticDrag,this.graphUpdateInterval,this.x,this.y,this.v_x,this.v_y,this.gravity,this.k,this.mass,this.omega,{},false,this.graphLen,this.graphData,this.timer);
-
+    this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
+    console.log(this.graphData)
+    this.graphLenTest = this.graphDataTest.data.length * this.graphUpdateInterval;
+    this.graphLen = this.graphData.data.length * this.graphUpdateInterval;
   }
 
   /**
    * Steps the model.
    * @param dt - time step, in seconds
    */
-  public step( dt: number ): void {
-    this.timer += dt*this.simSpeed;
+  public step(dt: number): void {
+    this.timer += dt * this.simSpeed;
     //TODO
   }
 }
 
-coriolisForce.register( 'CoriolisForceModel', CoriolisForceModel );
+coriolisForce.register('CoriolisForceModel', CoriolisForceModel);

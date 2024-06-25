@@ -1,0 +1,15 @@
+{
+    "notebook.compactView": true,
+    "notebook.consolidatedOutputButton": true,
+    "notebook.consolidatedRunButton": false,
+    "notebook.diff.enablePreview": true,
+    "notebook.diff.overviewRuler": false,
+    "notebook.dragAndDropEnabled": true,
+    "zenMode.centerLayout": false,
+    "zenMode.fullScreen": false,
+    "workbench.layoutControl.enabled": true,
+    "workbench.editor.centeredLayoutAutoResize": true,
+    "workbench.editor.centeredLayoutFixedWidth": false,
+    "workbench.editor.splitInGroupLayout": "horizontal",
+    "workbench.view.alwaysShowHeaderActions": false
+}

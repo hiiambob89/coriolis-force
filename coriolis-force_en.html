@@ -7,8 +7,32 @@
   <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1"/>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="phet-sim-level" content="development">
+  <link rel="stylesheet" href="./xhtml/mathquill.css">
+  <style>
+    
+    math-field::part(virtual-keyboard-toggle) {
+      display: none;
+    }
+    .my-mathquill-input {
+    min-width: 290px; /* Set the minimum width as needed */
+    min-height: 60px;
+    background: white;
+    
+  }
+  .error {
+    border-color: red;
+    background: red;
+    
+  }
+  .MLK__keyboard{
+    display:none;
+  }
+  </style>
 
   <title>coriolis-force</title>
+  <link rel="stylesheet" href="../coriolis-force/js/common/mathquill-0.10.1/mathquill.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="../projectile-motion-drag/js/common/mathquill-0.10.1/mathquill.js"></script>
 </head>
 
 <!-- body is only made black for the loading phase so that the splash screen is black -->
@@ -38,8 +62,12 @@
         "runnable": true,
         "preload": [
           "../sherpa/lib/poly-decomp-0.3.0.js",
-          "../sherpa/lib/p2-0.7.1.js",
-          "../sherpa/lib/three-r104.js"],
+      "../sherpa/lib/p2-0.7.1.js",
+      "../sherpa/lib/three-r104.js", 
+      "../coriolis-force/js/common/simData.js",
+      "../coriolis-force/js/common/bundle2.js",
+      "../coriolis-force/js/common/d3.v7.min.js",
+      "../coriolis-force/js/common/mathquill.js"],
         "readmeCreatedManually": true,
         "supportedBrands": [
           "phet",
@@ -129,6 +157,13 @@
     '../tandem/js/PhetioIDUtils.js',
     '../perennial-alias/js/common/SimVersion.js',
     '../sherpa/lib/three-r104.js',
+    "../sherpa/lib/poly-decomp-0.3.0.js",
+      "../sherpa/lib/p2-0.7.1.js",
+      "../sherpa/lib/three-r104.js", 
+      "../coriolis-force/js/common/simData.js",
+      "../coriolis-force/js/common/bundle2.js",
+      "../coriolis-force/js/common/d3.v7.min.js",
+      "../coriolis-force/js/common/mathquill.js"
   ];
 
   if ( brand === 'phet-io' ) {
