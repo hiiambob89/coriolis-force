@@ -23,6 +23,7 @@ import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { drawDistance, drawTV } from '../../common/makeGraphs.js';
 import { verifyEq } from '../../common/verifyEq.js';
+import { LineBasicMaterial } from 'c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index';
 
 
 type SelfOptions = {
@@ -33,19 +34,19 @@ type CoriolisForceScreenViewOptions = SelfOptions & ScreenViewOptions;
 
 export default class CoriolisForceScreenView extends ScreenView {
   domNode: any;
-  disk: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Mesh<import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").SphereGeometry, import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").MeshBasicMaterial>;
+  disk: any;
   model: CoriolisForceModel;
-  puckI: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Mesh<import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").SphereGeometry, import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").MeshBasicMaterial>;
-  puckRef: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Mesh<import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").SphereGeometry, import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").MeshBasicMaterial>;
-  diskRef: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Mesh<import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").SphereGeometry, import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").MeshBasicMaterial>;
-  iOffset: number;
+  puckIRef: any;
+    puckRefRef: any;
+    diskRef: any;
+    iOffset: number;
   refOffset: number;
-  pathRefRef: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Path;
-  lineRefRef: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Line<import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").BufferGeometry, import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").LineBasicMaterial>;
-  pathIRef: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Path;
-  lineIRef: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Line<import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").BufferGeometry, import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").LineBasicMaterial>;
-  scene: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Scene;
-  rootNode: any;
+  pathRefRef: any;
+  lineRefRef: any;
+  pathIRef: any;
+    lineIRef: any;
+    scene: any;
+    rootNode: any;
   refDistanceCenterGraph: any;
   testDistanceCenterGraph: any;
   passedStart: boolean;
@@ -57,6 +58,12 @@ export default class CoriolisForceScreenView extends ScreenView {
   xScaleD: any;
   yScaleTv: any;
   xScaleTv: any;
+  puckITest: any;
+  puckRefTest: any;
+  pathRefTest: any;
+  lineRefTest: any;
+  pathITest: any;
+  lineITest: any;
 
   public constructor(model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions) {
 
@@ -521,15 +528,26 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     const puckGeometry = new THREE.SphereGeometry(10, 32, 32);
     const puckMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, depthTest: true });
-    const puckI = new THREE.Mesh(puckGeometry, puckMaterial);
-    this.puckI = puckI;
-    scene.add(puckI)
-    puckI.position.set(this.iOffset + this.model.x, this.model.y, 0)
+    const puckIRef = new THREE.Mesh(puckGeometry, puckMaterial);
+    this.puckIRef = puckIRef;
+    scene.add(puckIRef)
+    puckIRef.position.set(this.iOffset + this.model.x, this.model.y, 0)
 
-    const puckRef = new THREE.Mesh(puckGeometry, puckMaterial);
-    this.puckRef = puckRef;
-    scene.add(puckRef)
-    puckRef.position.set(this.refOffset + this.model.x, this.model.y, 0)
+    const puckRefRef = new THREE.Mesh(puckGeometry, puckMaterial);
+    this.puckRefRef = puckRefRef;
+    scene.add(puckRefRef)
+    puckRefRef.position.set(this.refOffset + this.model.x, this.model.y, 0)
+
+    const puckTestMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, transparent: true, depthTest: true });
+    const puckITest = new THREE.Mesh(puckGeometry, puckTestMaterial);
+    this.puckITest = puckITest;
+    scene.add(puckITest)
+    puckITest.position.set(this.iOffset + this.model.x, this.model.y, 0)
+
+    const puckRefTest = new THREE.Mesh(puckGeometry, puckTestMaterial);
+    this.puckRefTest = puckRefTest;
+    scene.add(puckRefTest)
+    puckRefTest.position.set(this.refOffset + this.model.x, this.model.y, 0)
 
     const diskRef = new THREE.Mesh(diskGeometry, iceMaterial);
     this.diskRef = diskRef;
@@ -541,9 +559,9 @@ export default class CoriolisForceScreenView extends ScreenView {
 
 
     this.pathRefRef = new THREE.Path();
-    this.pathRefRef.currentPoint = new THREE.Vector2(puckRef.position.x, puckRef.position.y)
+    this.pathRefRef.currentPoint = new THREE.Vector2(puckRefRef.position.x, puckRefRef.position.y)
 
-    const points = [new THREE.Vector2(puckRef.position.x, puckRef.position.y)];
+    const points = [new THREE.Vector2(puckRefRef.position.x, puckRefRef.position.y)];
 
     const geometryPath = new THREE.BufferGeometry().setFromPoints(points);
     const materialPath = new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true });
@@ -553,9 +571,9 @@ export default class CoriolisForceScreenView extends ScreenView {
     scene.add(this.lineRefRef);
 
     this.pathIRef = new THREE.Path();
-    this.pathIRef.currentPoint = new THREE.Vector2(puckI.position.x, puckI.position.y)
+    this.pathIRef.currentPoint = new THREE.Vector2(puckIRef.position.x, puckIRef.position.y)
 
-    const pointsI = [new THREE.Vector2(puckI.position.x, puckI.position.y)];
+    const pointsI = [new THREE.Vector2(puckIRef.position.x, puckIRef.position.y)];
 
     const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
     const materialPathI = new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true });
@@ -563,6 +581,25 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.lineIRef = new THREE.Line(geometryPathI, materialPathI);
 
     scene.add(this.lineIRef);
+
+    //Test path stuff
+    this.pathRefTest = new THREE.Path();
+    this.pathRefTest.currentPoint = new THREE.Vector2(puckRefTest.position.x, puckRefTest.position.y)
+    const materialTestPath = new THREE.LineBasicMaterial({ color: 0x0000ff, transparent: true });
+
+    this.lineRefTest = new THREE.Line(geometryPath, materialTestPath);
+
+    // scene.add(this.lineRefTest);
+
+    this.pathITest = new THREE.Path();
+    this.pathITest.currentPoint = new THREE.Vector2(puckITest.position.x, puckITest.position.y)
+    const materialTestPathI = new THREE.LineBasicMaterial({ color: 0x0000ff, transparent: true });
+
+    this.lineITest = new THREE.Line(geometryPathI, materialTestPathI);
+
+    // scene.add(this.lineITest);
+    //
+
     this.scene = scene;
 
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -602,26 +639,26 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.model.reset()
 
 
-    this.puckRef.position.x = this.refOffset + this.model.x
-    this.puckRef.position.y = this.model.y;
-    this.puckI.position.x = this.iOffset + this.model.x
-    this.puckI.position.y = this.model.y;
+    this.puckRefRef.position.x = this.refOffset + this.model.x
+    this.puckRefRef.position.y = this.model.y;
+    this.puckIRef.position.x = this.iOffset + this.model.x
+    this.puckIRef.position.y = this.model.y;
     this.pathRefRef = new THREE.Path();
-    this.pathRefRef.currentPoint = new THREE.Vector2(this.puckRef.position.x, this.puckRef.position.y)
+    this.pathRefRef.currentPoint = new THREE.Vector2(this.puckRefRef.position.x, this.puckRefRef.position.y)
 
-    const points = [new THREE.Vector2(this.puckRef.position.x, this.puckRef.position.y)];
+    const points = [new THREE.Vector2(this.puckRefRef.position.x, this.puckRefRef.position.y)];
 
     const geometryPath = new THREE.BufferGeometry().setFromPoints(points);
     const materialPath = new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true });
     this.scene.remove(this.lineRefRef);
     this.lineRefRef = new THREE.Line(geometryPath, materialPath);
 
-    this.scene.add(this.lineRefRef);
+    // this.scene.add(this.lineRefRef);
 
     this.pathIRef = new THREE.Path();
-    this.pathIRef.currentPoint = new THREE.Vector2(this.puckI.position.x, this.puckI.position.y)
+    this.pathIRef.currentPoint = new THREE.Vector2(this.puckIRef.position.x, this.puckIRef.position.y)
 
-    const pointsI = [new THREE.Vector2(this.puckI.position.x, this.puckI.position.y)];
+    const pointsI = [new THREE.Vector2(this.puckIRef.position.x, this.puckIRef.position.y)];
 
     const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
     const materialPathI = new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true });
@@ -630,7 +667,47 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     this.lineIRef = new THREE.Line(geometryPathI, materialPathI);
 
-    this.scene.add(this.lineIRef);
+    // this.scene.add(this.lineIRef);
+    //
+    //
+    //Test stuff
+    this.puckRefTest.position.x = this.refOffset + this.model.x
+    this.puckRefTest.position.y = this.model.y;
+    this.puckITest.position.x = this.iOffset + this.model.x
+    this.puckITest.position.y = this.model.y;
+    this.pathRefTest = new THREE.Path();
+    this.pathRefTest.currentPoint = new THREE.Vector2(this.puckRefTest.position.x, this.puckRefTest.position.y)
+
+    const pointsTest = [new THREE.Vector2(this.puckRefTest.position.x, this.puckRefTest.position.y)];
+
+    const geometryTestPath = new THREE.BufferGeometry().setFromPoints(pointsTest);
+    const materialTestPath = new THREE.LineBasicMaterial({ color: 0x0000ff, transparent: true });
+    this.scene.remove(this.lineRefTest);
+    this.lineRefTest = new THREE.Line(geometryTestPath, materialTestPath);
+
+    // this.scene.add(this.lineRefTest);
+
+    this.pathITest = new THREE.Path();
+    this.pathITest.currentPoint = new THREE.Vector2(this.puckITest.position.x, this.puckITest.position.y)
+
+    const pointsITest = [new THREE.Vector2(this.puckITest.position.x, this.puckITest.position.y)];
+
+    const geometryTestPathI = new THREE.BufferGeometry().setFromPoints(pointsITest);
+    const materialTestPathI = new THREE.LineBasicMaterial({ color: 0x0000ff, transparent: true });
+
+    this.scene.remove(this.lineITest);
+
+    this.lineITest = new THREE.Line(geometryTestPathI, materialTestPathI);
+
+    // this.scene.add(this.lineITest);
+    // this.scene.add(this.lineIRef);
+
+    //
+    //
+    //
+
+
+
     this.passedStart = false
 
     // Updating graphs
@@ -675,68 +752,185 @@ export default class CoriolisForceScreenView extends ScreenView {
    * Steps the view.
    * @param dt - time step, in seconds
    */
-  public override step(dt: number): void {
-    if (this.model.timer <= 10) {
-      const updatePuckAndPath = () => {
-        this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
+  // public override step(dt: number): void {
+  //   if (this.model.timer <= 10) {
+  //     const updatePuckAndPath = () => {
+  //       this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
 
-        const bufferXRef = this.puckRef.position.x;
-        const bufferYRef = this.puckRef.position.y;
-        const bufferXI = this.puckI.position.x;
-        const bufferYI = this.puckI.position.y;
+  //       const bufferXRef = this.puckRefRef.position.x;
+  //       const bufferYRef = this.puckRefRef.position.y;
+  //       const bufferXI = this.puckIRef.position.x;
+  //       const bufferYI = this.puckIRef.position.y;
+        
+  //       const bufferXRefTest = this.puckRefTest.position.x;
+  //       const bufferYRefTest = this.puckRefRef.position.y;
+  //       const bufferXITest = this.puckITest.position.x;
+  //       const bufferYITest = this.puckITest.position.y;
 
-        this.puckI.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
-        this.puckI.position.y = this.model.graphData.getYI(this.model.timer);
-        this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckI.position.x, this.puckI.position.y);
+  //       //
+  //       //
+  //       //Test stuff
+  //       // console.log("ahhhhhhh",this.model.graphDataTest.getX(this.model.timer))
+  //       this.puckITest.position.x = this.model.graphDataTest.getXI(this.model.timer) + this.iOffset;
+  //       this.puckITest.position.y = this.model.graphDataTest.getYI(this.model.timer);
+  //       this.pathITest.quadraticCurveTo(bufferXITest, bufferYITest, this.puckITest.position.x, this.puckITest.position.y);
 
-        const pointsI = this.pathIRef.getPoints();
-        const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
-        const materialPath = new THREE.LineDashedMaterial({
-          color: 0xff0000,
-          linewidth: 1,
-          scale: .5,
-          dashSize: 2,
-          gapSize: 2,
-          transparent: false
-        });
+  //       const pointsITest = this.pathITest.getPoints();
+  //       const geometryPathITest = new THREE.BufferGeometry().setFromPoints(pointsITest);
 
-        this.scene.remove(this.lineIRef);
-        this.lineIRef = new THREE.Line(geometryPathI, materialPath);
-        this.lineIRef.computeLineDistances();
-        this.scene.add(this.lineIRef);
+  //       const materialTestPath = new THREE.LineBasicMaterial({ color: 0x0000ff, transparent: true });
 
-        this.puckRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
-        this.puckRef.position.y = this.model.graphData.getY(this.model.timer);
-        this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRef.position.x, this.puckRef.position.y);
+  //       this.scene.remove(this.lineITest);
+  //       this.lineITest = new THREE.Line(geometryPathITest, materialTestPath);
+  //       // this.lineITest.computeLineDistances();
+  //       this.scene.add(this.lineITest);
 
-        // console.log(Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)));
+  //       this.puckRefTest.position.x = this.model.graphDataTest.getX(this.model.timer) + this.refOffset;
+  //       this.puckRefTest.position.y = this.model.graphDataTest.getY(this.model.timer);
 
-        const points = this.pathRefRef.getPoints();
-        const geometryPathRef = new THREE.BufferGeometry().setFromPoints(points);
+  //       this.pathRefTest.quadraticCurveTo(bufferXRefTest, bufferYRefTest, this.puckRefTest.position.x, this.puckRefTest.position.y);
 
-        this.scene.remove(this.lineRefRef);
-        this.lineRefRef = new THREE.Line(geometryPathRef, materialPath);
-        this.lineRefRef.computeLineDistances();
-        this.scene.add(this.lineRefRef);
+  //       const pointsTest = this.pathRefTest.getPoints();
+  //       console.log(this.model.graphDataTest.getY(this.model.timer));
+  //       const geometryPathTest = new THREE.BufferGeometry().setFromPoints(pointsTest);
+  //       this.scene.remove(this.lineRefTest);
+  //       this.lineRefTest = new THREE.Line(geometryPathTest, materialTestPath);
+  //       this.scene.add(this.lineRefTest);
+
+
+  //       this.puckIRef.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
+  //       this.puckIRef.position.y = this.model.graphData.getYI(this.model.timer);
+  //       this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckIRef.position.x, this.puckIRef.position.y);
+
+  //       const pointsI = this.pathIRef.getPoints();
+  //       const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
+  //       const materialPath = new THREE.LineDashedMaterial({
+  //         color: 0xff0000,
+  //         linewidth: 1,
+  //         scale: .5,
+  //         dashSize: 2,
+  //         gapSize: 2,
+  //         transparent: false
+  //       });
+
+  //       this.scene.remove(this.lineIRef);
+  //       this.lineIRef = new THREE.Line(geometryPathI, materialPath);
+  //       this.lineIRef.computeLineDistances();
+  //       this.scene.add(this.lineIRef);
+
+  //       this.puckRefRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
+  //       this.puckRefRef.position.y = this.model.graphData.getY(this.model.timer);
+  //       this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRefRef.position.x, this.puckRefRef.position.y);
+
+  //       // console.log(Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)));
+
+  //       const points = this.pathRefRef.getPoints();
+  //       const geometryPathRef = new THREE.BufferGeometry().setFromPoints(points);
+
+  //       this.scene.remove(this.lineRefRef);
+  //       this.lineRefRef = new THREE.Line(geometryPathRef, materialPath);
+  //       this.lineRefRef.computeLineDistances();
+  //       this.scene.add(this.lineRefRef);
+        
 
         
-        // console.log(this.model.graphData.getDistance(this.model.timer))
-      };
+  //       // console.log(this.model.graphData.getDistance(this.model.timer))
+  //     };
 
-      if (!this.passedStart) {
-        updatePuckAndPath();
-        this.passedStart = true;
-      // } else if (Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)) < 200 || Math.sqrt(Math.pow(this.puckI.position.x - this.iOffset, 2) + Math.pow(this.puckI.position.y, 2)) < 200) {
-      } else if (this.model.graphData.getDistance(this.model.timer) <= 200) {
-        this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
-        this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getDistance(this.model.timer)));
-        this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
-        // console.log("look at this 3:")
-        console.log(this.model.graphData.getTV(this.model.timer))
-        this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getTV(this.model.timer)));
-        updatePuckAndPath();
-      }
+  //     if (!this.passedStart) {
+  //       updatePuckAndPath();
+  //       this.passedStart = true;
+  //     // } else if (Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)) < 200 || Math.sqrt(Math.pow(this.puckI.position.x - this.iOffset, 2) + Math.pow(this.puckI.position.y, 2)) < 200) {
+  //     } else if (this.model.graphData.getDistance(this.model.timer) <= 200) {
+  //       this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
+  //       this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getDistance(this.model.timer)));
+  //       this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
+  //       // console.log("look at this 3:")
+  //       // console.log(this.model.graphData.getTV(this.model.timer))
+  //       this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getTV(this.model.timer)));
+  //       updatePuckAndPath();
+  //     }
+  //   }
+  public override step(dt: number): void {
+    if (this.model.timer <= 10) {
+        const updatePuckAndPath = () => {
+            this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
+
+            const bufferXRef = this.puckRefRef.position.x;
+            const bufferYRef = this.puckRefRef.position.y;
+            const bufferXI = this.puckIRef.position.x;
+            const bufferYI = this.puckIRef.position.y;
+
+            const bufferXRefTest = this.puckRefTest.position.x;
+            const bufferYRefTest = this.puckRefTest.position.y;
+            const bufferXITest = this.puckITest.position.x;
+            const bufferYITest = this.puckITest.position.y;
+
+            if(this.model.graphDataTest.getX(this.model.timer) !== 0 && this.model.graphDataTest.getY(this.model.timer) !== 0){
+
+              this.puckITest.position.x = this.model.graphDataTest.getXI(this.model.timer) + this.iOffset;
+              this.puckITest.position.y = this.model.graphDataTest.getYI(this.model.timer);
+              this.pathITest.quadraticCurveTo(bufferXITest, bufferYITest, this.puckITest.position.x, this.puckITest.position.y);
+
+              this.puckRefTest.position.x = this.model.graphDataTest.getX(this.model.timer) + this.refOffset;
+              this.puckRefTest.position.y = this.model.graphDataTest.getY(this.model.timer);
+              this.pathRefTest.quadraticCurveTo(bufferXRefTest, bufferYRefTest, this.puckRefTest.position.x, this.puckRefTest.position.y);
+            }
+
+            this.puckIRef.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
+            this.puckIRef.position.y = this.model.graphData.getYI(this.model.timer);
+            this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckIRef.position.x, this.puckIRef.position.y);
+
+            this.puckRefRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
+            this.puckRefRef.position.y = this.model.graphData.getY(this.model.timer);
+            this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRefRef.position.x, this.puckRefRef.position.y);
+
+            // Update geometries and lines
+            const updateLine = (path, line, material) => {
+                const points = path.getPoints();
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                this.scene.remove(line);
+                line = new THREE.Line(geometry, material);
+                this.scene.add(line);
+                return line;
+            };
+
+            const materialTestPath = new THREE.LineBasicMaterial({ color: 0x0000ff, transparent: true });
+            const materialPath = new THREE.LineDashedMaterial({
+                color: 0xff0000,
+                linewidth: 1,
+                scale: 0.5,
+                dashSize: 2,
+                gapSize: 2,
+                transparent: false
+            });
+            if(this.model.graphDataTest.getX(this.model.timer) !== 0 && this.model.graphDataTest.getY(this.model.timer) !== 0){
+              this.lineITest = updateLine(this.pathITest, this.lineITest, materialTestPath);
+              this.lineRefTest = updateLine(this.pathRefTest, this.lineRefTest, materialTestPath);
+            }
+            this.lineIRef = updateLine(this.pathIRef, this.lineIRef, materialPath);
+            this.lineRefRef = updateLine(this.pathRefRef, this.lineRefRef, materialPath);
+        };
+
+        if (!this.passedStart) {
+            updatePuckAndPath();
+            this.passedStart = true;
+        } else if (this.model.graphData.getDistance(this.model.timer) <= 200) {
+            this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
+            this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getDistance(this.model.timer)));
+            this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
+            this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getTV(this.model.timer)));
+            // console.log(this.refTangentialVelocityGraph.element)
+            this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(this.model.timer));
+            this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getDistance(this.model.timer)));
+            this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(this.model.timer));
+            this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getTV(this.model.timer)));
+            updatePuckAndPath();
+        }
     }
+}
+
+
     // if (this.model.timer <= 10) {
     //   if (this.passedStart === false) {
     //     this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
@@ -795,6 +989,6 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     // }
   }
-}
+// }
 
 coriolisForce.register('CoriolisForceScreenView', CoriolisForceScreenView);

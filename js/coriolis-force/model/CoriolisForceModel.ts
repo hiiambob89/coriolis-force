@@ -135,7 +135,7 @@ export default class CoriolisForceModel implements TModel {
       this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
       this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
 
-      this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
+      this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_yFunc:this.v_yEQ,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphData, this.timer);
 
     } else {
       this.xEQ = ''
@@ -173,12 +173,41 @@ export default class CoriolisForceModel implements TModel {
     this.graphUpdateInterval = .001;
     this.simSpeed = this.simSpeedProp.value;
     this.graphData = new simData(this.graphUpdateInterval);
+    console.log(this.xEQ)
+    console.log(this.yEQ)
+    console.log(this.v_xEQ)
+    console.log(this.v_yEQ)
 
 
+    // this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_yFunc:this.v_yEQ,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphData, this.timer);
+    // if (this.validEqs) {
+    if (true) {
+      if (this.xEQ === '' || this.yEQ === '' || this.v_xEQ === '' || this.v_yEQ === '') {
+        this.graphDataTest = new simData(this.graphUpdateInterval)
+        this.graphDataTest.insert(0,0,0,0,0,0,0)
+      } else {
+        // console.log('VYYY:',this.v_yEQ)
+        this.xFunc = globalThis.window.evaluatex(this.xEQ, {k:this.k,m:this.mass,g:this.gravity}, {latex:true});
+        this.yFunc = globalThis.window.evaluatex(this.yEQ, {k:this.k,m:this.mass,g:this.gravity}, {latex:true});
+        this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, {k:this.k,m:this.mass,g:this.gravity}, {latex:true});
+        this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, {k:this.k,m:this.mass,g:this.gravity}, {latex:true});
+        // this.graphDataTest = getGraphData(this.quadraticDrag,this.graphUpdateInterval, this.x, this.y,this.y,angle, this.v_x, this.v_y, this.gravity, this.k,this.mass, {v_xdot:this.v_xFunc,v_ydot:this.v_yFunc,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphDataTest, this.timer);
+        this.graphDataTest = new simData(this.graphUpdateInterval);
+        
+        this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_ydot:this.v_yFunc,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphDataTest, this.timer);
+      
+      }
+
+      
+    } else {
+      this.graphDataTest = new simData(this.graphUpdateInterval);
+      this.graphDataTest.insert(0,0,0,0,0,0,0)
+    }
     this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
     console.log(this.graphData)
     this.graphLenTest = this.graphDataTest.data.length * this.graphUpdateInterval;
     this.graphLen = this.graphData.data.length * this.graphUpdateInterval;
+
   }
 
   /**

@@ -196,6 +196,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
       .y(function (d) { return y(d.tv) })
+      // .y(function (d) { return y(d.y) })
     )
   svg
     .append("path")
@@ -206,6 +207,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
       .y(function (d) { return y(d.tv) })
+      // .y(function (d) { return y(d.y) })
     )
   svg.append("text")
     .attr("transform", "rotate(-90)")
