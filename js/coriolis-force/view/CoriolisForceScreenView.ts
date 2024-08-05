@@ -183,7 +183,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     const y = new RichText("<em>y<sub>0</sub></em>")
     const v_x = new RichText("<em>v<sub>0x</sub></em>");
     const v_y = new RichText("<em>v<sub>0y</sub></em>");
-    const omega = new RichText("<em>ω</em>")
+    const omega = new RichText("<em>Ω</em>")
 
     const constantNames = new VBox({
       align: "left", children: [
@@ -465,19 +465,38 @@ export default class CoriolisForceScreenView extends ScreenView {
     model.simSpeedProp.link((val) => model.simSpeed = val)
     this.addChild(constantPanel);
 
+    var xdotPrime = document.createElement('span');    
+    xdotPrime.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">x=<span style="position: absolute; top: -0.35em; left: 0.09em;">&middot;</span><span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;">′</span></span>';
+    xdotPrime.style.fontSize = `${this.graphSize/9}px`
+    const xdotPrimeDOM = new phet.scenery.DOM((xdotPrime));
+
+
+    var ydotPrime = document.createElement('span');    
+    ydotPrime.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">y=<span style="position: absolute; top: -0.35em; left: 0.09em;">&middot;</span><span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;">′</span></span>';
+    ydotPrime.style.fontSize = `${this.graphSize/9}px`
+    const ydotPrimeDOM = new phet.scenery.DOM((ydotPrime));
+
+    var vxPrime = document.createElement('span');    
+    vxPrime.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">v<sub>x</sub>=<span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;">′</span></span>';
+    vxPrime.style.fontSize = `${this.graphSize/9}px`
+    const vxPrimeDOM = new phet.scenery.DOM((vxPrime));
+
+    var vyPrime = document.createElement('span');    
+    vyPrime.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">v<sub>y</sub>=<span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;">′</span></span>';
+    vyPrime.style.fontSize = `${this.graphSize/9}px`
+    const vyPrimeDOM = new phet.scenery.DOM((vyPrime));
+
     const equationPanel = new Panel(new VBox({
       align: "center", children: [
         new RichText("Test Equations"),
         new Rectangle(0, 0, 350, 15),
-
-        // new HBox({ align: "center", children: [xdotLabel, xdotBox] }), 
-        new HBox({ align: "center", children: [new RichText("<em>x=</em>  "), xdotBox] }),
+        new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
         new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-        new HBox({ align: "center", children: [new RichText("<em>y=</em>  "), ydotBox] }),
+        new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
         new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-        new HBox({ align: "center", children: [new RichText("<em>v<sub>x</sub>=</em>  "), v_xdotBox] }),
+        new HBox({ align: "center", children: [vxPrimeDOM, v_xdotBox] }),
         new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-        new HBox({ align: "center", children: [new RichText("<em>v<sub>y</sub>=</em>  "), v_ydotBox] }),
+        new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
       ]
     }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
 
@@ -886,7 +905,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     if (this.model.timer <= 10) {
       const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
 
-        this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
+        this.diskRef.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
         const bufferXRef = this.puckRefRef.position.x;
         const bufferYRef = this.puckRefRef.position.y;
         const bufferXI = this.puckIRef.position.x;
