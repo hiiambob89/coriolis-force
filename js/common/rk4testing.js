@@ -1,5 +1,5 @@
 
-function derivsEval(drag, y, dydt, g,k, m,equations) {
+function derivsEval(drag, y, dydt, g,k, m, omega,equations) {
     try {
         dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
@@ -28,20 +28,24 @@ function derivsEval(drag, y, dydt, g,k, m,equations) {
 }
 
 
-function derivs(drag, y, dydt, g,k, m) {
+function derivs(drag, y, dydt, g,k, m, omega) {
     let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
 
-    if (drag) {
-        dydt[0] = y[2]; 
-        dydt[1] = y[3]; 
-        dydt[2] = -((k / m) * y[2] * Math.sqrt(y[2] ** 2 + y[3] ** 2));
-        dydt[3] = -((k / m) * y[3] * Math.sqrt(y[2] ** 2 + y[3] ** 2));
-    } else {
-        dydt[0] = y[2];
-        dydt[1] = y[3];
-        dydt[2] = -(k / m) * y[2];
-        dydt[3] = -(k / m) * y[3];
-    }
+    // if (drag) {
+    //     dydt[0] = y[2]; 
+    //     dydt[1] = y[3]; 
+    //     dydt[2] = -((k / m) * y[2] * Math.sqrt(y[2] ** 2 + y[3] ** 2));
+    //     dydt[3] = -((k / m) * y[3] * Math.sqrt(y[2] ** 2 + y[3] ** 2));
+    // } else {
+    //     dydt[0] = y[2];
+    //     dydt[1] = y[3];
+    //     dydt[2] = -(k / m) * y[2];
+    //     dydt[3] = -(k / m) * y[3];
+    // }
+    dydt[0] = y[2];
+    dydt[1] = y[3];
+    dydt[2] = 2*omega*y[1] + (omega**2)*y[0];
+    dydt[3] = -2*omega*y[2] + (omega**2)*y[1];
 
     return dydt;
 }
@@ -66,24 +70,24 @@ function rk4(drag, y, N, x, h, ynew, g, k, m, omega, equations, useEval) {
     let dyt = new Array(y.length).fill(0);
     let dym = new Array(y.length).fill(0);
 
-    dydx = useEval ? derivsEval(drag, y, dydx, g, k, m, equations) : derivs(drag, y, dydx, g, k, m);
+    dydx = useEval ? derivsEval(drag, y, dydx, g, k, m, omega, equations) : derivs(drag, y, dydx, g, k, m,omega);
 
     for (let index = 0; index < N; index++) {
         yt[index] = y[index] + hh * dydx[index];
     }
 
-    dyt = useEval ? derivs(drag, yt, dyt, g, k, m, equations) : derivs(drag, yt, dyt, g, k, m);
+    dyt = useEval ? derivs(drag, yt, dyt, g, k, m, omega, equations) : derivs(drag, yt, dyt, g, k, m,omega);
     for (let index = 0; index < N; index++) {
         yt[index] = y[index] + hh * dyt[index];
     }
 
-    dym = useEval ? derivs(drag, yt, dym, g, k, m, equations) : derivs(drag, yt, dym, g, k, m);
+    dym = useEval ? derivs(drag, yt, dym, g, k, m, omega, equations) : derivs(drag, yt, dym, g, k, m,omega);
     for (let index = 0; index < N; index++) {
         yt[index] = y[index] + h * dym[index];
         dym[index] += dyt[index];
     }
 
-    dyt = useEval ? derivs(drag, yt, dyt, g, k, m, equations) : derivs(drag, yt, dyt, g, k, m);
+    dyt = useEval ? derivs(drag, yt, dyt, g, k, m, omega, equations) : derivs(drag, yt, dyt, g, k, m,omega);
 
     // console.log("Before updating ynew:");
     // console.log("y:", y);
@@ -128,6 +132,7 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
     while (t < 10) {
         let theta = omega * t * 2 * Math.PI;
         let [xInertial, yInertial] = transformToInertial(ynew[0], ynew[1], theta)
+        // let [xInertial, yInertial] = [ynew[0], ynew[1]]
         if (Math.sqrt(Math.pow(y[0], 2) + Math.pow(y[1], 2)) <=200){
         graphVals.insert(t, xInertial, yInertial, ynew[2], ynew[3], ynew[0], ynew[1], findDistance(xInertial, yInertial), tv(omega));
         ynew = rk4(drag, y, N, t, h, ynew, g, k, m, omega, equations, useEval);
