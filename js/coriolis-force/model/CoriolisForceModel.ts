@@ -62,6 +62,7 @@ export default class CoriolisForceModel implements TModel {
   public graphUpdateInterval: number;
   public graphLenTest: number;
   public prevX: number
+  coriolisEq: boolean;
 
   public constructor(providedOptions: CoriolisForceModelOptions) {
     this.k = 0;
@@ -79,6 +80,7 @@ export default class CoriolisForceModel implements TModel {
     this.graphUpdateInterval = .001;
     this.simSpeed = .09;
     this.graphUpdateInterval = .001;
+    this.coriolisEq = true;
     this.graphData = new simData(this.graphUpdateInterval)
     this.graphDataTest = new simData(this.graphUpdateInterval)
 
@@ -91,7 +93,7 @@ export default class CoriolisForceModel implements TModel {
     this.massProp = new Property(this.mass);
     this.graphData = new simData(this.graphUpdateInterval);
     this.simSpeedProp = new Property(this.simSpeed);
-    this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
+    this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer,this.coriolisEq);
     console.log(this.graphData)
     // console.log(this.y)
     let prevX = this.x
@@ -135,7 +137,7 @@ export default class CoriolisForceModel implements TModel {
       this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
       this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
 
-      this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_yFunc:this.v_yEQ,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphData, this.timer);
+      this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_yFunc:this.v_yEQ,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphData, this.timer,this.coriolisEq);
 
     } else {
       this.xEQ = ''
@@ -194,7 +196,7 @@ export default class CoriolisForceModel implements TModel {
         // this.graphDataTest = getGraphData(this.quadraticDrag,this.graphUpdateInterval, this.x, this.y,this.y,angle, this.v_x, this.v_y, this.gravity, this.k,this.mass, {v_xdot:this.v_xFunc,v_ydot:this.v_yFunc,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphDataTest, this.timer);
         this.graphDataTest = new simData(this.graphUpdateInterval);
         
-        this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_ydot:this.v_yFunc,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphDataTest, this.timer);
+        this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_ydot:this.v_yFunc,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphDataTest, this.timer,this.coriolisEq);
       
       }
 
@@ -203,7 +205,7 @@ export default class CoriolisForceModel implements TModel {
       this.graphDataTest = new simData(this.graphUpdateInterval);
       this.graphDataTest.insert(0,0,0,0,0,0,0)
     }
-    this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
+    this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer,this.coriolisEq);
     console.log(this.graphData)
     this.graphLenTest = this.graphDataTest.data.length * this.graphUpdateInterval;
     this.graphLen = this.graphData.data.length * this.graphUpdateInterval;

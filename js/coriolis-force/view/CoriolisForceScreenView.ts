@@ -24,6 +24,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import { drawDistance, drawTV } from '../../common/makeGraphs.js';
 import { verifyEq } from '../../common/verifyEq.js';
 import { LineBasicMaterial } from 'c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index';
+import ToggleSwitch from '../../../../sun/js/ToggleSwitch.js';
 
 
 type SelfOptions = {
@@ -486,10 +487,37 @@ export default class CoriolisForceScreenView extends ScreenView {
     vyPrime.style.fontSize = `${this.graphSize/9}px`
     const vyPrimeDOM = new phet.scenery.DOM((vyPrime));
 
-    const equationPanel = new Panel(new VBox({
+    var xdot = document.createElement('span');    
+    xdot.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">x=<span style="position: absolute; top: -0.35em; left: 0.09em;">&middot;</span><span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;"></span></span>';
+    xdot.style.fontSize = `${this.graphSize/9}px`
+    const xdotlabelDOM = new phet.scenery.DOM((xdot));
+
+
+    var ydot = document.createElement('span');    
+    ydot.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">y=<span style="position: absolute; top: -0.35em; left: 0.09em;">&middot;</span><span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;"></span></span>';
+    ydot.style.fontSize = `${this.graphSize/9}px`
+    const ydotlabelDOM = new phet.scenery.DOM((ydot));
+
+    var vx = document.createElement('span');    
+    vx.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">v<sub>x</sub>=<span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;"></span></span>';
+    vx.style.fontSize = `${this.graphSize/9}px`
+    const vxlabelDOM = new phet.scenery.DOM((vx));
+
+    var vy = document.createElement('span');    
+    vy.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">v<sub>y</sub>=<span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;"></span></span>';
+    vy.style.fontSize = `${this.graphSize/9}px`
+    const vylabelDOM = new phet.scenery.DOM((vy));
+
+    const switchEquationProp = new Property<boolean>(model.coriolisEq);
+    const equationSwitch = new ToggleSwitch(switchEquationProp,true,false)
+
+    let equationPanel = 
+    new Panel(new VBox({
       align: "center", children: [
+        //eqation switch here
         new RichText("Test Equations"),
         new Rectangle(0, 0, 350, 15),
+        new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
         new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
         new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
         new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
@@ -499,6 +527,43 @@ export default class CoriolisForceScreenView extends ScreenView {
         new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
       ]
     }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+    
+    switchEquationProp.lazyLink(() => { model.coriolisEq = switchEquationProp.value; this.reset(); 
+      if (model.coriolisEq){
+      equationPanel = new Panel(new VBox({
+        align: "center", children: [
+          //eqation switch here
+          new RichText("Test Equations"),
+          new Rectangle(0, 0, 350, 15),
+          new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+          new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [vxPrimeDOM, v_xdotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
+        ]
+      }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+    } else{
+      equationPanel = new Panel(new VBox({
+        align: "center", children: [
+          //eqation switch here
+          new RichText("Test Equations"),
+          new Rectangle(0, 0, 350, 15),
+          new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+          new HBox({ align: "center", children: [xdotlabelDOM, xdotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [ydotlabelDOM, ydotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [vxlabelDOM, v_xdotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [vylabelDOM, v_ydotBox] }),
+        ]
+      }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+    };console.log(model.coriolisEq);this.scene.remove(equationPanel);this.addChild(equationPanel);equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 10)})
+
+
 
     this.addChild(equationPanel)
     equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 10)
@@ -905,7 +970,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     if (this.model.timer <= 10) {
       const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
 
-        this.diskRef.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
+        this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
         const bufferXRef = this.puckRefRef.position.x;
         const bufferYRef = this.puckRefRef.position.y;
         const bufferXI = this.puckIRef.position.x;

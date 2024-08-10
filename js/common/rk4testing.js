@@ -1,5 +1,5 @@
 
-function derivsEval(drag, y, dydt, g,k, m, omega,equations) {
+function derivsEval(drag, y, dydt, g,k, m, omega,equations, coriolisEq) {
     try {
         dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
@@ -28,24 +28,28 @@ function derivsEval(drag, y, dydt, g,k, m, omega,equations) {
 }
 
 
-function derivs(drag, y, dydt, g,k, m, omega) {
+function derivs(drag, y, dydt, g,k, m, omega, coriolisEq) {
     let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
 
+
+    if (coriolisEq){
+        dydt[0] = y[2];
+        dydt[1] = y[3];
+        dydt[2] = 2*omega*y[1] + (omega**2)*y[0];
+        dydt[3] = -2*omega*y[2] + (omega**2)*y[1];
+    } else {
     // if (drag) {
-    //     dydt[0] = y[2]; 
-    //     dydt[1] = y[3]; 
-    //     dydt[2] = -((k / m) * y[2] * Math.sqrt(y[2] ** 2 + y[3] ** 2));
-    //     dydt[3] = -((k / m) * y[3] * Math.sqrt(y[2] ** 2 + y[3] ** 2));
-    // } else {
+        dydt[0] = y[2]; 
+        dydt[1] = y[3]; 
+        dydt[2] = -((k / m) * y[2] * Math.sqrt(y[2] ** 2 + y[3] ** 2));
+        dydt[3] = -((k / m) * y[3] * Math.sqrt(y[2] ** 2 + y[3] ** 2));
+    // // } else {
     //     dydt[0] = y[2];
     //     dydt[1] = y[3];
     //     dydt[2] = -(k / m) * y[2];
     //     dydt[3] = -(k / m) * y[3];
-    // }
-    dydt[0] = y[2];
-    dydt[1] = y[3];
-    dydt[2] = 2*omega*y[1] + (omega**2)*y[0];
-    dydt[3] = -2*omega*y[2] + (omega**2)*y[1];
+    // // }
+    }
 
     return dydt;
 }
@@ -62,7 +66,7 @@ function derivs(drag, y, dydt, g,k, m, omega) {
 //     return dydt;
 // }
 
-function rk4(drag, y, N, x, h, ynew, g, k, m, omega, equations, useEval) {
+function rk4(drag, y, N, x, h, ynew, g, k, m, omega, equations, useEval, coriolisEq) {
     let h6 = h / 6.0;
     let hh = h * 0.5;
     let dydx = new Array(y.length).fill(0);
@@ -70,24 +74,24 @@ function rk4(drag, y, N, x, h, ynew, g, k, m, omega, equations, useEval) {
     let dyt = new Array(y.length).fill(0);
     let dym = new Array(y.length).fill(0);
 
-    dydx = useEval ? derivsEval(drag, y, dydx, g, k, m, omega, equations) : derivs(drag, y, dydx, g, k, m,omega);
+    dydx = useEval ? derivsEval(drag, y, dydx, g, k, m, omega, equations, coriolisEq) : derivs(drag, y, dydx, g, k, m,omega, coriolisEq);
 
     for (let index = 0; index < N; index++) {
         yt[index] = y[index] + hh * dydx[index];
     }
 
-    dyt = useEval ? derivs(drag, yt, dyt, g, k, m, omega, equations) : derivs(drag, yt, dyt, g, k, m,omega);
+    dyt = useEval ? derivs(drag, yt, dyt, g, k, m, omega, equations, coriolisEq) : derivs(drag, yt, dyt, g, k, m,omega, coriolisEq);
     for (let index = 0; index < N; index++) {
         yt[index] = y[index] + hh * dyt[index];
     }
 
-    dym = useEval ? derivs(drag, yt, dym, g, k, m, omega, equations) : derivs(drag, yt, dym, g, k, m,omega);
+    dym = useEval ? derivs(drag, yt, dym, g, k, m, omega, equations, coriolisEq) : derivs(drag, yt, dym, g, k, m,omega, coriolisEq);
     for (let index = 0; index < N; index++) {
         yt[index] = y[index] + h * dym[index];
         dym[index] += dyt[index];
     }
 
-    dyt = useEval ? derivs(drag, yt, dyt, g, k, m, omega, equations) : derivs(drag, yt, dyt, g, k, m,omega);
+    dyt = useEval ? derivs(drag, yt, dyt, g, k, m, omega, equations, coriolisEq) : derivs(drag, yt, dyt, g, k, m,omega, coriolisEq);
 
     // console.log("Before updating ynew:");
     // console.log("y:", y);
@@ -119,7 +123,7 @@ function tv(omega){
     return omega * 200
 }
 
-export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega, equations, useEval, graphLen, graphVals, time) {
+export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega, equations, useEval, graphLen, graphVals, time, coriolisEq) {
     const N = 4;
     let h = dt;
     let t = time;
@@ -135,7 +139,7 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
         // let [xInertial, yInertial] = [ynew[0], ynew[1]]
         if (Math.sqrt(Math.pow(y[0], 2) + Math.pow(y[1], 2)) <=200){
         graphVals.insert(t, xInertial, yInertial, ynew[2], ynew[3], ynew[0], ynew[1], findDistance(xInertial, yInertial), tv(omega));
-        ynew = rk4(drag, y, N, t, h, ynew, g, k, m, omega, equations, useEval);
+        ynew = rk4(drag, y, N, t, h, ynew, g, k, m, omega, equations, useEval, coriolisEq);
         y = [...ynew];
         // console.log(findDistance(xInertial, yInertial))
         t = t + h;
