@@ -1,37 +1,9 @@
-function derivsEval(drag, y, dydt, g,k, m, omega,equations, coriolisEq) {
-    try {
-        dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
-    } catch (err) {
-        console.log("Error in xdot:", err);
-    }
-
-    try {
-        dydt[1] = equations.ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
-    } catch (err) {
-        console.log("Error in ydot:", err);
-    }
-
-    try {
-        dydt[2] = equations.v_xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
-    } catch (err) {
-        console.log("Error in v_xdot:", err);
-    }
-
-    try {
-        dydt[3] = equations.v_ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
-    } catch (err) {
-        console.log("Error in v_ydot:", err);
-    }
-
-    return dydt;
-}
-
 function derivs(y, dydt, g, k, m, omega, coriolisEq) {
     if (coriolisEq) {
         dydt[0] = y[2];
         dydt[1] = y[3];
-        dydt[2] = 2 * omega * y[3] + (omega ** 2) * y[0];
-        dydt[3] = -2 * omega * y[2] + (omega ** 2) * y[1];
+        dydt[2] = 2 * omega * y[3] + omega ** 2 * y[0];
+        dydt[3] = -2 * omega * y[2] + omega ** 2 * y[1];
     } else {
         let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
         dydt[0] = y[2];
@@ -97,7 +69,7 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
     let y = [xinit, yinit, xdot, ydot];
 
     while (t < 10 && findDistance(y[0], y[1]) <= 200) {
-        let theta = omega * t * 2 * Math.PI;
+        let theta = omega * t;
         let [xInertial, yInertial] = transformToInertial(y[0], y[1], theta);
         
         graphVals.insert(t, xInertial, yInertial, y[2], y[3], y[0], y[1], findDistance(xInertial, yInertial), tv(omega));

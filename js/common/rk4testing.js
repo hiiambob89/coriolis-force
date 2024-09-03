@@ -1,25 +1,25 @@
 
-function derivsEval(drag, y, dydt, g,k, m, omega,equations, coriolisEq) {
+function derivsEval( y, dydt, g,k, m, omega,equations, coriolisEq) {
     try {
-        dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
+        dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3],o:omega });
     } catch (err) {
         console.log("Error in xdot:", err);
     }
 
     try {
-        dydt[1] = equations.ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
+        dydt[1] = equations.ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3],o:omega });
     } catch (err) {
         console.log("Error in ydot:", err);
     }
 
     try {
-        dydt[2] = equations.v_xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
+        dydt[2] = equations.v_xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3],o:omega });
     } catch (err) {
         console.log("Error in v_xdot:", err);
     }
 
     try {
-        dydt[3] = equations.v_ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
+        dydt[3] = equations.v_ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3],o:omega });
     } catch (err) {
         console.log("Error in v_ydot:", err);
     }
@@ -45,7 +45,7 @@ function derivs(y, dydt, g, k, m, omega, coriolisEq) {
     return dydt;
 }
 
-function rk4(y, h, g, k, m, omega, coriolisEq) {
+function rk4(y, h, g, k, m, omega, coriolisEq, equations, useEval) {
     const N = 4;
     let h6 = h / 6.0;
     let hh = h * 0.5;
@@ -55,24 +55,24 @@ function rk4(y, h, g, k, m, omega, coriolisEq) {
     let dym = new Array(N).fill(0);
     let ynew = new Array(N).fill(0);
 
-    dydx = derivs(y, dydx, g, k, m, omega, coriolisEq);
+    dydx = useEval? derivs(y, dydx, g, k, m, omega, coriolisEq):derivsEval( y, dydx, g,k, m, omega,equations, coriolisEq);
 
     for (let i = 0; i < N; i++) {
         yt[i] = y[i] + hh * dydx[i];
     }
 
-    dyt = derivs(yt, dyt, g, k, m, omega, coriolisEq);
+    dyt = useEval ? derivs(yt, dyt, g, k, m, omega, coriolisEq):derivsEval( y, dyt, g,k, m, omega,equations, coriolisEq);
     for (let i = 0; i < N; i++) {
         yt[i] = y[i] + hh * dyt[i];
     }
 
-    dym = derivs(yt, dym, g, k, m, omega, coriolisEq);
+    dym = useEval ? derivs(yt, dym, g, k, m, omega, coriolisEq):derivsEval( y, dym, g,k, m, omega,equations, coriolisEq);
     for (let i = 0; i < N; i++) {
         yt[i] = y[i] + h * dym[i];
         dym[i] += dyt[i];
     }
 
-    dyt = derivs(yt, dyt, g, k, m, omega, coriolisEq);
+    dyt = useEval ? derivs(yt, dyt, g, k, m, omega, coriolisEq) :derivsEval( y, dyt, g,k, m, omega,equations, coriolisEq);
 
     for (let i = 0; i < N; i++) {
         ynew[i] = y[i] + h6 * (dydx[i] + dyt[i] + 2.0 * dym[i]);
@@ -110,7 +110,7 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
     let y = [xinit, yinit, xdot, ydot];
     let x_inertial_init, y_inertial_init, vx_inertial_init, vy_inertial_init;
 
-    
+
     if (coriolisEq) {
         // Transform initial conditions to inertial frame for Coriolis case
         [x_inertial_init, y_inertial_init, vx_inertial_init, vy_inertial_init] = transformToInertial(xinit, yinit, xdot, ydot, 0, omega);
@@ -138,7 +138,7 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
 
         graphVals.insert(t, x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating, findDistance(x_inertial, y_inertial), tv(omega));
         
-        y = rk4(y, dt, g, k, m, omega, coriolisEq);
+        y = rk4(y, dt, g, k, m, omega, coriolisEq, equations, useEval);
         t += dt;
     }
 

@@ -867,7 +867,7 @@ export default class CoriolisForceScreenView extends ScreenView {
   public override step(dt: number): void {
 
     if (this.model.timer <= 10) {
-      console.log(this.model.graphData.getV_Y(this.model.timer))
+      // console.log(this.model.graphData.getV_Y(this.model.timer))
       const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
 
         this.diskRef.rotateZ(dt  * this.model.omega * this.model.simSpeed * -1);
