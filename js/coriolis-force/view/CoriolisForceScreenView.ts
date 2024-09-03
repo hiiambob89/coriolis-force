@@ -863,114 +863,14 @@ export default class CoriolisForceScreenView extends ScreenView {
     }
   }
 
-  /**
-   * Steps the view.
-   * @param dt - time step, in seconds
-   */
-  // public override step(dt: number): void {
-  //   if (this.model.timer <= 10) {
-  //     const updatePuckAndPath = () => {
-  //       this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
 
-  //       const bufferXRef = this.puckRefRef.position.x;
-  //       const bufferYRef = this.puckRefRef.position.y;
-  //       const bufferXI = this.puckIRef.position.x;
-  //       const bufferYI = this.puckIRef.position.y;
-
-  //       const bufferXRefTest = this.puckRefTest.position.x;
-  //       const bufferYRefTest = this.puckRefRef.position.y;
-  //       const bufferXITest = this.puckITest.position.x;
-  //       const bufferYITest = this.puckITest.position.y;
-
-  //       //
-  //       //
-  //       //Test stuff
-  //       // console.log("ahhhhhhh",this.model.graphDataTest.getX(this.model.timer))
-  //       this.puckITest.position.x = this.model.graphDataTest.getXI(this.model.timer) + this.iOffset;
-  //       this.puckITest.position.y = this.model.graphDataTest.getYI(this.model.timer);
-  //       this.pathITest.quadraticCurveTo(bufferXITest, bufferYITest, this.puckITest.position.x, this.puckITest.position.y);
-
-  //       const pointsITest = this.pathITest.getPoints();
-  //       const geometryPathITest = new THREE.BufferGeometry().setFromPoints(pointsITest);
-
-  //       const materialTestPath = new THREE.LineBasicMaterial({ color: 0x0000ff, transparent: true });
-
-  //       this.scene.remove(this.lineITest);
-  //       this.lineITest = new THREE.Line(geometryPathITest, materialTestPath);
-  //       // this.lineITest.computeLineDistances();
-  //       this.scene.add(this.lineITest);
-
-  //       this.puckRefTest.position.x = this.model.graphDataTest.getX(this.model.timer) + this.refOffset;
-  //       this.puckRefTest.position.y = this.model.graphDataTest.getY(this.model.timer);
-
-  //       this.pathRefTest.quadraticCurveTo(bufferXRefTest, bufferYRefTest, this.puckRefTest.position.x, this.puckRefTest.position.y);
-
-  //       const pointsTest = this.pathRefTest.getPoints();
-  //       console.log(this.model.graphDataTest.getY(this.model.timer));
-  //       const geometryPathTest = new THREE.BufferGeometry().setFromPoints(pointsTest);
-  //       this.scene.remove(this.lineRefTest);
-  //       this.lineRefTest = new THREE.Line(geometryPathTest, materialTestPath);
-  //       this.scene.add(this.lineRefTest);
-
-
-  //       this.puckIRef.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
-  //       this.puckIRef.position.y = this.model.graphData.getYI(this.model.timer);
-  //       this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckIRef.position.x, this.puckIRef.position.y);
-
-  //       const pointsI = this.pathIRef.getPoints();
-  //       const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
-  //       const materialPath = new THREE.LineDashedMaterial({
-  //         color: 0xff0000,
-  //         linewidth: 1,
-  //         scale: .5,
-  //         dashSize: 2,
-  //         gapSize: 2,
-  //         transparent: false
-  //       });
-
-  //       this.scene.remove(this.lineIRef);
-  //       this.lineIRef = new THREE.Line(geometryPathI, materialPath);
-  //       this.lineIRef.computeLineDistances();
-  //       this.scene.add(this.lineIRef);
-
-  //       this.puckRefRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
-  //       this.puckRefRef.position.y = this.model.graphData.getY(this.model.timer);
-  //       this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRefRef.position.x, this.puckRefRef.position.y);
-
-  //       // console.log(Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)));
-
-  //       const points = this.pathRefRef.getPoints();
-  //       const geometryPathRef = new THREE.BufferGeometry().setFromPoints(points);
-
-  //       this.scene.remove(this.lineRefRef);
-  //       this.lineRefRef = new THREE.Line(geometryPathRef, materialPath);
-  //       this.lineRefRef.computeLineDistances();
-  //       this.scene.add(this.lineRefRef);
-
-
-
-  //       // console.log(this.model.graphData.getDistance(this.model.timer))
-  //     };
-
-  //     if (!this.passedStart) {
-  //       updatePuckAndPath();
-  //       this.passedStart = true;
-  //     // } else if (Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)) < 200 || Math.sqrt(Math.pow(this.puckI.position.x - this.iOffset, 2) + Math.pow(this.puckI.position.y, 2)) < 200) {
-  //     } else if (this.model.graphData.getDistance(this.model.timer) <= 200) {
-  //       this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
-  //       this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getDistance(this.model.timer)));
-  //       this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
-  //       // console.log("look at this 3:")
-  //       // console.log(this.model.graphData.getTV(this.model.timer))
-  //       this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getTV(this.model.timer)));
-  //       updatePuckAndPath();
-  //     }
-  //   }
   public override step(dt: number): void {
+
     if (this.model.timer <= 10) {
+      console.log(this.model.graphData.getV_Y(this.model.timer))
       const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
 
-        this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
+        this.diskRef.rotateZ(dt  * this.model.omega * this.model.simSpeed * -1);
         const bufferXRef = this.puckRefRef.position.x;
         const bufferYRef = this.puckRefRef.position.y;
         const bufferXI = this.puckIRef.position.x;
@@ -1068,64 +968,8 @@ export default class CoriolisForceScreenView extends ScreenView {
   }
 
 
-  // if (this.model.timer <= 10) {
-  //   if (this.passedStart === false) {
-  //     this.disk.rotateZ(dt * 2 * Math.PI * this.model.omega * this.model.simSpeed);
-  //     const bufferXRef = this.puckRef.position.x;
-  //     const bufferYRef = this.puckRef.position.y;
-  //     const bufferXI = this.puckI.position.x;
-  //     const bufferYI = this.puckI.position.y;
-
-  //     this.puckI.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
-  //     this.puckI.position.y = this.model.graphData.getYI(this.model.timer);
-  //     this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckI.position.x, this.puckI.position.y);
-
-
-  //     const pointsI = this.pathIRef.getPoints();
-
-  //     const geometryPathI = new THREE.BufferGeometry().setFromPoints(pointsI);
-  //     const materialPath = new THREE.LineDashedMaterial({
-  //       color: 0xff0000,
-  //       linewidth: 1,
-  //       scale: .5,
-  //       dashSize: 2,
-  //       gapSize: 2,
-  //       transparent: false
-  //     });
-
-  //     this.scene.remove(this.lineIRef);
-  //     this.lineIRef = new THREE.Line(geometryPathI, materialPath);
-  //     this.lineIRef.computeLineDistances();
-  //     this.scene.add(this.lineIRef);
-
-  //     this.puckRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
-  //     this.puckRef.position.y = this.model.graphData.getY(this.model.timer);
-  //     this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRef.position.x, this.puckRef.position.y);
-  //     console.log(Math.sqrt(Math.pow(this.puckRef.position.x - this.refOffset, 2) + Math.pow(this.puckRef.position.y, 2)))
-
-
-  //     const points = this.pathRefRef.getPoints();
-
-  //     const geometryPathRef = new THREE.BufferGeometry().setFromPoints(points);
-  //     // const materialPath = new THREE.LineDashedMaterial({
-  //     //   color: 0xff0000,
-  //     //   linewidth: 1,
-  //     //   scale: .5,
-  //     //   dashSize: 1,
-  //     //   gapSize: 1,
-  //     //   transparent: false
-  //     // });
-
-  //     this.scene.remove(this.lineRefRef);
-  //     this.lineRefRef = new THREE.Line(geometryPathRef, materialPath);
-  //     this.lineRefRef.computeLineDistances();
-  //     this.scene.add(this.lineRefRef);
-  //     this.passedStart = true
-  //   }
-
-
-  // }
+  
 }
-// }
+
 
 coriolisForce.register('CoriolisForceScreenView', CoriolisForceScreenView);
