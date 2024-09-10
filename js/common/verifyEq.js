@@ -5,6 +5,7 @@ export function verifyEq( options,model ){
  let vxbool = testVX(options.v_xdotElement,model,options.equation);
  let ybool = testY(options.ydotElement,model,options.equation);
  let vybool = testVY(options.v_ydotElement,model,options.equation);
+//  console.log(xbool,vxbool,ybool,vybool)
  return  xbool && vxbool && ybool && vybool
 }
 
@@ -23,18 +24,21 @@ function testX(element,model,type){
   }
   let vx = model.v_x;
   let vy = model.v_y;
+  let x = model.x
+  let y = model.y
   let k = model.k;
   let m = model.mass;
   let g = model.gravity;
+  let o = model.omega
   let result;
   let result2;
   try{
-    const eq = globalThis.window.evaluatex(model.xEQ, {k:k,g:g,v_x:vx,v_y:vy,m:m}, {latex:true});
+    const eq = globalThis.window.evaluatex(model.xEQ, {k:k,g:g,v_x:vx,v_y:vy,m:m,x:x,y:y,o:o}, {latex:true});
     result = eq({});
     
 
   } catch (err){
-    //console.log(err)
+    console.log(err)
     if (type !== 'xEQ'){
       return
     }
@@ -78,10 +82,14 @@ function testVX(element,model,type ){
   let k = model.k;
   let m = model.mass;
   let g = model.gravity;
+  let x = model.x
+  let o = model.omega
+
+  let y = model.y
   let result;
   let result2;
   try{
-    const eq = globalThis.window.evaluatex(model.v_xEQ, {k:k,g:g,v_x:vx,v_y:vy,m:m}, {latex:true});
+    const eq = globalThis.window.evaluatex(model.v_xEQ, {k:k,g:g,v_x:vx,v_y:vy,m:m,x:x,y:y,o:o}, {latex:true});
     result = eq({});
     
 
@@ -131,11 +139,15 @@ function testY(element,model ,type){
   let vy = model.y;
   let k = model.k;
   let m = model.mass;
+  let x = model.x
+  let y = model.y
+  let o = model.omega
+
   let g = model.gravity;
   let result;
   let result2;
   try{
-    const eq = globalThis.window.evaluatex(model.yEQ, {k:k,g:g,v_x:vx,v_y:vy,m:m}, {latex:true});
+    const eq = globalThis.window.evaluatex(model.yEQ, {k:k,g:g,v_x:vx,v_y:vy,m:m,x:x,y:y,o:o}, {latex:true});
     result = eq({});
     
 
@@ -182,12 +194,16 @@ function testVY(element,model ,type){
   let vx = model.x;
   let vy = model.y;
   let k = model.k;
+  let x = model.x
+  let y = model.y
+  let o = model.omega
+
   let m = model.mass;
   let g = model.gravity;
   let result;
   let result2;
   try{
-    const eq = globalThis.window.evaluatex(model.v_yEQ, {k:k,g:g,v_x:vx,v_y:vy,m:m}, {latex:true});
+    const eq = globalThis.window.evaluatex(model.v_yEQ, {k:k,g:g,v_x:vx,v_y:vy,m:m,x:x,y:y,o:o}, {latex:true});
     result = eq({});
     
 

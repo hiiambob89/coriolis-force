@@ -136,7 +136,7 @@ export default class CoriolisForceModel implements TModel {
       this.yFunc = globalThis.window.evaluatex(this.yEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
       this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
       this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
-
+      
       this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_yFunc:this.v_yEQ,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphData, this.timer,this.coriolisEq);
 
     } else {
@@ -149,6 +149,7 @@ export default class CoriolisForceModel implements TModel {
 
 
     }
+
     this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
     this.graphLen = this.graphData.data.length * this.graphUpdateInterval;
     this.graphLenTest = this.graphDataTest.data.length * this.graphUpdateInterval;
