@@ -1,25 +1,26 @@
 
 function derivsEval( y, dydt, g,k, m, omega,equations, coriolisEq) {
+
     try {
-        dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3],o:omega });
+        dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
         console.log("Error in xdot:", err);
     }
 
     try {
-        dydt[1] = equations.ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3],o:omega });
+        dydt[1] = equations.ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3]});
     } catch (err) {
         console.log("Error in ydot:", err);
     }
 
     try {
-        dydt[2] = equations.v_xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3],o:omega });
+        dydt[2] = equations.v_xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
         console.log("Error in v_xdot:", err);
     }
 
     try {
-        dydt[3] = equations.v_ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3],o:omega });
+        dydt[3] = equations.v_ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
         console.log("Error in v_ydot:", err);
     }
@@ -28,20 +29,20 @@ function derivsEval( y, dydt, g,k, m, omega,equations, coriolisEq) {
 }
 
 function derivs(y, dydt, g, k, m, omega, coriolisEq) {
-    if (coriolisEq) {
+    // if (coriolisEq) {
         // Equations of motion in the rotating frame (Coriolis)
         dydt[0] = y[2];
         dydt[1] = y[3];
         dydt[2] = 2 * omega * y[3] + (omega ** 2) * y[0];
-        dydt[3] = -2 * omega * y[2] + (omega ** 2) * y[1] - g;
-    } else {
-        // Projectile motion with air resistance in inertial frame
-        let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
-        dydt[0] = y[2];
-        dydt[1] = y[3];
-        dydt[2] = -(k / m) * y[2] * speed;
-        dydt[3] = -g - (k / m) * y[3] * speed;
-    }
+        dydt[3] = -2 * omega * y[2] + (omega ** 2) * y[1];
+    // } else {
+    //     // Projectile motion with air resistance in inertial frame
+    //     let speed = Math.sqrt(y[2] ** 2 + y[3] ** 2);
+    //     dydt[0] = y[2];
+    //     dydt[1] = y[3];
+    //     dydt[2] = -(k / m) * y[2] * speed;
+    //     dydt[3] = -g - (k / m) * y[3] * speed;
+    // }
     return dydt;
 }
 

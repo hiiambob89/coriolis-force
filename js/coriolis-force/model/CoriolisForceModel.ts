@@ -132,10 +132,10 @@ export default class CoriolisForceModel implements TModel {
       // this.v_xEQ = '-\\frac{k}{m}\\cdot v_x\\cdot\\sqrt{v_x^2+v_y^2}'
       // this.v_yEQ = '-g-\\frac{k}{m}\\cdot v_y\\cdot\\sqrt{v_x^2+v_y^2}'
 
-      this.xFunc = globalThis.window.evaluatex(this.xEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
-      this.yFunc = globalThis.window.evaluatex(this.yEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
-      this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
-      this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, { k: this.k, m: this.mass, g: this.gravity }, { latex: true });
+      this.xFunc = globalThis.window.evaluatex(this.xEQ, { k: this.k, m: this.mass, g: this.gravity, o:this.omega }, { latex: true });
+      this.yFunc = globalThis.window.evaluatex(this.yEQ, { k: this.k, m: this.mass, g: this.gravity , o:this.omega}, { latex: true });
+      this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, { k: this.k, m: this.mass, g: this.gravity , o:this.omega}, { latex: true });
+      this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, { k: this.k, m: this.mass, g: this.gravity , o:this.omega}, { latex: true });
       
       this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_yFunc:this.v_yEQ,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphData, this.timer,this.coriolisEq);
 
@@ -190,10 +190,10 @@ export default class CoriolisForceModel implements TModel {
         this.graphDataTest.insert(0,0,0,0,0,0,0)
       } else {
         // console.log('VYYY:',this.v_yEQ)
-        this.xFunc = globalThis.window.evaluatex(this.xEQ, {k:this.k,m:this.mass,g:this.gravity}, {latex:true});
-        this.yFunc = globalThis.window.evaluatex(this.yEQ, {k:this.k,m:this.mass,g:this.gravity}, {latex:true});
-        this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, {k:this.k,m:this.mass,g:this.gravity}, {latex:true});
-        this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, {k:this.k,m:this.mass,g:this.gravity}, {latex:true});
+        this.xFunc = globalThis.window.evaluatex(this.xEQ, {k:this.k,m:this.mass,g:this.gravity, o:this.omega}, {latex:true});
+        this.yFunc = globalThis.window.evaluatex(this.yEQ, {k:this.k,m:this.mass,g:this.gravity, o:this.omega}, {latex:true});
+        this.v_xFunc = globalThis.window.evaluatex(this.v_xEQ, {k:this.k,m:this.mass,g:this.gravity, o:this.omega}, {latex:true});
+        this.v_yFunc = globalThis.window.evaluatex(this.v_yEQ, {k:this.k,m:this.mass,g:this.gravity, o:this.omega}, {latex:true});
         // this.graphDataTest = getGraphData(this.quadraticDrag,this.graphUpdateInterval, this.x, this.y,this.y,angle, this.v_x, this.v_y, this.gravity, this.k,this.mass, {v_xdot:this.v_xFunc,v_ydot:this.v_yFunc,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphDataTest, this.timer);
         this.graphDataTest = new simData(this.graphUpdateInterval);
         
