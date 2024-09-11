@@ -127,8 +127,8 @@ export default class CoriolisForceModel implements TModel {
     if (new URL(window.location.href).searchParams.get("formula") === 'true') {
       this.xEQ = 'v_x'
       this.yEQ = 'v_y'
-      this.v_xEQ = '-k\\cdot v_x\\cdot\\sqrt{v_x^2+v_y^2}'
-      this.v_yEQ = '-g-k\\cdot v_y\\cdot\\sqrt{v_x^2+v_y^2}'
+      this.v_xEQ = '2\\cdot o\\cdot v_y+o^2\\cdot x'
+      this.v_yEQ = '-2\\cdot o\\cdot v_x+o^2\\cdot y'
       // this.v_xEQ = '-\\frac{k}{m}\\cdot v_x\\cdot\\sqrt{v_x^2+v_y^2}'
       // this.v_yEQ = '-g-\\frac{k}{m}\\cdot v_y\\cdot\\sqrt{v_x^2+v_y^2}'
 

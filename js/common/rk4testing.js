@@ -1,5 +1,5 @@
 
-function derivsEval( y, dydt, g,k, m, omega,equations, coriolisEq) {
+function derivsEval( y, dydt, omega,equations, coriolisEq) {
 
     try {
         dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
@@ -28,9 +28,10 @@ function derivsEval( y, dydt, g,k, m, omega,equations, coriolisEq) {
     return dydt;
 }
 
-function derivs(y, dydt, g, k, m, omega, coriolisEq) {
+function derivs(y, dydt, omega, coriolisEq) {
     // if (coriolisEq) {
         // Equations of motion in the rotating frame (Coriolis)
+        // console.log(omega)
         dydt[0] = y[2];
         dydt[1] = y[3];
         dydt[2] = 2 * omega * y[3] + (omega ** 2) * y[0];
@@ -56,24 +57,24 @@ function rk4(y, h, g, k, m, omega, coriolisEq, equations, useEval) {
     let dym = new Array(N).fill(0);
     let ynew = new Array(N).fill(0);
     // useEval = true
-    dydx = useEval? derivsEval( y, dydx, g,k, m, omega,equations, coriolisEq): derivs(y, dydx, g, k, m, omega, coriolisEq);
+    dydx = useEval? derivsEval( y, dydx,  omega,equations, coriolisEq): derivs(y, dydx,  omega, coriolisEq);
 
     for (let i = 0; i < N; i++) {
         yt[i] = y[i] + hh * dydx[i];
     }
 
-    dyt = useEval ? derivsEval( y, dyt, g,k, m, omega,equations, coriolisEq): derivs(yt, dyt, g, k, m, omega, coriolisEq);
+    dyt = useEval ? derivsEval( yt, dyt,  omega,equations, coriolisEq): derivs(yt, dyt,  omega, coriolisEq);
     for (let i = 0; i < N; i++) {
         yt[i] = y[i] + hh * dyt[i];
     }
 
-    dym = useEval ? derivsEval( y, dym, g,k, m, omega,equations, coriolisEq):derivs(yt, dym, g, k, m, omega, coriolisEq);
+    dym = useEval ? derivsEval( yt, dym,  omega,equations, coriolisEq):derivs(yt, dym, omega, coriolisEq);
     for (let i = 0; i < N; i++) {
         yt[i] = y[i] + h * dym[i];
         dym[i] += dyt[i];
     }
 
-    dyt = useEval ? derivsEval( y, dyt, g,k, m, omega,equations, coriolisEq) : derivs(yt, dyt, g, k, m, omega, coriolisEq) ;
+    dyt = useEval ? derivsEval( yt, dyt,  omega,equations, coriolisEq) : derivs(yt, dyt, omega, coriolisEq) ;
 
     for (let i = 0; i < N; i++) {
         ynew[i] = y[i] + h6 * (dydx[i] + dyt[i] + 2.0 * dym[i]);
@@ -119,26 +120,28 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
         y = [x_i, y_i, vx_i, vy_i];
     }
 
-    while (t < 10 && findDistance(y[0], y[1]) <= 200) {
+    // while (t < 10 ) {
+    while (t < 10 && findDistance(y[0], y[1]) <= 175-10) {
         let theta = omega * t;
         let x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating;
 
-        if (coriolisEq) {
+        // if (coriolisEq) {
             // For Coriolis: y contains rotating frame values
             [x_rotating, y_rotating] = [y[0], y[1]];
             // Transform to inertial frame for consistent output
             [x_inertial, y_inertial, vx_inertial, vy_inertial] = transformToInertial(y[0], y[1], y[2], y[3], theta, omega);
-        } else {
-            // For projectile: y contains inertial frame values
-            [x_inertial, y_inertial, vx_inertial, vy_inertial] = y;
-            // Transform to rotating frame for consistent output
-            [x_rotating, y_rotating] = transformToRotating(x_inertial, y_inertial, vx_inertial, vy_inertial, theta, omega);
-        }
+        // } else {
+        //     // For projectile: y contains inertial frame values
+        //     [x_inertial, y_inertial, vx_inertial, vy_inertial] = y;
+        //     // Transform to rotating frame for consistent output
+        //     [x_rotating, y_rotating] = transformToRotating(x_inertial, y_inertial, vx_inertial, vy_inertial, theta, omega);
+        // }
 
         graphVals.insert(t, x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating, findDistance(x_inertial, y_inertial), tv(omega));
         
         y = rk4(y, dt, g, k, m, omega, coriolisEq, equations, useEval);
         t += dt;
+
     }
 
     return graphVals;

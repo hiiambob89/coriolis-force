@@ -508,8 +508,8 @@ export default class CoriolisForceScreenView extends ScreenView {
     vy.style.fontSize = `${this.graphSize/9}px`
     const vylabelDOM = new phet.scenery.DOM((vy));
 
-    const switchEquationProp = new Property<boolean>(model.coriolisEq);
-    const equationSwitch = new ToggleSwitch(switchEquationProp,true,false)
+    // const switchEquationProp = new Property<boolean>(model.coriolisEq);
+    // const equationSwitch = new ToggleSwitch(switchEquationProp,true,false)
 
     let equationPanel = 
     new Panel(new VBox({
@@ -517,7 +517,7 @@ export default class CoriolisForceScreenView extends ScreenView {
         //eqation switch here
         new RichText("Test Equations"),
         new Rectangle(0, 0, 350, 15),
-        new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+        // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
         new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
         new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
         new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
@@ -528,14 +528,14 @@ export default class CoriolisForceScreenView extends ScreenView {
       ]
     }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
     
-    switchEquationProp.lazyLink(() => { model.coriolisEq = switchEquationProp.value; this.reset(); 
-      if (model.coriolisEq){
+    // switchEquationProp.lazyLink(() => { model.coriolisEq = switchEquationProp.value; this.reset(); 
+    //   if (model.coriolisEq){
       equationPanel = new Panel(new VBox({
         align: "center", children: [
           //eqation switch here
           new RichText("Test Equations"),
           new Rectangle(0, 0, 350, 15),
-          new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+          // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
           new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
           new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
           new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
@@ -545,23 +545,23 @@ export default class CoriolisForceScreenView extends ScreenView {
           new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
         ]
       }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
-    } else{
-      equationPanel = new Panel(new VBox({
-        align: "center", children: [
-          //eqation switch here
-          new RichText("Test Equations"),
-          new Rectangle(0, 0, 350, 15),
-          new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
-          new HBox({ align: "center", children: [xdotlabelDOM, xdotBox] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [ydotlabelDOM, ydotBox] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [vxlabelDOM, v_xdotBox] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [vylabelDOM, v_ydotBox] }),
-        ]
-      }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
-    };console.log(model.coriolisEq);this.scene.remove(equationPanel);this.addChild(equationPanel);equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 10)})
+    // } else{
+      // equationPanel = new Panel(new VBox({
+      //   align: "center", children: [
+      //     //eqation switch here
+      //     new RichText("Test Equations"),
+      //     new Rectangle(0, 0, 350, 15),
+      //     // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+      //     new HBox({ align: "center", children: [xdotlabelDOM, xdotBox] }),
+      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+      //     new HBox({ align: "center", children: [ydotlabelDOM, ydotBox] }),
+      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+      //     new HBox({ align: "center", children: [vxlabelDOM, v_xdotBox] }),
+      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+      //     new HBox({ align: "center", children: [vylabelDOM, v_ydotBox] }),
+      //   ]
+      // }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+    // };console.log(model.coriolisEq);this.scene.remove(equationPanel);this.addChild(equationPanel);equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 10)})
 
 
 
@@ -609,7 +609,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     const camera = new THREE.OrthographicCamera(-this.layoutBounds.maxX / 2, this.layoutBounds.maxX / 2, -this.layoutBounds.maxY / 2, this.layoutBounds.maxY / 2);
     camera.position.set(0, 0, 0)
     camera.position.z = 1;
-    const diskGeometry = new THREE.SphereGeometry(200, 32, 32);
+    const diskGeometry = new THREE.SphereGeometry(175, 32, 32);
     var iceMaterial = new THREE.MeshBasicMaterial({
       map: new THREE.TextureLoader().load('/coriolis-force/js/coriolis-force/view/6465863.jpg'),
       transparent: true,
@@ -620,6 +620,16 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.disk = disk;
     scene.add(disk);
     disk.position.set(this.iOffset, 0, 0);
+
+
+    const rotationalFrame = new RichText("Rotational Frame")
+    const inertialFrame = new RichText("Inertial Frame")
+
+    rotationalFrame.leftTop = new Vector2(420, 60)
+    inertialFrame.leftTop = new Vector2(850, 60)
+
+    this.addChild(rotationalFrame)
+    this.addChild(inertialFrame)
 
 
 
