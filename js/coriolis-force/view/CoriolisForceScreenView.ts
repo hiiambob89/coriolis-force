@@ -188,10 +188,10 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     const constantNames = new VBox({
       align: "left", children: [
-        mass,
-        new Rectangle(0, 0, 0, massSlider.height - mass.height + 7),
-        k,
-        new Rectangle(0, 0, 0, massSlider.height - mass.height + 7),
+        // mass,
+        // new Rectangle(0, 0, 0, massSlider.height - mass.height + 7),
+        // k,
+        // new Rectangle(0, 0, 0, massSlider.height - mass.height + 7),
         x,
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 7),
         y,
@@ -207,10 +207,10 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     const constantSliders = new VBox({
       align: "center", children: [
-        massSlider,
-        new Rectangle(0, 0, 0, 10),
-        new HSlider(model.kProp, new Range(0, 10)),
-        new Rectangle(0, 0, 0, 10),
+        // massSlider,
+        // new Rectangle(0, 0, 0, 10),
+        // new HSlider(model.kProp, new Range(0, 10)),
+        // new Rectangle(0, 0, 0, 10),
         new HSlider(model.xProp, new Range(-200, 200)),
         new Rectangle(0, 0, 0, 10),
         new HSlider(model.yProp, new Range(-200, 200)),
@@ -229,14 +229,14 @@ export default class CoriolisForceScreenView extends ScreenView {
     const buttonVBoxConstants = new VBox({
       children: [
         // new Rectangle(0, 0, 0, massSlider.height - mass.height),
-        new RoundToggleButton(buttonMass, false, true, { radius: toggleRadius }),
-        new RichText('✎'),
+        // new RoundToggleButton(buttonMass, false, true, { radius: toggleRadius }),
+        // new RichText('✎'),
 
-        new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
-        new RoundToggleButton(buttonFriction, false, true, { radius: toggleRadius }),
-        new RichText('✎'),
+        // new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
+        // new RoundToggleButton(buttonFriction, false, true, { radius: toggleRadius }),
+        // new RichText('✎'),
 
-        new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
+        // new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new RoundToggleButton(buttonX, false, true, { radius: toggleRadius }),
         new RichText('✎'),
 
@@ -262,11 +262,11 @@ export default class CoriolisForceScreenView extends ScreenView {
     const constantMeasure = new VBox({
       align: "left", children: [
         new Rectangle(0, 0, 50, 0),
-        new phet.scenery.Text(new DerivedProperty([model.massProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
-        new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
-        new phet.scenery.Text(new DerivedProperty([model.kProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
+        // new phet.scenery.Text(new DerivedProperty([model.massProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
+        // new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
+        // new phet.scenery.Text(new DerivedProperty([model.kProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
 
-        new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
+        // new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new phet.scenery.Text(new DerivedProperty([model.xProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new phet.scenery.Text(new DerivedProperty([model.yProp], (value) => { return String(Number(value).toFixed(2)) }), { fontSize: 20 }),
@@ -285,10 +285,10 @@ export default class CoriolisForceScreenView extends ScreenView {
       align: "left", children: [
         // new RichText("<span style='font-family: Roman;'>kg</span>"),
         // new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
-        new RichText("<span style='font-family: Roman;'>kg</span>"),
-        new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
-        new RichText("<span style='font-family: Roman;'>1/m</span>"),
-        new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
+        // new RichText("<span style='font-family: Roman;'>kg</span>"),
+        // new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
+        // new RichText("<span style='font-family: Roman;'>1/m</span>"),
+        // new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new RichText("<span style='font-family: Roman;'>m</span>"),
         new Rectangle(0, 0, 0, massSlider.height - mass.height + 10),
         new RichText("<span style='font-family: Roman;'>m</span>"),
