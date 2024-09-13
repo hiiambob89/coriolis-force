@@ -85,7 +85,6 @@ export default class CoriolisForceModel implements TModel {
     this.originalLen = 0;
     this.graphUpdateInterval = .001;
     this.simSpeed = 1;
-    this.graphUpdateInterval = .001;
     this.coriolisEq = true;
     this.graphData = new simData(this.graphUpdateInterval)
     this.graphDataTest = new simData(this.graphUpdateInterval)

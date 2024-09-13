@@ -537,8 +537,8 @@ export default class CoriolisForceScreenView extends ScreenView {
         new RichText("Test Equations"),
         new Rectangle(0, 0, 350, 15),
         // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
-        new HBox({align: "center", children: [new RichText("Show Force Vecotrs?"),forceVectorToggle]}),
-        new HBox({align: "center", children: [new RichText("Trail Force Vecotrs?"),trailVectorToggle]}),
+        new HBox({align: "center", children: [new RichText("Show Force Vectors?"),forceVectorToggle]}),
+        new HBox({align: "center", children: [new RichText("Trail Force Vectors?"),trailVectorToggle]}),
         new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
         new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
         new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
@@ -643,7 +643,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     disk.position.set(this.iOffset, 0, 0);
 
 
-    const rotationalFrame = new RichText("Rotational Frame")
+    const rotationalFrame = new RichText("Rotating Frame")
     const inertialFrame = new RichText("Inertial Frame")
 
     rotationalFrame.leftTop = new Vector2(420, 60)
@@ -840,6 +840,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.maxTestCen =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
     this.maxTestCor =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
 
+    this.diskRef.rotation.z = 0;
 
 
     this.puckRefRef.position.x = this.refOffset + this.model.x
@@ -1008,8 +1009,9 @@ export default class CoriolisForceScreenView extends ScreenView {
 
       }
       const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
-
+        if (Math.sqrt(this.model.graphData.getX(this.model.timer)**2 +this.model.graphData.getY(this.model.timer)**2)<= 165 ||  Math.sqrt(this.model.graphDataTest.getX(this.model.timer)**2 +this.model.graphDataTest.getY(this.model.timer)**2)<= 165) {
         this.diskRef.rotateZ(dt  * this.model.omega * this.model.simSpeed *-1);
+        }
         const bufferXRef = this.puckRefRef.position.x;
         const bufferYRef = this.puckRefRef.position.y ;
         const bufferXI = this.puckIRef.position.x;
