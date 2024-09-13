@@ -1012,32 +1012,14 @@ export default class CoriolisForceScreenView extends ScreenView {
           this.scene.add(line);
           return line;
         };
-        // const updateLine = (path, line, material) => {
-        //   const points = path.getPoints();
-        //   if (!line) {
-        //     const geometry = new THREE.BufferGeometry().setFromPoints(points);
-        //     line = new THREE.Line(geometry, material);
-        //     this.scene.add(line);
-        //   } else {
-        //     line.geometry.setFromPoints(points);
-        //     line.geometry.attributes.position.needsUpdate = true;
-        //   }
-        //   return line;
-        // };
+
 
         const materialTestPath = new THREE.LineBasicMaterial({
           color: 0x0000ff,
 
           transparent: true
         });
-        // const materialTestPath = new THREE.LineDashedMaterial({
-        //   color: 0x0000ff,
-        //   linewidth: 1,
-        //   scale: 0.5,
-        //   dashSize: .4,
-        //   gapSize: .2,
-        //   transparent: true
-        // });
+
         const materialPath = new THREE.LineDashedMaterial({
           color: 0xff0000,
           linewidth: 1,
@@ -1056,34 +1038,29 @@ export default class CoriolisForceScreenView extends ScreenView {
         }
       };
 
-      if (!this.passedStart) {
-        updatePuckAndPath();
-        this.passedStart = true;
-      } else if (this.model.graphData.getCor(this.model.timer) <= 199.9) {
+      // if (!this.passedStart) {
+      //   updatePuckAndPath();
+      //   this.passedStart = true;
+      // } else 
+      if (Math.sqrt(this.model.graphData.getX(this.model.timer)**2 +this.model.graphData.getY(this.model.timer)**2)<= 165 ) {
         this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
         this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getCor(this.model.timer)));
         this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
         this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getCen(this.model.timer)));
-        // console.log(this.refTangentialVelocityGraph.element)
-        if (this.model.xEQ !== "" && this.model.yEQ !== "" && this.model.v_xEQ !== "" && this.model.v_yEQ !== "") {
-          this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(this.model.timer));
-          this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getCor(this.model.timer)));
-          this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(this.model.timer));
-          this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getCen(this.model.timer)));
-        }
 
-
-        updatePuckAndPath(true, true);
-      } else if (this.model.graphDataTest.getCor(this.model.timer) <= 199 && this.model.graphData.getCor(this.model.timer) > 199.9) {
-        updatePuckAndPath(true, false);
-        if (this.model.xEQ !== "" && this.model.yEQ !== "" && this.model.v_xEQ !== "" && this.model.v_yEQ !== "") {
-          this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(this.model.timer));
-          this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getCor(this.model.timer)));
-          this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(this.model.timer));
-          this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getCen(this.model.timer)));
-        }
 
       }
+      if (Math.sqrt(this.model.graphDataTest.getX(this.model.timer)**2 +this.model.graphDataTest.getY(this.model.timer)**2)<= 165 ) {
+        if (this.model.xEQ !== "" && this.model.yEQ !== "" && this.model.v_xEQ !== "" && this.model.v_yEQ !== "") {
+          this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(this.model.timer));
+          this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getCor(this.model.timer)));
+          this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(this.model.timer));
+          this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getCen(this.model.timer)));
+        }
+
+
+      }
+      updatePuckAndPath(true, true);
     }
   }
 
