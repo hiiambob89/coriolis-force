@@ -63,8 +63,14 @@ export default class CoriolisForceModel implements TModel {
   public graphLenTest: number;
   public prevX: number
   coriolisEq: boolean;
+  showForceVectors: boolean;
+  showForceProp: Property<boolean>;
+  frameCount: number;
+  trailForceVectors: boolean;
+  trailForceVectorsProp: Property<boolean>;
 
   public constructor(providedOptions: CoriolisForceModelOptions) {
+    this.frameCount = 1
     this.k = 0;
     this.gravity = 9.8;
     this.x = 0;
@@ -78,11 +84,14 @@ export default class CoriolisForceModel implements TModel {
     this.graphLen = 5;
     this.originalLen = 0;
     this.graphUpdateInterval = .001;
-    this.simSpeed = .09;
+    this.simSpeed = 1;
     this.graphUpdateInterval = .001;
     this.coriolisEq = true;
     this.graphData = new simData(this.graphUpdateInterval)
     this.graphDataTest = new simData(this.graphUpdateInterval)
+    this.showForceVectors = true;
+    this.trailForceVectors = false;
+
 
     this.kProp = new Property(this.k);
     this.xProp = new Property(this.x);
@@ -93,8 +102,10 @@ export default class CoriolisForceModel implements TModel {
     this.massProp = new Property(this.mass);
     this.graphData = new simData(this.graphUpdateInterval);
     this.simSpeedProp = new Property(this.simSpeed);
+    this.showForceProp = new Property(this.showForceVectors);
+    this.trailForceVectorsProp = new Property(this.trailForceVectors);
     this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer,this.coriolisEq);
-    console.log(this.graphData)
+    // console.log(this.graphData)
     // console.log(this.y)
     let prevX = this.x
     let prevY = -200
@@ -160,8 +171,9 @@ export default class CoriolisForceModel implements TModel {
    * Resets the model.
    */
   public reset(): void {
-    console.log(this.y)
-    console.log(this.yProp.value)
+    // console.log(this.y)
+    // console.log(this.yProp.value)
+    this.frameCount = 0
     this.k = this.kProp.value;
     this.x = this.xProp.value;
     this.y = this.yProp.value;
@@ -176,10 +188,10 @@ export default class CoriolisForceModel implements TModel {
     this.graphUpdateInterval = .001;
     this.simSpeed = this.simSpeedProp.value;
     this.graphData = new simData(this.graphUpdateInterval);
-    console.log(this.xEQ)
-    console.log(this.yEQ)
-    console.log(this.v_xEQ)
-    console.log(this.v_yEQ)
+    // console.log(this.xEQ)
+    // console.log(this.yEQ)
+    // console.log(this.v_xEQ)
+    // console.log(this.v_yEQ)
 
 
     // this.graphDataTest = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {v_xdot:this.v_xFunc,v_yFunc:this.v_yEQ,xdot:this.xFunc,ydot:this.yFunc}, true, this.graphLen, this.graphData, this.timer);
@@ -207,7 +219,7 @@ export default class CoriolisForceModel implements TModel {
       this.graphDataTest.insert(0,0,0,0,0,0,0)
     }
     this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer,this.coriolisEq);
-    console.log(this.graphData)
+    // console.log(this.graphData)
     this.graphLenTest = this.graphDataTest.data.length * this.graphUpdateInterval;
     this.graphLen = this.graphData.data.length * this.graphUpdateInterval;
 

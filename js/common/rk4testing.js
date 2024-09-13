@@ -4,25 +4,25 @@ function derivsEval( y, dydt, omega,equations, coriolisEq) {
     try {
         dydt[0] = equations.xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
-        console.log("Error in xdot:", err);
+        // console.log("Error in xdot:", err);
     }
 
     try {
         dydt[1] = equations.ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3]});
     } catch (err) {
-        console.log("Error in ydot:", err);
+        // console.log("Error in ydot:", err);
     }
 
     try {
         dydt[2] = equations.v_xdot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
-        console.log("Error in v_xdot:", err);
+        // console.log("Error in v_xdot:", err);
     }
 
     try {
         dydt[3] = equations.v_ydot({ x: y[0], y: y[1], v_x: y[2], v_y: y[3] });
     } catch (err) {
-        console.log("Error in v_ydot:", err);
+        // console.log("Error in v_ydot:", err);
     }
 
     return dydt;

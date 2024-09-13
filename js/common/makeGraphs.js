@@ -7,21 +7,30 @@ export function drawCoriolis(globalData, graphLen, divID, type, size, testData, 
   const height = size - margin.top - margin.bottom;
   const minX = d3.min(globalData.data, (d) => d.cor)
   const maxX = d3.max(globalData.data, (d) => d.cor)
-  console.log("Look at this")
-  console.log(graphLen)
   const minXTest = d3.min(testData.data, (d) => d.cor)
   const maxXTest = d3.max(testData.data, (d) => d.cor)
   // Declare the x (horizontal position) scale.
-  const x = d3.scaleLinear()
+  let x;
+  let y;
+  if (testData.data.length > 5){
+  x = d3.scaleLinear()
     .domain([0, Math.max(graphLen, testLen)])
     .range([margin.left, width + margin.left]);
   // const xAxis = d3.axisBottom(x).ticks(7)
 
   // Declare the y (vertical position) scale.
-  const y = d3.scaleLinear()
+  y = d3.scaleLinear()
     .domain([Math.min(minX, minXTest), Math.max(maxX, maxXTest)])
-    // .domain([0, 500])
     .range([height - margin.bottom, margin.bottom]);
+  } else{
+    x = d3.scaleLinear()
+    .domain([0, graphLen])
+    .range([margin.left, width + margin.left]);
+
+  y = d3.scaleLinear()
+    .domain([minX, maxX])
+    .range([height - margin.bottom, margin.bottom]);
+  }
 
   // append the svg object to the body of the page
   const svg = window.d3.select(`#${divID}`)
@@ -148,22 +157,30 @@ export function drawCen(globalData, graphLen, divID, type, size, testData, testL
   const height = size - margin.top - margin.bottom;
   const minX = d3.min(globalData.data, (d) => d.cen)
   const maxX = d3.max(globalData.data, (d) => d.cen)
-  console.log(`look at this 2: `)
-  console.log(globalData)
   const minXTest = d3.min(testData.data, (d) => d.cen)
   const maxXTest = d3.max(testData.data, (d) => d.cen)
   // Declare the x (horizontal position) scale.
-  const x = d3.scaleLinear()
+  let x;
+  let y;
+  if (testData.data.length > 5){
+  x = d3.scaleLinear()
     .domain([0, Math.max(graphLen, testLen)])
     .range([margin.left, width + margin.left]);
   // const xAxis = d3.axisBottom(x).ticks(7)
 
   // Declare the y (vertical position) scale.
-  const y = d3.scaleLinear()
+  y = d3.scaleLinear()
     .domain([Math.min(minX, minXTest), Math.max(maxX, maxXTest)])
-
-    // .domain([0, 500])
     .range([height - margin.bottom, margin.bottom]);
+  } else{
+    x = d3.scaleLinear()
+    .domain([0, graphLen])
+    .range([margin.left, width + margin.left]);
+
+  y = d3.scaleLinear()
+    .domain([minX, maxX])
+    .range([height - margin.bottom, margin.bottom]);
+  }
 
   // append the svg object to the body of the page
   const svg = window.d3.select(`#${divID}`)
@@ -215,7 +232,7 @@ export function drawCen(globalData, graphLen, divID, type, size, testData, testL
     .attr("x", -(height / 2))
     .attr("y", 25)
     .style("text-anchor", "middle")
-    .style("font-size", "20px")
+    .style("font-size", "15px")
     .style("font-style", "italic")
     // .text("v<sub>x<sub>0</sub></sub>")
     .text("Centrifugal Force")

@@ -7,7 +7,7 @@ export class simData {
 
 
     insert(time, xI, yI, v_xI, v_yI, x, y, cor, cen, v_x, v_y) {
-        console.log(time,x,y,v_x,v_y)
+        // console.log(time,x,y,v_x,v_y)
         this.data.push(new dataPoint(time, xI, yI, v_xI, v_yI, x, y, cor, cen, v_x, v_y));
     }
     getX(time) {

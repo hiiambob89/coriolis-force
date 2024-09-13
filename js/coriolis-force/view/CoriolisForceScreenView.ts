@@ -73,6 +73,13 @@ export default class CoriolisForceScreenView extends ScreenView {
   refCorArrow: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").ArrowHelper;
   refCorArrowDir2: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Vector3;
   refCorArrow2: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").ArrowHelper;
+  testCenArrowDir: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Vector3;
+  testCenArrow: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").ArrowHelper;
+  maxTestCor: any;
+  testCorArrowDir: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Vector3;
+  testCorArrow: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").ArrowHelper;
+  maxTestCen: any;
+  arrowGroup: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Group;
 
   public constructor(model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions) {
 
@@ -211,7 +218,7 @@ export default class CoriolisForceScreenView extends ScreenView {
         omega
       ]
     })
-    console.log("YYYYPROP", model.yProp.value)
+    // console.log("YYYYPROP", model.yProp.value)
 
     const constantSliders = new VBox({
       align: "center", children: [
@@ -231,7 +238,7 @@ export default class CoriolisForceScreenView extends ScreenView {
       ]
     })
     model.yProp.value = model.y;
-    console.log("YYYYPROP", model.yProp.value)
+    // console.log("YYYYPROP", model.yProp.value)
 
     var toggleRadius = 11;
     const buttonVBoxConstants = new VBox({
@@ -429,7 +436,7 @@ export default class CoriolisForceScreenView extends ScreenView {
         xdotField.mathField.focus()
         focusedEq[0][0] = model.xEQ
         focusedEq[0][1] = xdotField
-        console.log('xdot detected')
+        // console.log('xdot detected')
       }
     })
     const ydotBox = new HBox({ preferredWidth: 30, children: [ydotField] })
@@ -439,7 +446,7 @@ export default class CoriolisForceScreenView extends ScreenView {
         ydotField.mathField.focus()
         focusedEq[0][0] = model.yEQ
         focusedEq[0][1] = ydotField
-        console.log('ydot detected')
+        // console.log('ydot detected')
 
       }
     })
@@ -450,7 +457,7 @@ export default class CoriolisForceScreenView extends ScreenView {
         v_xdotField.mathField.focus()
         focusedEq[0][0] = model.v_xEQ
         focusedEq[0][1] = v_xdotField
-        console.log('v_xdot detected')
+        // console.log('v_xdot detected')
 
       }
     })
@@ -461,7 +468,7 @@ export default class CoriolisForceScreenView extends ScreenView {
         v_ydotField.mathField.focus()
         focusedEq[0][0] = model.v_yEQ
         focusedEq[0][1] = v_ydotField
-        console.log('v_ydot detected')
+        // console.log('v_ydot detected')
 
       }
     })
@@ -518,6 +525,10 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     // const switchEquationProp = new Property<boolean>(model.coriolisEq);
     // const equationSwitch = new ToggleSwitch(switchEquationProp,true,false)
+    const forceVectorToggle = new ToggleSwitch(model.showForceProp,true,false);
+    model.showForceProp.lazyLink((e)=>model.showForceVectors=e)
+    const trailVectorToggle = new ToggleSwitch(model.trailForceVectorsProp,true,false);
+    model.trailForceVectorsProp.lazyLink((e)=>model.trailForceVectors=e)
 
     let equationPanel = 
     new Panel(new VBox({
@@ -526,6 +537,8 @@ export default class CoriolisForceScreenView extends ScreenView {
         new RichText("Test Equations"),
         new Rectangle(0, 0, 350, 15),
         // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+        new HBox({align: "center", children: [new RichText("Show Force Vecotrs?"),forceVectorToggle]}),
+        new HBox({align: "center", children: [new RichText("Trail Force Vecotrs?"),trailVectorToggle]}),
         new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
         new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
         new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
@@ -538,21 +551,21 @@ export default class CoriolisForceScreenView extends ScreenView {
     
     // switchEquationProp.lazyLink(() => { model.coriolisEq = switchEquationProp.value; this.reset(); 
     //   if (model.coriolisEq){
-      equationPanel = new Panel(new VBox({
-        align: "center", children: [
-          //eqation switch here
-          new RichText("Test Equations"),
-          new Rectangle(0, 0, 350, 15),
-          // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
-          new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [vxPrimeDOM, v_xdotBox] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
-        ]
-      }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+      // equationPanel = new Panel(new VBox({
+      //   align: "center", children: [
+      //     //eqation switch here
+      //     new RichText("Test Equations"),
+      //     new Rectangle(0, 0, 350, 15),
+      //     // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+      //     new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
+      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+      //     new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
+      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+      //     new HBox({ align: "center", children: [vxPrimeDOM, v_xdotBox] }),
+      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+      //     new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
+      //   ]
+      // }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
     // } else{
       // equationPanel = new Panel(new VBox({
       //   align: "center", children: [
@@ -722,7 +735,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.lineITest = new THREE.Line(geometryPathI, materialTestPathI);
 
     this.maxRefCen =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
-    console.log(this.model.graphData.data)
+    // console.log(this.model.graphData.data)
     this.refCenArrowDir = new THREE.Vector3( 0, 0, 0 );
 
     //normalize the direction vector (convert to vector of length 1)
@@ -733,24 +746,53 @@ export default class CoriolisForceScreenView extends ScreenView {
     const hex = 0xff0000;
 
     this.refCenArrow = new THREE.ArrowHelper( this.refCenArrowDir, puckIRef.position, 50, hex,10,20 );
-    scene.add( this.refCenArrow );
-
+    
     this.maxRefCor =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
-    console.log(this.model.graphData.data)
+    // console.log(this.model.graphData.data)
     this.refCorArrowDir = new THREE.Vector3( 0, 0, 0 );
-
+    
     //normalize the direction vector (convert to vector of length 1)
     this.refCorArrowDir.normalize();
 
     // const origin = puckIRef.position;
     // const length = 50;
     // const hex = 0xff0000;
-
+    
     this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, length, hex,10,20 );
-    scene.add( this.refCorArrow );
+    //////////////////////////////////////////////////////////////////
+    this.maxTestCen =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
+    
+    this.testCenArrowDir = new THREE.Vector3( 0, 0, 0 );
+    
+    //normalize the direction vector (convert to vector of length 1)
+    this.testCenArrowDir.normalize();
+    
+    const originTest = puckIRef.position;
+    // const length = 50;
+    // const hex = 0xff0000;
+    
+    this.testCenArrow = new THREE.ArrowHelper( this.testCenArrowDir, puckITest.position, 50, hex,10,20 );
+    
+    this.maxTestCor =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
+    // console.log(this.model.graphData.data)
+    this.testCorArrowDir = new THREE.Vector3( 0, 0, 0 );
+    
+    //normalize the direction vector (convert to vector of length 1)
+    this.testCorArrowDir.normalize();
+    
+    // const origin = puckIRef.position;
+    // const length = 50;
+    // const hex = 0xff0000;
+    
+    this.testCorArrow = new THREE.ArrowHelper( this.testCorArrowDir, originTest, length, hex,10,20 );
     // scene.add(this.lineITest);
     //
-
+    this.arrowGroup = new THREE.Group()
+    this.arrowGroup.add( this.refCenArrow );
+    this.arrowGroup.add( this.refCorArrow );
+    this.arrowGroup.add( this.testCenArrow );
+    this.arrowGroup.add( this.testCorArrow );
+    scene.add(this.arrowGroup)
     this.scene = scene;
 
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -789,9 +831,14 @@ export default class CoriolisForceScreenView extends ScreenView {
    */
   public reset(): void {
     this.model.reset()
-    console.log(this.model.graphData)
+    this.scene.remove(this.arrowGroup)
+    this.arrowGroup = new THREE.Group()
+    this.scene.add(this.arrowGroup)
+    // console.log(this.model.graphData)
     this.maxRefCen =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
     this.maxRefCor =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
+    this.maxTestCen =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
+    this.maxTestCor =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
 
 
 
@@ -916,58 +963,50 @@ export default class CoriolisForceScreenView extends ScreenView {
   public override step(dt: number): void {
 
     if (this.model.timer <= 10) {
-      // this.maxRefCor =  d3.max(this.model.graphData.data, (d) => d.cor)
-      this.scene.remove(this.refCenArrow)
-      this.refCenArrowDir = new THREE.Vector3(  this.puckIRef.position.x - this.disk.position.x , this.puckIRef.position.y - this.disk.position.y , 0 );
-      // this.refCorArrowDir = new THREE.Vector3(  this.puckIRef.position.x - this.disk.position.x , this.puckIRef.position.y - this.disk.position.y , 0 );
-      let adjustedRefCenForce = Math.abs(this.model.graphData.getCen(this.model.timer)/this.maxRefCen)
-      // console.log(adjustedRefCorForce)
-      // console.log(this.maxRefCor)
-      //normalize the direction vector (convert to vector of length 1)
-      this.refCenArrowDir.normalize();
-  
-      const origin = this.puckIRef.position;
-      // const length = 50;
-      const hex = 0xff00ff;
-  
-      this.refCenArrow = new THREE.ArrowHelper( this.refCenArrowDir, origin, adjustedRefCenForce*50, hex,adjustedRefCenForce*20,adjustedRefCenForce*10);
-      this.scene.add(this.refCenArrow)
-      // if (Math.random() > .1){
-        this.scene.remove(this.refCorArrow)
-        // this.scene.remove(this.refCorArrow2)
-// 
-      // }
-        
-      // console.log(this.model.graphData.getCor(this.model.timer))
-      // this.refCorArrowDir2 = new THREE.Vector3( this.model.graphData.getV_X(this.model.timer), -1*this.model.graphData.getV_Y(this.model.timer), 0 );
-      // if (this.model.graphData.getV_Y(this.model.timer) == undefined || this.model.graphData.getV_X(this.model.timer) == undefined){
-      //   console.log("poopy")
-      // }
-      this.refCorArrowDir = new THREE.Vector3( this.model.graphData.getV_Y(this.model.timer), this.model.graphData.getV_X(this.model.timer), 0 );
+      // console.log(this.model.timer)
+      if (this.model.trailForceVectors){
+        if (this.model.frameCount %50 !==0){
+          this.arrowGroup.remove(this.refCenArrow)
+          this.arrowGroup.remove(this.refCorArrow)
+          this.arrowGroup.remove(this.testCenArrow)
+          this.arrowGroup.remove(this.testCorArrow)
+        }
+        this.model.frameCount++;
+      }else{
+        this.arrowGroup.remove(this.refCenArrow)
+        this.arrowGroup.remove(this.refCorArrow)
+        this.arrowGroup.remove(this.testCenArrow)
+        this.arrowGroup.remove(this.testCorArrow)
+      }
       
-    //   this.refCorArrowDir = new THREE.Vector3(
-    //     4 * Math.PI * this.model.omega * this.model.graphData.getV_Y(this.model.timer),
-    //      -4 * Math.PI * this.model.omega * this.model.graphData.getV_X(this.model.timer),
-    //      0
-    //  );
-      // console.log(this.model.graphData.getV_Y(this.model.timer), this.model.graphData.getV_X(this.model.timer))
-      // console.log()
-      // console.log(this.model.graphData.getV_X(this.model.timer), this.model.graphData.getV_Y(this.model.timer))
-      //normalize the direction vector (convert to vector of length 1)
+      this.refCenArrowDir = new THREE.Vector3(  this.puckIRef.position.x - this.disk.position.x , this.puckIRef.position.y - this.disk.position.y , 0 );
+      let adjustedRefCenForce = Math.abs(this.model.graphData.getCen(this.model.timer)/this.maxRefCen)
+      this.refCenArrowDir.normalize();
+      const origin = this.puckIRef.position;
+      const hex = 0xff00ff;
+      this.refCenArrow = new THREE.ArrowHelper( this.refCenArrowDir, origin, adjustedRefCenForce*50, hex,adjustedRefCenForce*20,adjustedRefCenForce*10);
+      this.refCorArrowDir = new THREE.Vector3( this.model.graphData.getV_Y(this.model.timer), this.model.graphData.getV_X(this.model.timer), 0 );
       this.refCorArrowDir.normalize();
-      // this.refCorArrowDir2.normalize();
-  
-      // const origin = puckIRef.position;
-      // const length = 50;
-      // const hex = 0xff0000;
       const magnitude = Math.abs(this.model.graphData.getCor(this.model.timer)/this.maxRefCor)
-  
       this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, magnitude*50, '#00ff00',magnitude*20,magnitude*10);
-      // this.refCorArrow2 = new THREE.ArrowHelper( this.refCorArrowDir2, origin, magnitude*50, '#00ffff',magnitude*20,magnitude*10);
-      // this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, 50, '#00ff00',0,0);
-      this.scene.add( this.refCorArrow );
-      // this.scene.add( this.refCorArrow2 );
-      // console.log(this.model.graphData.getV_Y(this.model.timer))
+
+      this.testCenArrowDir = new THREE.Vector3(  this.puckITest.position.x - this.disk.position.x , this.puckITest.position.y - this.disk.position.y , 0 );
+      let adjustedTestCenForce = Math.abs(this.model.graphDataTest.getCen(this.model.timer)/this.maxTestCen)
+      this.testCenArrowDir.normalize();
+      const originTest = this.puckITest.position;
+      // const hex = 0xff00ff;
+      this.testCenArrow = new THREE.ArrowHelper( this.testCenArrowDir, originTest, adjustedTestCenForce*50, hex,adjustedTestCenForce*20,adjustedTestCenForce*10);
+      this.testCorArrowDir = new THREE.Vector3( this.model.graphDataTest.getV_Y(this.model.timer), this.model.graphDataTest.getV_X(this.model.timer), 0 );
+      this.testCorArrowDir.normalize();
+      const magnitudeTest = Math.abs(this.model.graphDataTest.getCor(this.model.timer)/this.maxTestCor)
+      this.testCorArrow = new THREE.ArrowHelper( this.testCorArrowDir, originTest, magnitudeTest*50, '#00ff00',magnitudeTest*20,magnitudeTest*10);
+      if (this.model.showForceVectors){
+        this.arrowGroup.add( this.refCorArrow );
+        this.arrowGroup.add(this.refCenArrow);
+        this.arrowGroup.add( this.testCorArrow );
+        this.arrowGroup.add(this.testCenArrow);
+
+      }
       const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
 
         this.diskRef.rotateZ(dt  * this.model.omega * this.model.simSpeed *-1);
