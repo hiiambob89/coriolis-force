@@ -68,8 +68,8 @@ export default class CoriolisForceModel implements TModel {
     this.k = 0;
     this.gravity = 9.8;
     this.x = 0;
-    this.y = 0;
-    this.v_x = 400;
+    this.y = -50;
+    this.v_x = 10;
     this.v_y = 0;
     this.omega = .5;
     this.mass = 1;

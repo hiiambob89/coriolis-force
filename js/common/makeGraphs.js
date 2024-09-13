@@ -1,16 +1,16 @@
 
-export function drawDistance(globalData, graphLen, divID, type, size, testData, testLen) {
+export function drawCoriolis(globalData, graphLen, divID, type, size, testData, testLen) {
 
   // Declare the chart dimensions and margins.
   const margin = { top: size / 35, right: 30, bottom: size / (35 / 3), left: 60 };
   const width = size - margin.left - margin.right;
   const height = size - margin.top - margin.bottom;
-  const minX = d3.min(globalData.data, (d) => d.distance)
-  const maxX = d3.max(globalData.data, (d) => d.distance)
+  const minX = d3.min(globalData.data, (d) => d.cor)
+  const maxX = d3.max(globalData.data, (d) => d.cor)
   console.log("Look at this")
   console.log(graphLen)
-  const minXTest = d3.min(testData.data, (d) => d.v_x)
-  const maxXTest = d3.max(testData.data, (d) => d.v_x)
+  const minXTest = d3.min(testData.data, (d) => d.cor)
+  const maxXTest = d3.max(testData.data, (d) => d.cor)
   // Declare the x (horizontal position) scale.
   const x = d3.scaleLinear()
     .domain([0, Math.max(graphLen, testLen)])
@@ -52,7 +52,7 @@ export function drawDistance(globalData, graphLen, divID, type, size, testData, 
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.distance) })
+      .y(function (d) { return y(d.cor) })
     )
   svg
     .append("path")
@@ -62,7 +62,7 @@ export function drawDistance(globalData, graphLen, divID, type, size, testData, 
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.distance) })
+      .y(function (d) { return y(d.cor) })
     )
   svg.append("text")
     .attr("transform", "rotate(-90)")
@@ -76,7 +76,7 @@ export function drawDistance(globalData, graphLen, divID, type, size, testData, 
     // .text("v̇")
     .style("font-style", "italic")
     // .style("font-size", "10px")
-    .text("Distance from center")
+    .text("Coriolis force")
     .append('tspan')
     // .attr('baseline-shift', 'sub')
     // .style('font-size', '12px') // Adjust font size for the subscript
@@ -140,18 +140,18 @@ export function drawDistance(globalData, graphLen, divID, type, size, testData, 
   return { node: svg.node(), x: x, y: y };
 }
 
-export function drawTV(globalData, graphLen, divID, type, size, testData, testLen) {
+export function drawCen(globalData, graphLen, divID, type, size, testData, testLen) {
 
   // Declare the chart dimensions and margins.
   const margin = { top: size / 35, right: 30, bottom: size / (35 / 3), left: 60 };
   const width = size - margin.left - margin.right;
   const height = size - margin.top - margin.bottom;
-  const minX = d3.min(globalData.data, (d) => d.tv)
-  const maxX = d3.max(globalData.data, (d) => d.tv)
+  const minX = d3.min(globalData.data, (d) => d.cen)
+  const maxX = d3.max(globalData.data, (d) => d.cen)
   console.log(`look at this 2: `)
   console.log(globalData)
-  const minXTest = d3.min(testData.data, (d) => d.x)
-  const maxXTest = d3.max(testData.data, (d) => d.x)
+  const minXTest = d3.min(testData.data, (d) => d.cen)
+  const maxXTest = d3.max(testData.data, (d) => d.cen)
   // Declare the x (horizontal position) scale.
   const x = d3.scaleLinear()
     .domain([0, Math.max(graphLen, testLen)])
@@ -195,7 +195,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.tv) })
+      .y(function (d) { return y(d.cen) })
       // .y(function (d) { return y(d.y) })
     )
   svg
@@ -206,7 +206,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.tv) })
+      .y(function (d) { return y(d.cen) })
       // .y(function (d) { return y(d.y) })
     )
   svg.append("text")
@@ -218,7 +218,7 @@ export function drawTV(globalData, graphLen, divID, type, size, testData, testLe
     .style("font-size", "20px")
     .style("font-style", "italic")
     // .text("v<sub>x<sub>0</sub></sub>")
-    .text("v")
+    .text("Centrifugal Force")
   // .html("<li>x</li>")
 
   svg.append("text")

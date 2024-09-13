@@ -91,13 +91,13 @@ function transformToInertial(x_r, y_r, vx_r, vy_r, theta, omega) {
     return [x_i, y_i, vx_i, vy_i];
 }
 
-function transformToRotating(x_i, y_i, vx_i, vy_i, theta, omega) {
-    let x_r = x_i * Math.cos(theta) + y_i * Math.sin(theta);
-    let y_r = -x_i * Math.sin(theta) + y_i * Math.cos(theta);
-    let vx_r = (vx_i + omega * y_i) * Math.cos(theta) + (vy_i - omega * x_i) * Math.sin(theta);
-    let vy_r = -(vx_i + omega * y_i) * Math.sin(theta) + (vy_i - omega * x_i) * Math.cos(theta);
-    return [x_r, y_r, vx_r, vy_r];
-}
+// function transformToRotating(x_i, y_i, vx_i, vy_i, theta, omega) {
+//     let x_r = x_i * Math.cos(theta) + y_i * Math.sin(theta);
+//     let y_r = -x_i * Math.sin(theta) + y_i * Math.cos(theta);
+//     let vx_r = (vx_i + omega * y_i) * Math.cos(theta) + (vy_i - omega * x_i) * Math.sin(theta);
+//     let vy_r = -(vx_i + omega * y_i) * Math.sin(theta) + (vy_i - omega * x_i) * Math.cos(theta);
+//     return [x_r, y_r, vx_r, vy_r];
+// }
 
 function findDistance(x, y) {
     return Math.sqrt(x ** 2 + y ** 2);
@@ -111,19 +111,20 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
     let t = 0;
     let y;
 
-    if (coriolisEq) {
+    // if (coriolisEq) {
         // For Coriolis: initial coordinates are in the rotating frame
         y = [xinit, yinit, xdot, ydot];
-    } else {
-        // For projectile: transform initial coordinates to the inertial frame
-        let [x_i, y_i, vx_i, vy_i] = transformToInertial(xinit, yinit, xdot, ydot, 0, omega);
-        y = [x_i, y_i, vx_i, vy_i];
-    }
+    // } else {
+    //     // For projectile: transform initial coordinates to the inertial frame
+    //     let [x_i, y_i, vx_i, vy_i] = transformToInertial(xinit, yinit, xdot, ydot, 0, omega);
+    //     y = [x_i, y_i, vx_i, vy_i];
+    // }
 
     // while (t < 10 ) {
     while (t < 10 && findDistance(y[0], y[1]) <= 175-10) {
         let theta = omega * t;
         let x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating;
+        y = rk4(y, dt, g, k, m, omega, coriolisEq, equations, useEval);
 
         // if (coriolisEq) {
             // For Coriolis: y contains rotating frame values
@@ -136,10 +137,11 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
         //     // Transform to rotating frame for consistent output
         //     [x_rotating, y_rotating] = transformToRotating(x_inertial, y_inertial, vx_inertial, vy_inertial, theta, omega);
         // }
-
-        graphVals.insert(t, x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating, findDistance(x_inertial, y_inertial), tv(omega));
+        // console.log(y[2],y[3])
+        let Fcor = 2*omega*y[3]*(y[0]/(Math.sqrt((y[0]**2)+(y[1]**2))))-2*omega*y[2]*(y[1]/(Math.sqrt((y[0]**2)+(y[1]**2))))
+        let Fcen = (omega**2)*(y[0]/(Math.sqrt((y[0]**2)+(y[1]**2))))*(y[0])+(omega**2)*(y[1]/(Math.sqrt((y[0]**2)+(y[1]**2))))*(y[1])
+        graphVals.insert(t, x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating,Fcor,Fcen,y[2],y[3]);
         
-        y = rk4(y, dt, g, k, m, omega, coriolisEq, equations, useEval);
         t += dt;
 
     }
