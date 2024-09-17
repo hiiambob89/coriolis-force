@@ -735,10 +735,7 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.lineITest = new THREE.Line(geometryPathI, materialTestPathI);
 
     this.maxRefCen =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
-    // console.log(this.model.graphData.data)
     this.refCenArrowDir = new THREE.Vector3( 0, 0, 0 );
-
-    //normalize the direction vector (convert to vector of length 1)
     this.refCenArrowDir.normalize();
 
     const origin = puckIRef.position;
@@ -748,45 +745,19 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.refCenArrow = new THREE.ArrowHelper( this.refCenArrowDir, puckIRef.position, 50, hex,10,20 );
     
     this.maxRefCor =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
-    // console.log(this.model.graphData.data)
     this.refCorArrowDir = new THREE.Vector3( 0, 0, 0 );
-    
-    //normalize the direction vector (convert to vector of length 1)
     this.refCorArrowDir.normalize();
-
-    // const origin = puckIRef.position;
-    // const length = 50;
-    // const hex = 0xff0000;
-    
     this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, length, hex,10,20 );
     //////////////////////////////////////////////////////////////////
     this.maxTestCen =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
-    
     this.testCenArrowDir = new THREE.Vector3( 0, 0, 0 );
-    
-    //normalize the direction vector (convert to vector of length 1)
     this.testCenArrowDir.normalize();
-    
     const originTest = puckIRef.position;
-    // const length = 50;
-    // const hex = 0xff0000;
-    
     this.testCenArrow = new THREE.ArrowHelper( this.testCenArrowDir, puckITest.position, 50, hex,10,20 );
-    
     this.maxTestCor =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
-    // console.log(this.model.graphData.data)
     this.testCorArrowDir = new THREE.Vector3( 0, 0, 0 );
-    
-    //normalize the direction vector (convert to vector of length 1)
     this.testCorArrowDir.normalize();
-    
-    // const origin = puckIRef.position;
-    // const length = 50;
-    // const hex = 0xff0000;
-    
     this.testCorArrow = new THREE.ArrowHelper( this.testCorArrowDir, originTest, length, hex,10,20 );
-    // scene.add(this.lineITest);
-    //
     this.arrowGroup = new THREE.Group()
     this.arrowGroup.add( this.refCenArrow );
     this.arrowGroup.add( this.refCorArrow );
@@ -911,15 +882,6 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     this.lineITest = new THREE.Line(geometryTestPathI, materialTestPathI);
 
-    // this.scene.add(this.lineITest);
-    // this.scene.add(this.lineIRef);
-
-    //
-    //
-    //
-
-
-
     this.passedStart = false
 
     // Updating graphs
@@ -1009,7 +971,7 @@ export default class CoriolisForceScreenView extends ScreenView {
 
       }
       const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
-        if (Math.sqrt(this.model.graphData.getX(this.model.timer)**2 +this.model.graphData.getY(this.model.timer)**2)<= 165 ||  Math.sqrt(this.model.graphDataTest.getX(this.model.timer)**2 +this.model.graphDataTest.getY(this.model.timer)**2)<= 165) {
+        if (Math.sqrt(this.model.graphData.getX(this.model.timer)**2 +this.model.graphData.getY(this.model.timer)**2)<= 165 ||  (Math.sqrt(this.model.graphDataTest.getX(this.model.timer)**2 +this.model.graphDataTest.getY(this.model.timer)**2)<= 165 && this.model.graphDataTest.data.length > 5)) {
         this.diskRef.rotateZ(dt  * this.model.omega * this.model.simSpeed *-1);
         }
         const bufferXRef = this.puckRefRef.position.x;
@@ -1036,6 +998,7 @@ export default class CoriolisForceScreenView extends ScreenView {
           this.puckIRef.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
           this.puckIRef.position.y = this.model.graphData.getYI(this.model.timer)*-1;
           this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckIRef.position.x, this.puckIRef.position.y);
+          // console.log(this.pathRefRef.)
   
           this.puckRefRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
           this.puckRefRef.position.y = this.model.graphData.getY(this.model.timer)*-1;
@@ -1050,6 +1013,7 @@ export default class CoriolisForceScreenView extends ScreenView {
           this.scene.remove(line);
           line = new THREE.Line(geometry, material);
           line.computeLineDistances()
+          console.log(line.computeLineDistances())
           this.scene.add(line);
           return line;
         };
