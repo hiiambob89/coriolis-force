@@ -951,8 +951,15 @@ export default class CoriolisForceScreenView extends ScreenView {
       this.refCorArrowDir = new THREE.Vector3( this.model.graphData.getV_Y(this.model.timer), this.model.graphData.getV_X(this.model.timer), 0 );
       this.refCorArrowDir.normalize();
       const magnitude = Math.abs(this.model.graphData.getCor(this.model.timer)/this.maxRefCor)
-      this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, magnitude*50, '#00ff00',magnitude*20,magnitude*10);
-
+      this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, magnitude*50, '#027320',magnitude*20,magnitude*10);
+      this.refCorArrow.line.material = new THREE.LineDashedMaterial({
+        color: '#027320',
+        linewidth: 2,
+        scale: 15,
+        dashSize: 2,
+        gapSize: 1,
+    })
+    this.refCorArrow.line.computeLineDistances()
       this.testCenArrowDir = new THREE.Vector3(  this.puckITest.position.x - this.disk.position.x , this.puckITest.position.y - this.disk.position.y , 0 );
       let adjustedTestCenForce = Math.abs(this.model.graphDataTest.getCen(this.model.timer)/this.maxTestCen)
       this.testCenArrowDir.normalize();
@@ -962,7 +969,14 @@ export default class CoriolisForceScreenView extends ScreenView {
       this.testCorArrowDir = new THREE.Vector3( this.model.graphDataTest.getV_Y(this.model.timer), this.model.graphDataTest.getV_X(this.model.timer), 0 );
       this.testCorArrowDir.normalize();
       const magnitudeTest = Math.abs(this.model.graphDataTest.getCor(this.model.timer)/this.maxTestCor)
-      this.testCorArrow = new THREE.ArrowHelper( this.testCorArrowDir, originTest, magnitudeTest*50, '#00ff00',magnitudeTest*20,magnitudeTest*10);
+      this.testCorArrow = new THREE.ArrowHelper( this.testCorArrowDir, originTest, magnitudeTest*50, '#027320',magnitudeTest*20,magnitudeTest*10);
+      this.testCorArrow.line.material = new THREE.LineDashedMaterial({
+        color: '#027320',
+        linewidth: 2,
+        scale: 15,
+        dashSize: 2,
+        gapSize: 1,
+    })
       if (this.model.showForceVectors){
         this.arrowGroup.add( this.refCorArrow );
         this.arrowGroup.add(this.refCenArrow);
