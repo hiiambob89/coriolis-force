@@ -163,6 +163,8 @@ export default class CoriolisForceModel implements TModel {
     this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer);
     this.graphLen = this.graphData.data.length * this.graphUpdateInterval;
     this.graphLenTest = this.graphDataTest.data.length * this.graphUpdateInterval;
+    const thisAlt = this;
+
 
   }
 
@@ -229,7 +231,7 @@ export default class CoriolisForceModel implements TModel {
    * @param dt - time step, in seconds
    */
   public step(dt: number): void {
-    this.timer += dt * this.simSpeed;
+    // this.timer += dt * this.simSpeed;
     //TODO
   }
 }
