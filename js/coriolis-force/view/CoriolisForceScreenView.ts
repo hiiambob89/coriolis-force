@@ -1043,10 +1043,10 @@ export default class CoriolisForceScreenView extends ScreenView {
   
           const materialPath = new THREE.LineDashedMaterial({
             color: 0xff0000,
-            linewidth: 1,
+            linewidth: 2,
             scale: 0.5,
-            dashSize: .4,
-            gapSize: .2,
+            dashSize: 3,
+            gapSize: 2,
             transparent: false
           });
           if (this.model.graphDataTest.getX(this.model.timer) !== 0 && this.model.graphDataTest.getY(this.model.timer) !== 0) {
