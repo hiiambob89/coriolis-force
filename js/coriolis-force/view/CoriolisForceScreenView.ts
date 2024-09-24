@@ -13,7 +13,7 @@ import coriolisForce from '../../coriolisForce.js';
 import CoriolisForceModel from '../model/CoriolisForceModel.js';
 import optionize from '../../../../phet-core/js/optionize.js';
 import Panel from '../../../../sun/js/Panel.js';
-import { Circle, Color, HBox, Rectangle, RichText, VBox } from '../../../../scenery/js/imports.js';
+import { AlignBox, Circle, Color, HBox, Rectangle, RichText, VBox } from '../../../../scenery/js/imports.js';
 import Property from '../../../../axon/js/Property.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import EquationInput from './EquationInput.js';
@@ -80,6 +80,7 @@ export default class CoriolisForceScreenView extends ScreenView {
   testCorArrow: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").ArrowHelper;
   maxTestCen: any;
   arrowGroup: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Group;
+  corCen: import("c:/Users/aggies/Desktop/phetsims/chipper/node_modules/@types/three/index").Group;
 
   public constructor(model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions) {
 
@@ -740,14 +741,15 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     const origin = puckIRef.position;
     const length = 50;
-    const hex = 0xff0000;
-
+    // const hex = 0xff0000;
+    const hex = 0xff00ff;
+    
     this.refCenArrow = new THREE.ArrowHelper( this.refCenArrowDir, puckIRef.position, 50, hex,10,20 );
     
     this.maxRefCor =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
     this.refCorArrowDir = new THREE.Vector3( 0, 0, 0 );
     this.refCorArrowDir.normalize();
-    this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, length, hex,10,20 );
+    this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, length, "#027320",10,20 );
     //////////////////////////////////////////////////////////////////
     this.maxTestCen =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
     this.testCenArrowDir = new THREE.Vector3( 0, 0, 0 );
@@ -764,7 +766,46 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.arrowGroup.add( this.testCenArrow );
     this.arrowGroup.add( this.testCorArrow );
     scene.add(this.arrowGroup)
+
+    
+    
     this.scene = scene;
+
+    this.refCorArrow.line.material = new THREE.LineDashedMaterial({
+      color: '#027320',
+      linewidth: 2,
+      scale: 15,
+      dashSize: 2,
+      gapSize: 1,
+  })
+
+
+  scene.add(this.refCorArrow)
+  scene.add(this.refCenArrow)
+  // this.refCenArrow.position.x = 440
+  this.refCenArrow.position.x = -290
+  this.refCenArrow.position.y = 300
+  // this.refCorArrow.position.x = 610
+  this.refCorArrow.position.x = -100
+  this.refCorArrow.position.y = 300
+  this.refCorArrow.rotation.z = Math.PI
+  this.refCenArrow.rotation.z = Math.PI
+
+
+  const cenV = new RichText("Centrifugal Force")
+  cenV.leftTop = new Vector2(330, 620)
+  const corV = new RichText("Coriolis Force")
+  
+  corV.leftTop = new Vector2(540, 620)
+
+  this.addChild(cenV)
+  this.addChild(corV)
+
+  
+  
+
+    
+    
 
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setClearColor(0x000000, 0);

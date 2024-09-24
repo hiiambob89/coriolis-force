@@ -85,7 +85,7 @@ export function drawCoriolis(globalData, graphLen, divID, type, size, testData, 
     // .text("v̇")
     .style("font-style", "italic")
     // .style("font-size", "10px")
-    .text("Coriolis force")
+    .text("Coriolis Force")
     .append('tspan')
     // .attr('baseline-shift', 'sub')
     // .style('font-size', '12px') // Adjust font size for the subscript
