@@ -482,107 +482,110 @@ export default class CoriolisForceScreenView extends ScreenView {
     model.simSpeedProp.link((val) => model.simSpeed = val)
     this.addChild(constantPanel);
 
-    var xdotPrime = document.createElement('span');    
+    var xdotPrime = document.createElement('span');
     xdotPrime.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">x=<span style="position: absolute; top: -0.35em; left: 0.09em;">&middot;</span><span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;">′</span></span>';
-    xdotPrime.style.fontSize = `${this.graphSize/9}px`
+    xdotPrime.style.fontSize = `${this.graphSize / 9}px`
     const xdotPrimeDOM = new phet.scenery.DOM((xdotPrime));
 
 
-    var ydotPrime = document.createElement('span');    
+    var ydotPrime = document.createElement('span');
     ydotPrime.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">y=<span style="position: absolute; top: -0.35em; left: 0.09em;">&middot;</span><span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;">′</span></span>';
-    ydotPrime.style.fontSize = `${this.graphSize/9}px`
+    ydotPrime.style.fontSize = `${this.graphSize / 9}px`
     const ydotPrimeDOM = new phet.scenery.DOM((ydotPrime));
 
-    var vxPrime = document.createElement('span');    
+    var vxPrime = document.createElement('span');
     vxPrime.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">v<sub>x</sub>=<span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;">′</span></span>';
-    vxPrime.style.fontSize = `${this.graphSize/9}px`
+    vxPrime.style.fontSize = `${this.graphSize / 9}px`
     const vxPrimeDOM = new phet.scenery.DOM((vxPrime));
 
-    var vyPrime = document.createElement('span');    
+    var vyPrime = document.createElement('span');
     vyPrime.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">v<sub>y</sub>=<span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;">′</span></span>';
-    vyPrime.style.fontSize = `${this.graphSize/9}px`
+    vyPrime.style.fontSize = `${this.graphSize / 9}px`
     const vyPrimeDOM = new phet.scenery.DOM((vyPrime));
 
-    var xdot = document.createElement('span');    
+    var xdot = document.createElement('span');
     xdot.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">x=<span style="position: absolute; top: -0.35em; left: 0.09em;">&middot;</span><span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;"></span></span>';
-    xdot.style.fontSize = `${this.graphSize/9}px`
+    xdot.style.fontSize = `${this.graphSize / 9}px`
     const xdotlabelDOM = new phet.scenery.DOM((xdot));
 
 
-    var ydot = document.createElement('span');    
+    var ydot = document.createElement('span');
     ydot.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">y=<span style="position: absolute; top: -0.35em; left: 0.09em;">&middot;</span><span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;"></span></span>';
-    ydot.style.fontSize = `${this.graphSize/9}px`
+    ydot.style.fontSize = `${this.graphSize / 9}px`
     const ydotlabelDOM = new phet.scenery.DOM((ydot));
 
-    var vx = document.createElement('span');    
+    var vx = document.createElement('span');
     vx.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">v<sub>x</sub>=<span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;"></span></span>';
-    vx.style.fontSize = `${this.graphSize/9}px`
+    vx.style.fontSize = `${this.graphSize / 9}px`
     const vxlabelDOM = new phet.scenery.DOM((vx));
 
-    var vy = document.createElement('span');    
+    var vy = document.createElement('span');
     vy.innerHTML = '<span style="position: relative; font-family: sans-serif; font-style: italic;">v<sub>y</sub>=<span style="position: absolute; top: -0.3em; left: 0.55em; font-size: 0.9em;"></span></span>';
-    vy.style.fontSize = `${this.graphSize/9}px`
+    vy.style.fontSize = `${this.graphSize / 9}px`
     const vylabelDOM = new phet.scenery.DOM((vy));
 
     // const switchEquationProp = new Property<boolean>(model.coriolisEq);
     // const equationSwitch = new ToggleSwitch(switchEquationProp,true,false)
-    const forceVectorToggle = new ToggleSwitch(model.showForceProp,true,false);
-    model.showForceProp.lazyLink((e)=>model.showForceVectors=e)
-    const trailVectorToggle = new ToggleSwitch(model.trailForceVectorsProp,true,false);
-    model.trailForceVectorsProp.lazyLink((e)=>model.trailForceVectors=e)
+    // const forceVectorToggle = new ToggleSwitch(model.showForceProp, true, false);
+    const forceVectorToggle = new ToggleSwitch(model.showForceProp, true, false);
+    model.showForceProp.lazyLink((e) => model.showForceVectors = !e)
+    const trailVectorToggle = new ToggleSwitch(model.trailForceVectorsProp, true, false);
+    model.trailForceVectorsProp.lazyLink((e) => model.trailForceVectors = !e)
 
-    let equationPanel = 
-    new Panel(new VBox({
-      align: "center", children: [
-        //eqation switch here
-        new RichText("Test Equations"),
-        new Rectangle(0, 0, 350, 15),
-        // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
-        new HBox({align: "center", children: [new RichText("Show Force Vectors?"),forceVectorToggle]}),
-        new HBox({align: "center", children: [new RichText("Trail Force Vectors?"),trailVectorToggle]}),
-        new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
-        new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-        new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
-        new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-        new HBox({ align: "center", children: [vxPrimeDOM, v_xdotBox] }),
-        new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-        new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
-      ]
-    }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
-    
+    let equationPanel =
+      new Panel(new VBox({
+        align: "center", children: [
+          //eqation switch here
+          new RichText("Test Equations"),
+          new Rectangle(0, 0, 350, 15),
+          // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+          new HBox({ align: "center", children: [new RichText("Show Force Vectors?"), new Rectangle(0, 0, 10, 0), forceVectorToggle] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [new RichText("Trail Force Vectors?"), new Rectangle(0, 0, 10, 0), trailVectorToggle] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [vxPrimeDOM, v_xdotBox] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
+        ]
+      }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+
     // switchEquationProp.lazyLink(() => { model.coriolisEq = switchEquationProp.value; this.reset(); 
     //   if (model.coriolisEq){
-      // equationPanel = new Panel(new VBox({
-      //   align: "center", children: [
-      //     //eqation switch here
-      //     new RichText("Test Equations"),
-      //     new Rectangle(0, 0, 350, 15),
-      //     // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
-      //     new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
-      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-      //     new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
-      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-      //     new HBox({ align: "center", children: [vxPrimeDOM, v_xdotBox] }),
-      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-      //     new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
-      //   ]
-      // }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+    // equationPanel = new Panel(new VBox({
+    //   align: "center", children: [
+    //     //eqation switch here
+    //     new RichText("Test Equations"),
+    //     new Rectangle(0, 0, 350, 15),
+    //     // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+    //     new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
+    //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+    //     new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
+    //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+    //     new HBox({ align: "center", children: [vxPrimeDOM, v_xdotBox] }),
+    //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+    //     new HBox({ align: "center", children: [vyPrimeDOM, v_ydotBox] }),
+    //   ]
+    // }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
     // } else{
-      // equationPanel = new Panel(new VBox({
-      //   align: "center", children: [
-      //     //eqation switch here
-      //     new RichText("Test Equations"),
-      //     new Rectangle(0, 0, 350, 15),
-      //     // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
-      //     new HBox({ align: "center", children: [xdotlabelDOM, xdotBox] }),
-      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-      //     new HBox({ align: "center", children: [ydotlabelDOM, ydotBox] }),
-      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-      //     new HBox({ align: "center", children: [vxlabelDOM, v_xdotBox] }),
-      //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-      //     new HBox({ align: "center", children: [vylabelDOM, v_ydotBox] }),
-      //   ]
-      // }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+    // equationPanel = new Panel(new VBox({
+    //   align: "center", children: [
+    //     //eqation switch here
+    //     new RichText("Test Equations"),
+    //     new Rectangle(0, 0, 350, 15),
+    //     // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
+    //     new HBox({ align: "center", children: [xdotlabelDOM, xdotBox] }),
+    //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+    //     new HBox({ align: "center", children: [ydotlabelDOM, ydotBox] }),
+    //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+    //     new HBox({ align: "center", children: [vxlabelDOM, v_xdotBox] }),
+    //     new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+    //     new HBox({ align: "center", children: [vylabelDOM, v_ydotBox] }),
+    //   ]
+    // }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
     // };console.log(model.coriolisEq);this.scene.remove(equationPanel);this.addChild(equationPanel);equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 10)})
 
 
@@ -735,40 +738,40 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     this.lineITest = new THREE.Line(geometryPathI, materialTestPathI);
 
-    this.maxRefCen =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
-    this.refCenArrowDir = new THREE.Vector3( 0, 0, 0 );
+    this.maxRefCen = d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
+    this.refCenArrowDir = new THREE.Vector3(0, 0, 0);
     this.refCenArrowDir.normalize();
 
     const origin = puckIRef.position;
     const length = 50;
     // const hex = 0xff0000;
     const hex = 0xff00ff;
-    
-    this.refCenArrow = new THREE.ArrowHelper( this.refCenArrowDir, puckIRef.position, 50, hex,10,20 );
-    
-    this.maxRefCor =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
-    this.refCorArrowDir = new THREE.Vector3( 0, 0, 0 );
+
+    this.refCenArrow = new THREE.ArrowHelper(this.refCenArrowDir, puckIRef.position, 50, hex, 10, 20);
+
+    this.maxRefCor = d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
+    this.refCorArrowDir = new THREE.Vector3(0, 0, 0);
     this.refCorArrowDir.normalize();
-    this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, length, "#027320",10,20 );
+    this.refCorArrow = new THREE.ArrowHelper(this.refCorArrowDir, origin, length, "#027320", 10, 20);
     //////////////////////////////////////////////////////////////////
-    this.maxTestCen =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
-    this.testCenArrowDir = new THREE.Vector3( 0, 0, 0 );
+    this.maxTestCen = d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
+    this.testCenArrowDir = new THREE.Vector3(0, 0, 0);
     this.testCenArrowDir.normalize();
     const originTest = puckIRef.position;
-    this.testCenArrow = new THREE.ArrowHelper( this.testCenArrowDir, puckITest.position, 50, hex,10,20 );
-    this.maxTestCor =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
-    this.testCorArrowDir = new THREE.Vector3( 0, 0, 0 );
+    this.testCenArrow = new THREE.ArrowHelper(this.testCenArrowDir, puckITest.position, 50, hex, 10, 20);
+    this.maxTestCor = d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
+    this.testCorArrowDir = new THREE.Vector3(0, 0, 0);
     this.testCorArrowDir.normalize();
-    this.testCorArrow = new THREE.ArrowHelper( this.testCorArrowDir, originTest, length, hex,10,20 );
+    this.testCorArrow = new THREE.ArrowHelper(this.testCorArrowDir, originTest, length, hex, 10, 20);
     this.arrowGroup = new THREE.Group()
-    this.arrowGroup.add( this.refCenArrow );
-    this.arrowGroup.add( this.refCorArrow );
-    this.arrowGroup.add( this.testCenArrow );
-    this.arrowGroup.add( this.testCorArrow );
+    this.arrowGroup.add(this.refCenArrow);
+    this.arrowGroup.add(this.refCorArrow);
+    this.arrowGroup.add(this.testCenArrow);
+    this.arrowGroup.add(this.testCorArrow);
     scene.add(this.arrowGroup)
 
-    
-    
+
+
     this.scene = scene;
 
     this.refCorArrow.line.material = new THREE.LineDashedMaterial({
@@ -777,35 +780,35 @@ export default class CoriolisForceScreenView extends ScreenView {
       scale: 15,
       dashSize: 2,
       gapSize: 1,
-  })
+    })
 
 
-  scene.add(this.refCorArrow)
-  scene.add(this.refCenArrow)
-  // this.refCenArrow.position.x = 440
-  this.refCenArrow.position.x = -290
-  this.refCenArrow.position.y = 300
-  // this.refCorArrow.position.x = 610
-  this.refCorArrow.position.x = -100
-  this.refCorArrow.position.y = 300
-  this.refCorArrow.rotation.z = Math.PI
-  this.refCenArrow.rotation.z = Math.PI
+    scene.add(this.refCorArrow)
+    scene.add(this.refCenArrow)
+    // this.refCenArrow.position.x = 440
+    this.refCenArrow.position.x = -290
+    this.refCenArrow.position.y = 250
+    // this.refCorArrow.position.x = 610
+    this.refCorArrow.position.x = -100
+    this.refCorArrow.position.y = 250
+    this.refCorArrow.rotation.z = Math.PI
+    this.refCenArrow.rotation.z = Math.PI
 
 
-  const cenV = new RichText("Centrifugal Force")
-  cenV.leftTop = new Vector2(330, 620)
-  const corV = new RichText("Coriolis Force")
-  
-  corV.leftTop = new Vector2(540, 620)
+    const cenV = new RichText("Centrifugal Force")
+    cenV.leftTop = new Vector2(330, 570)
+    const corV = new RichText("Coriolis Force")
 
-  this.addChild(cenV)
-  this.addChild(corV)
+    corV.leftTop = new Vector2(540, 570)
 
-  
-  
+    this.addChild(cenV)
+    this.addChild(corV)
 
-    
-    
+
+
+
+
+
 
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setClearColor(0x000000, 0);
@@ -846,18 +849,18 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.arrowGroup = new THREE.Group()
     this.scene.add(this.arrowGroup)
     // console.log(this.model.graphData)
-    this.maxRefCen =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
-    this.maxRefCor =  d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
-    this.maxTestCen =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
-    this.maxTestCor =  d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
+    this.maxRefCen = d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
+    this.maxRefCor = d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
+    this.maxTestCen = d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
+    this.maxTestCor = d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
 
     this.diskRef.rotation.z = 0;
 
 
     this.puckRefRef.position.x = this.refOffset + this.model.x
-    this.puckRefRef.position.y = this.model.y*-1;
+    this.puckRefRef.position.y = this.model.y * -1;
     this.puckIRef.position.x = this.iOffset + this.model.x
-    this.puckIRef.position.y = this.model.y*-1;
+    this.puckIRef.position.y = this.model.y * -1;
     this.pathRefRef = new THREE.Path();
     this.pathRefRef.currentPoint = new THREE.Vector2(this.puckRefRef.position.x, this.puckRefRef.position.y)
 
@@ -895,9 +898,9 @@ export default class CoriolisForceScreenView extends ScreenView {
     //
     //Test stuff
     this.puckRefTest.position.x = this.refOffset + this.model.x
-    this.puckRefTest.position.y = this.model.y*-1;
+    this.puckRefTest.position.y = this.model.y * -1;
     this.puckITest.position.x = this.iOffset + this.model.x
-    this.puckITest.position.y = this.model.y*-1;
+    this.puckITest.position.y = this.model.y * -1;
     this.pathRefTest = new THREE.Path();
     this.pathRefTest.currentPoint = new THREE.Vector2(this.puckRefTest.position.x, this.puckRefTest.position.y)
 
@@ -964,172 +967,172 @@ export default class CoriolisForceScreenView extends ScreenView {
 
 
   public override step(dt: number): void {
-      // console.log(dt)
-      if (!document.hidden){
-      this.model.timer+=dt;
+    // console.log(dt)
+    if (!document.hidden) {
+      this.model.timer += dt;
     }
-      if (this.model.timer <= 10 ) {
-        // console.log(dt)
-        if (this.model.trailForceVectors){
-          if (this.model.frameCount %50 !==0){
-            this.arrowGroup.remove(this.refCenArrow)
-            this.arrowGroup.remove(this.refCorArrow)
-            this.arrowGroup.remove(this.testCenArrow)
-            this.arrowGroup.remove(this.testCorArrow)
-          }
-          this.model.frameCount++;
-        }else{
+    if (this.model.timer <= 10) {
+      // console.log(dt)
+      if (this.model.trailForceVectors) {
+        if (this.model.frameCount % 50 !== 0) {
           this.arrowGroup.remove(this.refCenArrow)
           this.arrowGroup.remove(this.refCorArrow)
           this.arrowGroup.remove(this.testCenArrow)
           this.arrowGroup.remove(this.testCorArrow)
         }
-        
-        this.refCenArrowDir = new THREE.Vector3(  this.puckIRef.position.x - this.disk.position.x , this.puckIRef.position.y - this.disk.position.y , 0 );
-        let adjustedRefCenForce = Math.abs(this.model.graphData.getCen(this.model.timer)/this.maxRefCen)
-        this.refCenArrowDir.normalize();
-        const origin = this.puckIRef.position;
-        const hex = 0xff00ff;
-        this.refCenArrow = new THREE.ArrowHelper( this.refCenArrowDir, origin, adjustedRefCenForce*50, hex,adjustedRefCenForce*20,adjustedRefCenForce*10);
-        this.refCorArrowDir = new THREE.Vector3( this.model.graphData.getV_Y(this.model.timer), this.model.graphData.getV_X(this.model.timer), 0 );
-        this.refCorArrowDir.normalize();
-        const magnitude = Math.abs(this.model.graphData.getCor(this.model.timer)/this.maxRefCor)
-        this.refCorArrow = new THREE.ArrowHelper( this.refCorArrowDir, origin, magnitude*50, '#027320',magnitude*20,magnitude*10);
-        this.refCorArrow.line.material = new THREE.LineDashedMaterial({
-          color: '#027320',
-          linewidth: 2,
-          scale: 15,
-          dashSize: 2,
-          gapSize: 1,
+        this.model.frameCount++;
+      } else {
+        this.arrowGroup.remove(this.refCenArrow)
+        this.arrowGroup.remove(this.refCorArrow)
+        this.arrowGroup.remove(this.testCenArrow)
+        this.arrowGroup.remove(this.testCorArrow)
+      }
+
+      this.refCenArrowDir = new THREE.Vector3(this.puckIRef.position.x - this.disk.position.x, this.puckIRef.position.y - this.disk.position.y, 0);
+      let adjustedRefCenForce = Math.abs(this.model.graphData.getCen(this.model.timer) / this.maxRefCen)
+      this.refCenArrowDir.normalize();
+      const origin = this.puckIRef.position;
+      const hex = 0xff00ff;
+      this.refCenArrow = new THREE.ArrowHelper(this.refCenArrowDir, origin, adjustedRefCenForce * 50, hex, adjustedRefCenForce * 20, adjustedRefCenForce * 10);
+      this.refCorArrowDir = new THREE.Vector3(this.model.graphData.getV_Y(this.model.timer), this.model.graphData.getV_X(this.model.timer), 0);
+      this.refCorArrowDir.normalize();
+      const magnitude = Math.abs(this.model.graphData.getCor(this.model.timer) / this.maxRefCor)
+      this.refCorArrow = new THREE.ArrowHelper(this.refCorArrowDir, origin, magnitude * 50, '#027320', magnitude * 20, magnitude * 10);
+      this.refCorArrow.line.material = new THREE.LineDashedMaterial({
+        color: '#027320',
+        linewidth: 2,
+        scale: 15,
+        dashSize: 2,
+        gapSize: 1,
       })
       this.refCorArrow.line.computeLineDistances()
-        this.testCenArrowDir = new THREE.Vector3(  this.puckITest.position.x - this.disk.position.x , this.puckITest.position.y - this.disk.position.y , 0 );
-        let adjustedTestCenForce = Math.abs(this.model.graphDataTest.getCen(this.model.timer)/this.maxTestCen)
-        this.testCenArrowDir.normalize();
-        const originTest = this.puckITest.position;
-        // const hex = 0xff00ff;
-        this.testCenArrow = new THREE.ArrowHelper( this.testCenArrowDir, originTest, adjustedTestCenForce*50, hex,adjustedTestCenForce*20,adjustedTestCenForce*10);
-        this.testCorArrowDir = new THREE.Vector3( this.model.graphDataTest.getV_Y(this.model.timer), this.model.graphDataTest.getV_X(this.model.timer), 0 );
-        this.testCorArrowDir.normalize();
-        const magnitudeTest = Math.abs(this.model.graphDataTest.getCor(this.model.timer)/this.maxTestCor)
-        this.testCorArrow = new THREE.ArrowHelper( this.testCorArrowDir, originTest, magnitudeTest*50, '#027320',magnitudeTest*20,magnitudeTest*10);
-        this.testCorArrow.line.material = new THREE.LineDashedMaterial({
-          color: '#027320',
-          linewidth: 2,
-          scale: 15,
-          dashSize: 2,
-          gapSize: 1,
+      this.testCenArrowDir = new THREE.Vector3(this.puckITest.position.x - this.disk.position.x, this.puckITest.position.y - this.disk.position.y, 0);
+      let adjustedTestCenForce = Math.abs(this.model.graphDataTest.getCen(this.model.timer) / this.maxTestCen)
+      this.testCenArrowDir.normalize();
+      const originTest = this.puckITest.position;
+      // const hex = 0xff00ff;
+      this.testCenArrow = new THREE.ArrowHelper(this.testCenArrowDir, originTest, adjustedTestCenForce * 50, hex, adjustedTestCenForce * 20, adjustedTestCenForce * 10);
+      this.testCorArrowDir = new THREE.Vector3(this.model.graphDataTest.getV_Y(this.model.timer), this.model.graphDataTest.getV_X(this.model.timer), 0);
+      this.testCorArrowDir.normalize();
+      const magnitudeTest = Math.abs(this.model.graphDataTest.getCor(this.model.timer) / this.maxTestCor)
+      this.testCorArrow = new THREE.ArrowHelper(this.testCorArrowDir, originTest, magnitudeTest * 50, '#027320', magnitudeTest * 20, magnitudeTest * 10);
+      this.testCorArrow.line.material = new THREE.LineDashedMaterial({
+        color: '#027320',
+        linewidth: 2,
+        scale: 15,
+        dashSize: 2,
+        gapSize: 1,
       })
-        if (this.model.showForceVectors){
-          this.arrowGroup.add( this.refCorArrow );
-          this.arrowGroup.add(this.refCenArrow);
-          this.arrowGroup.add( this.testCorArrow );
-          this.arrowGroup.add(this.testCenArrow);
-  
-        }
-        const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
-          if (Math.sqrt(this.model.graphData.getX(this.model.timer)**2 +this.model.graphData.getY(this.model.timer)**2)<= 165 ||  (Math.sqrt(this.model.graphDataTest.getX(this.model.timer)**2 +this.model.graphDataTest.getY(this.model.timer)**2)<= 165 && this.model.graphDataTest.data.length > 5)) {
-          this.diskRef.rotateZ(dt  * this.model.omega * this.model.simSpeed *-1);
-          }
-          const bufferXRef = this.puckRefRef.position.x;
-          const bufferYRef = this.puckRefRef.position.y ;
-          const bufferXI = this.puckIRef.position.x;
-          const bufferYI = this.puckIRef.position.y;
-  
-          const bufferXRefTest = this.puckRefTest.position.x;
-          const bufferYRefTest = this.puckRefTest.position.y;
-          const bufferXITest = this.puckITest.position.x;
-          const bufferYITest = this.puckITest.position.y;
-  
-          if (this.model.graphDataTest.getX(this.model.timer) !== 0 && this.model.graphDataTest.getY(this.model.timer) !== 0) {
-  
-            this.puckITest.position.x = this.model.graphDataTest.getXI(this.model.timer) + this.iOffset;
-            this.puckITest.position.y = this.model.graphDataTest.getYI(this.model.timer)*-1;
-            this.pathITest.quadraticCurveTo(bufferXITest, bufferYITest, this.puckITest.position.x, this.puckITest.position.y);
-  
-            this.puckRefTest.position.x = this.model.graphDataTest.getX(this.model.timer) + this.refOffset;
-            this.puckRefTest.position.y = this.model.graphDataTest.getY(this.model.timer)*-1;
-            this.pathRefTest.quadraticCurveTo(bufferXRefTest, bufferYRefTest, this.puckRefTest.position.x, this.puckRefTest.position.y);
-          }
-          if (refContinue){
-            this.puckIRef.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
-            this.puckIRef.position.y = this.model.graphData.getYI(this.model.timer)*-1;
-            this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckIRef.position.x, this.puckIRef.position.y);
-            // console.log(this.pathRefRef.)
-    
-            this.puckRefRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
-            this.puckRefRef.position.y = this.model.graphData.getY(this.model.timer)*-1;
-            this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRefRef.position.x, this.puckRefRef.position.y);
-  
-          }
-  
-          // Update geometries and lines
-          const updateLine = (path, line, material) => {
-            const points = path.getPoints();
-            const geometry = new THREE.BufferGeometry().setFromPoints(points);
-            this.scene.remove(line);
-            line = new THREE.Line(geometry, material);
-            line.computeLineDistances()
-            // console.log(line.computeLineDistances())
-            this.scene.add(line);
-            return line;
-          };
-  
-  
-          const materialTestPath = new THREE.LineBasicMaterial({
-            color: 0x0000ff,
-  
-            transparent: true
-          });
-  
-          const materialPath = new THREE.LineDashedMaterial({
-            color: 0xff0000,
-            linewidth: 2,
-            scale: 0.5,
-            dashSize: 3,
-            gapSize: 2,
-            transparent: false
-          });
-          if (this.model.graphDataTest.getX(this.model.timer) !== 0 && this.model.graphDataTest.getY(this.model.timer) !== 0) {
-            this.lineITest = updateLine(this.pathITest, this.lineITest, materialTestPath);
-            this.lineRefTest = updateLine(this.pathRefTest, this.lineRefTest, materialTestPath);
-          }
-          if (refContinue){
-            this.lineIRef = updateLine(this.pathIRef, this.lineIRef, materialPath);
-            this.lineRefRef = updateLine(this.pathRefRef, this.lineRefRef, materialPath);
-          }
-        };
-  
-        // if (!this.passedStart) {
-        //   updatePuckAndPath();
-        //   this.passedStart = true;
-        // } else 
-        if (Math.sqrt(this.model.graphData.getX(this.model.timer)**2 +this.model.graphData.getY(this.model.timer)**2)<= 165 ) {
-          this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
-          this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getCor(this.model.timer)));
-          this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
-          this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getCen(this.model.timer)));
-  
-  
-        }
-        if (Math.sqrt(this.model.graphDataTest.getX(this.model.timer)**2 +this.model.graphDataTest.getY(this.model.timer)**2)<= 165 ) {
-          if (this.model.xEQ !== "" && this.model.yEQ !== "" && this.model.v_xEQ !== "" && this.model.v_yEQ !== "") {
-            this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(this.model.timer));
-            this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getCor(this.model.timer)));
-            this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(this.model.timer));
-            this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getCen(this.model.timer)));
-          }
-  
-  
-        }
-        updatePuckAndPath(true, true);
+      if (this.model.showForceVectors) {
+        this.arrowGroup.add(this.refCorArrow);
+        this.arrowGroup.add(this.refCenArrow);
+        this.arrowGroup.add(this.testCorArrow);
+        this.arrowGroup.add(this.testCenArrow);
+
       }
+      const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
+        if (Math.sqrt(this.model.graphData.getX(this.model.timer) ** 2 + this.model.graphData.getY(this.model.timer) ** 2) <= 165 || (Math.sqrt(this.model.graphDataTest.getX(this.model.timer) ** 2 + this.model.graphDataTest.getY(this.model.timer) ** 2) <= 165 && this.model.graphDataTest.data.length > 5)) {
+          this.diskRef.rotateZ(dt * this.model.omega * this.model.simSpeed * -1);
+        }
+        const bufferXRef = this.puckRefRef.position.x;
+        const bufferYRef = this.puckRefRef.position.y;
+        const bufferXI = this.puckIRef.position.x;
+        const bufferYI = this.puckIRef.position.y;
+
+        const bufferXRefTest = this.puckRefTest.position.x;
+        const bufferYRefTest = this.puckRefTest.position.y;
+        const bufferXITest = this.puckITest.position.x;
+        const bufferYITest = this.puckITest.position.y;
+
+        if (this.model.graphDataTest.getX(this.model.timer) !== 0 && this.model.graphDataTest.getY(this.model.timer) !== 0) {
+
+          this.puckITest.position.x = this.model.graphDataTest.getXI(this.model.timer) + this.iOffset;
+          this.puckITest.position.y = this.model.graphDataTest.getYI(this.model.timer) * -1;
+          this.pathITest.quadraticCurveTo(bufferXITest, bufferYITest, this.puckITest.position.x, this.puckITest.position.y);
+
+          this.puckRefTest.position.x = this.model.graphDataTest.getX(this.model.timer) + this.refOffset;
+          this.puckRefTest.position.y = this.model.graphDataTest.getY(this.model.timer) * -1;
+          this.pathRefTest.quadraticCurveTo(bufferXRefTest, bufferYRefTest, this.puckRefTest.position.x, this.puckRefTest.position.y);
+        }
+        if (refContinue) {
+          this.puckIRef.position.x = this.model.graphData.getXI(this.model.timer) + this.iOffset;
+          this.puckIRef.position.y = this.model.graphData.getYI(this.model.timer) * -1;
+          this.pathIRef.quadraticCurveTo(bufferXI, bufferYI, this.puckIRef.position.x, this.puckIRef.position.y);
+          // console.log(this.pathRefRef.)
+
+          this.puckRefRef.position.x = this.model.graphData.getX(this.model.timer) + this.refOffset;
+          this.puckRefRef.position.y = this.model.graphData.getY(this.model.timer) * -1;
+          this.pathRefRef.quadraticCurveTo(bufferXRef, bufferYRef, this.puckRefRef.position.x, this.puckRefRef.position.y);
+
+        }
+
+        // Update geometries and lines
+        const updateLine = (path, line, material) => {
+          const points = path.getPoints();
+          const geometry = new THREE.BufferGeometry().setFromPoints(points);
+          this.scene.remove(line);
+          line = new THREE.Line(geometry, material);
+          line.computeLineDistances()
+          // console.log(line.computeLineDistances())
+          this.scene.add(line);
+          return line;
+        };
+
+
+        const materialTestPath = new THREE.LineBasicMaterial({
+          color: 0x0000ff,
+
+          transparent: true
+        });
+
+        const materialPath = new THREE.LineDashedMaterial({
+          color: 0xff0000,
+          linewidth: 2,
+          scale: 0.5,
+          dashSize: 3,
+          gapSize: 2,
+          transparent: false
+        });
+        if (this.model.graphDataTest.getX(this.model.timer) !== 0 && this.model.graphDataTest.getY(this.model.timer) !== 0) {
+          this.lineITest = updateLine(this.pathITest, this.lineITest, materialTestPath);
+          this.lineRefTest = updateLine(this.pathRefTest, this.lineRefTest, materialTestPath);
+        }
+        if (refContinue) {
+          this.lineIRef = updateLine(this.pathIRef, this.lineIRef, materialPath);
+          this.lineRefRef = updateLine(this.pathRefRef, this.lineRefRef, materialPath);
+        }
+      };
+
+      // if (!this.passedStart) {
+      //   updatePuckAndPath();
+      //   this.passedStart = true;
+      // } else 
+      if (Math.sqrt(this.model.graphData.getX(this.model.timer) ** 2 + this.model.graphData.getY(this.model.timer) ** 2) <= 165) {
+        this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
+        this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getCor(this.model.timer)));
+        this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
+        this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getCen(this.model.timer)));
+
+
+      }
+      if (Math.sqrt(this.model.graphDataTest.getX(this.model.timer) ** 2 + this.model.graphDataTest.getY(this.model.timer) ** 2) <= 165) {
+        if (this.model.xEQ !== "" && this.model.yEQ !== "" && this.model.v_xEQ !== "" && this.model.v_yEQ !== "") {
+          this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(this.model.timer));
+          this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getCor(this.model.timer)));
+          this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(this.model.timer));
+          this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getCen(this.model.timer)));
+        }
+
+
+      }
+      updatePuckAndPath(true, true);
+    }
 
 
   }
 
 
-  
+
 }
 
 
