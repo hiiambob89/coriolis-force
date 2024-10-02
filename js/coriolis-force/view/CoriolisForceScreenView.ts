@@ -25,6 +25,9 @@ import { drawCoriolis, drawCen } from '../../common/makeGraphs.js';
 import { verifyEq } from '../../common/verifyEq.js';
 import { LineBasicMaterial } from 'c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index';
 import ToggleSwitch from '../../../../sun/js/ToggleSwitch.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
+import DiscreteInfoDialog from './DiscreteInfoDialog.js';
+import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
 
 
 type SelfOptions = {
@@ -82,7 +85,7 @@ export default class CoriolisForceScreenView extends ScreenView {
   arrowGroup: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Group;
   corCen: import("c:/Users/aggies/Desktop/phetsims/chipper/node_modules/@types/three/index").Group;
 
-  public constructor(model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions) {
+  public constructor(model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions, tandem: Tandem) {
 
     const options = optionize<CoriolisForceScreenViewOptions, SelfOptions, ScreenViewOptions>()({
 
@@ -556,11 +559,24 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.addChild(refPanel)
     refPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 5)
 
+    const infoDialog = new DiscreteInfoDialog( options.tandem.createTandem( 'infoDialog' ) );
+
+    // Button to open the dialog
+    const infoButton = new InfoButton( {
+      listener: () => infoDialog.show(),
+      iconFill: 'rgb( 50, 145, 184 )',
+      scale: 0.6,
+      touchAreaDilation: 15,
+      tandem: options.tandem.createTandem( 'infoButton' )
+    } );
+    // this.addChild(infoButton)
+
     let equationPanel =
       new Panel(new VBox({
         align: "center", children: [
           //eqation switch here
-          new RichText("Test Equations"),
+          new HBox({align: "center", children:[new RichText("Test Equations"), new Rectangle(0, 0, 10, 0), infoButton]}),
+          
           new Rectangle(0, 0, 350, 15),
           // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
           // new HBox({ align: "center", children: [new RichText("Show Reference Force Vectors?"), new Rectangle(0, 0, 10, 0), forceRefVectorToggle] }),
