@@ -28,7 +28,7 @@ export default class DiscreteInfoDialog extends Dialog {
       "<sub>Fraction: Enter the numerator, then press <i>/</i> to move to the denominator.</sub>",
       "<sub>Exponent: x^2 (Type <i>^</i> after the base value)</sub>",
       "<sub>Subscript: x_1 (Type <i>_</i> after the base value)</sub>",
-      "<sub>Multiplication dot: Press <i>Shift + 0</i></sub>",
+      "<sub>Multiplication dot: Press <i>Shift + 8</i></sub>",
       "<sub>Parentheses: () (Press <i>Shift + 9</i> for ( and <i>Shift + 0</i> for ))</sub>",
       "<sub>Pi (π): <i>\\pi</i></sub>",
       "<sub>Sum: <i>+</i></sub>",

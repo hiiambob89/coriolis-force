@@ -546,19 +546,21 @@ export default class CoriolisForceScreenView extends ScreenView {
     let refPanel =
       new Panel(new VBox({
         align: "center", children: [
-          new RichText("Reference"),
+          new RichText("Vectors Visualization"),
           new Rectangle(0, 0, 350, 15),
           new HBox({ align: "center", children: [new RichText("Show Reference Force Vectors?"), new Rectangle(0, 0, 10, 0), forceRefVectorToggle] }),
           new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
           new HBox({ align: "center", children: [new RichText("Trail Reference Force Vectors?"), new Rectangle(0, 0, 10, 0), trailRefVectorToggle] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] })
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [new RichText("Show Test Force Vectors?"), new Rectangle(0, 0, 60, 0), forceTestVectorToggle] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [new RichText("Trail Test Force Vectors?"), new Rectangle(0, 0, 60, 0), trailTestVectorToggle] }),
         ]
       }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
 
 
     this.addChild(refPanel)
-    refPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 5)
-
+    
     const infoDialog = new DiscreteInfoDialog( options.tandem.createTandem( 'infoDialog' ) );
 
     // Button to open the dialog
@@ -578,17 +580,10 @@ export default class CoriolisForceScreenView extends ScreenView {
           new HBox({align: "center", children:[new RichText("Test Equations"), new Rectangle(0, 0, 10, 0), infoButton]}),
           
           new Rectangle(0, 0, 350, 15),
-          // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
-          // new HBox({ align: "center", children: [new RichText("Show Reference Force Vectors?"), new Rectangle(0, 0, 10, 0), forceRefVectorToggle] }),
+          // new HBox({ align: "center", children: [new RichText("Show Test Force Vectors?"), new Rectangle(0, 0, 10, 0), forceTestVectorToggle] }),
           // new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [new RichText("Show Test Force Vectors?"), new Rectangle(0, 0, 10, 0), forceTestVectorToggle] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          // new HBox({ align: "center", children: [new RichText("Trail Reference Force Vectors?"), new Rectangle(0, 0, 10, 0), trailRefVectorToggle] }),
+          // new HBox({ align: "center", children: [new RichText("Trail Test Force Vectors?"), new Rectangle(0, 0, 10, 0), trailTestVectorToggle] }),
           // new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          // new HBox({ align: "center", children: [new RichText("Show Test Force Vectors?"), new Rectangle(0, 0, 10, 0), forceVectorToggle] }),
-          // new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [new RichText("Trail Test Force Vectors?"), new Rectangle(0, 0, 10, 0), trailTestVectorToggle] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
           new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
           new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
           new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
@@ -637,9 +632,11 @@ export default class CoriolisForceScreenView extends ScreenView {
 
 
     this.addChild(equationPanel)
-    equationPanel.leftTop = new Vector2(0, refPanel.rightBottom.y + 5)
+    equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 5)
+    refPanel.leftTop = new Vector2(0, equationPanel.rightBottom.y + 5)
+
     // resetAllButton.leftTop = new Vector2(equationPanel.rightBottom.x - 50, equationPanel.rightBottom.y + 10)
-    speedPanel.leftTop = new Vector2(equationPanel.leftBottom.x, equationPanel.leftBottom.y + 5)
+    speedPanel.leftTop = new Vector2(refPanel.leftBottom.x, refPanel.leftBottom.y + 5)
 
     buttonMass.lazyLink(() => { model.massProp.value = Number(window.prompt("Enter value for mass:")); this.reset(); })
     buttonFriction.lazyLink(() => { model.kProp.value = Number(window.prompt("Enter value for k:")); this.reset(); })
