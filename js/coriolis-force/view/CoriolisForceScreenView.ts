@@ -25,6 +25,9 @@ import { drawCoriolis, drawCen } from '../../common/makeGraphs.js';
 import { verifyEq } from '../../common/verifyEq.js';
 import { LineBasicMaterial } from 'c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index';
 import ToggleSwitch from '../../../../sun/js/ToggleSwitch.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
+import DiscreteInfoDialog from './DiscreteInfoDialog.js';
+import InfoButton from '../../../../scenery-phet/js/buttons/InfoButton.js';
 
 
 type SelfOptions = {
@@ -82,7 +85,7 @@ export default class CoriolisForceScreenView extends ScreenView {
   arrowGroup: import("c:/Users/kaden/phetsims/chipper/node_modules/@types/three/index").Group;
   corCen: import("c:/Users/aggies/Desktop/phetsims/chipper/node_modules/@types/three/index").Group;
 
-  public constructor(model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions) {
+  public constructor(model: CoriolisForceModel, providedOptions: CoriolisForceScreenViewOptions, tandem: Tandem) {
 
     const options = optionize<CoriolisForceScreenViewOptions, SelfOptions, ScreenViewOptions>()({
 
@@ -527,22 +530,60 @@ export default class CoriolisForceScreenView extends ScreenView {
     // const switchEquationProp = new Property<boolean>(model.coriolisEq);
     // const equationSwitch = new ToggleSwitch(switchEquationProp,true,false)
     // const forceVectorToggle = new ToggleSwitch(model.showForceProp, true, false);
-    const forceVectorToggle = new ToggleSwitch(model.showForceProp, true, false);
-    model.showForceProp.lazyLink((e) => model.showForceVectors = !e)
-    const trailVectorToggle = new ToggleSwitch(model.trailForceVectorsProp, true, false);
-    model.trailForceVectorsProp.lazyLink((e) => model.trailForceVectors = !e)
+    // const forceVectorToggle = new ToggleSwitch(model.showForceProp, true, false);
+    // model.showForceProp.lazyLink((e) => model.showForceVectors = !e)
+    const forceRefVectorToggle = new ToggleSwitch(model.showRefForceProp, true, false);
+    model.showRefForceProp.lazyLink((e) => model.showRefForceVectors = !e)
+    const forceTestVectorToggle = new ToggleSwitch(model.showTestForceProp, true, false);
+    model.showTestForceProp.lazyLink((e) => model.showTestForceVectors = !e)
+    // const trailVectorToggle = new ToggleSwitch(model.trailForceVectorsProp, true, false);
+    // model.trailForceVectorsProp.lazyLink((e) => model.trailForceVectors = !e)
+    const trailRefVectorToggle = new ToggleSwitch(model.trailRefForceVectorsProp, true, false);
+    model.trailRefForceVectorsProp.lazyLink((e) => model.trailRefForceVectors = !e)
+    const trailTestVectorToggle = new ToggleSwitch(model.trailTestForceVectorsProp, true, false);
+    model.trailTestForceVectorsProp.lazyLink((e) => model.trailTestForceVectors = !e)
+
+    let refPanel =
+      new Panel(new VBox({
+        align: "center", children: [
+          new RichText("Vectors Visualization"),
+          new Rectangle(0, 0, 350, 15),
+          new HBox({ align: "center", children: [new RichText("Show Reference Force Vectors?"), new Rectangle(0, 0, 10, 0), forceRefVectorToggle] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [new RichText("Trail Reference Force Vectors?"), new Rectangle(0, 0, 10, 0), trailRefVectorToggle] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [new RichText("Show Test Force Vectors?"), new Rectangle(0, 0, 60, 0), forceTestVectorToggle] }),
+          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          new HBox({ align: "center", children: [new RichText("Trail Test Force Vectors?"), new Rectangle(0, 0, 60, 0), trailTestVectorToggle] }),
+        ]
+      }), { fill: new Color("#d3d3d3"), maxWidth: 230 })
+
+
+    this.addChild(refPanel)
+    
+    const infoDialog = new DiscreteInfoDialog( options.tandem.createTandem( 'infoDialog' ) );
+
+    // Button to open the dialog
+    const infoButton = new InfoButton( {
+      listener: () => infoDialog.show(),
+      iconFill: 'rgb( 50, 145, 184 )',
+      scale: 0.6,
+      touchAreaDilation: 15,
+      tandem: options.tandem.createTandem( 'infoButton' )
+    } );
+    // this.addChild(infoButton)
 
     let equationPanel =
       new Panel(new VBox({
         align: "center", children: [
           //eqation switch here
-          new RichText("Test Equations"),
+          new HBox({align: "center", children:[new RichText("Test Equations"), new Rectangle(0, 0, 10, 0), infoButton]}),
+          
           new Rectangle(0, 0, 350, 15),
-          // new HBox({align: "center", children: [new RichText("Coriolis Eq"),equationSwitch,new RichText("Projectile Eq")]}),
-          new HBox({ align: "center", children: [new RichText("Show Force Vectors?"), new Rectangle(0, 0, 10, 0), forceVectorToggle] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
-          new HBox({ align: "center", children: [new RichText("Trail Force Vectors?"), new Rectangle(0, 0, 10, 0), trailVectorToggle] }),
-          new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          // new HBox({ align: "center", children: [new RichText("Show Test Force Vectors?"), new Rectangle(0, 0, 10, 0), forceTestVectorToggle] }),
+          // new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
+          // new HBox({ align: "center", children: [new RichText("Trail Test Force Vectors?"), new Rectangle(0, 0, 10, 0), trailTestVectorToggle] }),
+          // new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
           new HBox({ align: "center", children: [xdotPrimeDOM, xdotBox] }),
           new HBox({ children: [new Rectangle(0, 0, 0, 10)] }),
           new HBox({ align: "center", children: [ydotPrimeDOM, ydotBox] }),
@@ -591,9 +632,11 @@ export default class CoriolisForceScreenView extends ScreenView {
 
 
     this.addChild(equationPanel)
-    equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 10)
+    equationPanel.leftTop = new Vector2(0, constantPanel.rightBottom.y + 5)
+    refPanel.leftTop = new Vector2(0, equationPanel.rightBottom.y + 5)
+
     // resetAllButton.leftTop = new Vector2(equationPanel.rightBottom.x - 50, equationPanel.rightBottom.y + 10)
-    speedPanel.leftTop = new Vector2(equationPanel.leftBottom.x, equationPanel.leftBottom.y + 5)
+    speedPanel.leftTop = new Vector2(refPanel.leftBottom.x, refPanel.leftBottom.y + 5)
 
     buttonMass.lazyLink(() => { model.massProp.value = Number(window.prompt("Enter value for mass:")); this.reset(); })
     buttonFriction.lazyLink(() => { model.kProp.value = Number(window.prompt("Enter value for k:")); this.reset(); })
@@ -969,19 +1012,42 @@ export default class CoriolisForceScreenView extends ScreenView {
   public override step(dt: number): void {
     // console.log(dt)
     if (!document.hidden) {
+      this.model.timer += dt * this.model.simSpeed;
       this.model.timer += dt*this.model.simSpeed;
     }
     if (this.model.timer <= 10) {
       // console.log(dt)
-      if (this.model.trailForceVectors) {
+      if (this.model.trailRefForceVectors && !this.model.trailTestForceVectors) {
         if (this.model.frameCount % 50 !== 0) {
           this.arrowGroup.remove(this.refCenArrow)
           this.arrowGroup.remove(this.refCorArrow)
+
+        }
+        this.arrowGroup.remove(this.testCenArrow)
+        this.arrowGroup.remove(this.testCorArrow)
+        this.model.frameCount++;
+      }
+      else if (this.model.trailTestForceVectors && !this.model.trailRefForceVectors) {
+        if (this.model.frameCount % 50 !== 0) {
           this.arrowGroup.remove(this.testCenArrow)
           this.arrowGroup.remove(this.testCorArrow)
+
+        }
+        this.arrowGroup.remove(this.refCenArrow)
+        this.arrowGroup.remove(this.refCorArrow)
+        this.model.frameCount++;
+      }
+      else if (this.model.trailTestForceVectors && this.model.trailRefForceVectors) {
+        if (this.model.frameCount % 50 !== 0) {
+          this.arrowGroup.remove(this.testCenArrow)
+          this.arrowGroup.remove(this.testCorArrow)
+          this.arrowGroup.remove(this.refCenArrow)
+          this.arrowGroup.remove(this.refCorArrow)
         }
         this.model.frameCount++;
-      } else {
+      }
+
+      else {
         this.arrowGroup.remove(this.refCenArrow)
         this.arrowGroup.remove(this.refCorArrow)
         this.arrowGroup.remove(this.testCenArrow)
@@ -1025,12 +1091,14 @@ export default class CoriolisForceScreenView extends ScreenView {
         dashSize: 2,
         gapSize: 1,
       })
-      if (this.model.showForceVectors) {
+      if (this.model.showRefForceVectors) {
         this.arrowGroup.add(this.refCorArrow);
         this.arrowGroup.add(this.refCenArrow);
+
+      }
+      if (this.model.showTestForceVectors) {
         this.arrowGroup.add(this.testCorArrow);
         this.arrowGroup.add(this.testCenArrow);
-
       }
       const updatePuckAndPath = (testContinue?: boolean, refContinue?: boolean) => {
         if (Math.sqrt(this.model.graphData.getX(this.model.timer) ** 2 + this.model.graphData.getY(this.model.timer) ** 2) <= 165 || (Math.sqrt(this.model.graphDataTest.getX(this.model.timer) ** 2 + this.model.graphDataTest.getY(this.model.timer) ** 2) <= 165 && this.model.graphDataTest.data.length > 5)) {

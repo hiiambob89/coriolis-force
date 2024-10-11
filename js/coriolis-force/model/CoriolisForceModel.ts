@@ -64,10 +64,18 @@ export default class CoriolisForceModel implements TModel {
   public prevX: number
   coriolisEq: boolean;
   showForceVectors: boolean;
+  showRefForceVectors: boolean;
+  showTestForceVectors: boolean;
   showForceProp: Property<boolean>;
+  showRefForceProp: Property<boolean>;
+  showTestForceProp: Property<boolean>;
   frameCount: number;
   trailForceVectors: boolean;
   trailForceVectorsProp: Property<boolean>;
+  trailRefForceVectors: boolean;
+  trailTestForceVectors: boolean;
+  trailRefForceVectorsProp: Property<boolean>;
+  trailTestForceVectorsProp: Property<boolean>;
 
   public constructor(providedOptions: CoriolisForceModelOptions) {
     this.frameCount = 1
@@ -89,7 +97,13 @@ export default class CoriolisForceModel implements TModel {
     this.graphData = new simData(this.graphUpdateInterval)
     this.graphDataTest = new simData(this.graphUpdateInterval)
     this.showForceVectors = true;
+    this.showRefForceVectors = true;
+    this.showTestForceVectors = true;
+    this.showRefForceVectors = true;
+    this.showTestForceVectors = true;
     this.trailForceVectors = false;
+    this.trailRefForceVectors = false;
+    this.trailTestForceVectors = false;
 
 
     this.kProp = new Property(this.k);
@@ -100,9 +114,13 @@ export default class CoriolisForceModel implements TModel {
     this.omegaProp = new Property(this.omega);
     this.massProp = new Property(this.mass);
     this.graphData = new simData(this.graphUpdateInterval);
-    this.simSpeedProp = new Property(this.simSpeed);
+    this.simSpeedProp = new Property(this.simSpeed); 
     this.showForceProp = new Property(!this.showForceVectors);
+    this.showRefForceProp = new Property(!this.showRefForceVectors);
+    this.showTestForceProp = new Property(!this.showTestForceVectors);
     this.trailForceVectorsProp = new Property(!this.trailForceVectors);
+    this.trailRefForceVectorsProp = new Property(!this.trailRefForceVectors);
+    this.trailTestForceVectorsProp = new Property(!this.trailTestForceVectors);
     this.graphData = getGraphData(this.quadraticDrag, this.graphUpdateInterval, this.x, this.y, this.v_x, this.v_y, this.gravity, this.k, this.mass, this.omega, {}, false, this.graphLen, this.graphData, this.timer,this.coriolisEq);
     // console.log(this.graphData)
     // console.log(this.y)
