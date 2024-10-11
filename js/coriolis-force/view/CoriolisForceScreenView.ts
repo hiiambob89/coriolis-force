@@ -161,20 +161,20 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     this.refDistanceCenterGraph = new phet.scenery.DOM(this.refDistanceCenterGraph.node);
     this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(0));
-    this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(model.graphData.getCor(0)));
+    this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(Math.sqrt(model.graphData.getCorX(0)**2+model.graphData.getCorY(0)**2)));
     if (model.graphDataTest.data.length > 10) {
       this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(0));
-      this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(model.graphDataTest.getCor(0)));
+      this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(Math.sqrt(model.graphData.getCorX(0)**2+model.graphData.getCorY(0)**2)));
     }
     this.addChild(this.refDistanceCenterGraph)
     this.refDistanceCenterGraph.leftTop = new Vector2(1050, 50)
 
     this.refTangentialVelocityGraph = new phet.scenery.DOM(this.refTangentialVelocityGraph.node);
     this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(0));
-    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(model.graphData.getCen(0)));
+    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(Math.sqrt(model.graphData.getCenX(0)**2+model.graphData.getCenY(0)**2)));
     if (model.graphDataTest.data.length > 10) {
       this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(0));
-      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(model.graphDataTest.getCen(0)));
+      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(Math.sqrt(model.graphDataTest.getCenX(0)**2+model.graphDataTest.getCenY(0)**2)));
     }
     this.addChild(this.refTangentialVelocityGraph)
     this.refTangentialVelocityGraph.leftTop = new Vector2(1225, 50)
@@ -738,7 +738,7 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     this.lineITest = new THREE.Line(geometryPathI, materialTestPathI);
 
-    this.maxRefCen = d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
+    this.maxRefCen = d3.max(this.model.graphData.data, (d) => Math.abs(Math.sqrt(d.cenx**2 + d.ceny**2)))
     this.refCenArrowDir = new THREE.Vector3(0, 0, 0);
     this.refCenArrowDir.normalize();
 
@@ -749,17 +749,17 @@ export default class CoriolisForceScreenView extends ScreenView {
 
     this.refCenArrow = new THREE.ArrowHelper(this.refCenArrowDir, puckIRef.position, 50, hex, 10, 20);
 
-    this.maxRefCor = d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
+    this.maxRefCor = d3.max(this.model.graphData.data, (d) => Math.abs(Math.sqrt(d.corx**2 + d.cory**2)))
     this.refCorArrowDir = new THREE.Vector3(0, 0, 0);
     this.refCorArrowDir.normalize();
     this.refCorArrow = new THREE.ArrowHelper(this.refCorArrowDir, origin, length, "#027320", 10, 20);
     //////////////////////////////////////////////////////////////////
-    this.maxTestCen = d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
+    this.maxTestCen = d3.max(this.model.graphDataTest.data, (d) => Math.abs(Math.sqrt(d.cenx**2 + d.ceny**2)))
     this.testCenArrowDir = new THREE.Vector3(0, 0, 0);
     this.testCenArrowDir.normalize();
     const originTest = puckIRef.position;
     this.testCenArrow = new THREE.ArrowHelper(this.testCenArrowDir, puckITest.position, 50, hex, 10, 20);
-    this.maxTestCor = d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
+    this.maxTestCor = d3.max(this.model.graphDataTest.data, (d) => Math.abs(Math.sqrt(d.corx**2 + d.cory**2)))
     this.testCorArrowDir = new THREE.Vector3(0, 0, 0);
     this.testCorArrowDir.normalize();
     this.testCorArrow = new THREE.ArrowHelper(this.testCorArrowDir, originTest, length, hex, 10, 20);
@@ -849,10 +849,10 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.arrowGroup = new THREE.Group()
     this.scene.add(this.arrowGroup)
     // console.log(this.model.graphData)
-    this.maxRefCen = d3.max(this.model.graphData.data, (d) => Math.abs(d.cen))
-    this.maxRefCor = d3.max(this.model.graphData.data, (d) => Math.abs(d.cor))
-    this.maxTestCen = d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cen))
-    this.maxTestCor = d3.max(this.model.graphDataTest.data, (d) => Math.abs(d.cor))
+    this.maxRefCen = d3.max(this.model.graphData.data, (d) => Math.abs(Math.sqrt(d.cenx**2 + d.ceny**2)))
+    this.maxRefCor = d3.max(this.model.graphData.data, (d) => Math.abs(Math.sqrt(d.corx**2 + d.cory**2)))
+    this.maxTestCen = d3.max(this.model.graphDataTest.data, (d) => Math.abs(Math.sqrt(d.cenx**2 + d.ceny**2)))
+    this.maxTestCor = d3.max(this.model.graphDataTest.data, (d) => Math.abs(Math.sqrt(d.corx**2 + d.cory**2)))
 
     this.diskRef.rotation.z = 0;
 
@@ -952,16 +952,16 @@ export default class CoriolisForceScreenView extends ScreenView {
     this.addChild(this.refTangentialVelocityGraph);
 
     this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(0));
-    this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getCor(0)));
+    this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(Math.sqrt(this.model.graphData.getCorX(0)**2+this.model.graphData.getCorY(0)**2)));
     if (this.model.graphDataTest.data.length > 10) {
       this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(0));
-      this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getCor(0)));
+      this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(Math.sqrt(this.model.graphDataTest.getCorX(0)**2+this.model.graphDataTest.getCorY(0)**2)));
     }
     this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(0));
-    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getCen(0)));
+    this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(Math.sqrt(this.model.graphData.getCenX(0)**2+this.model.graphData.getCenY(0)**2)));
     if (this.model.graphDataTest.data.length > 10) {
       this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(0));
-      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getCen(0)));
+      this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(Math.sqrt(this.model.graphDataTest.getCenX(0)**2+this.model.graphDataTest.getCenY(0)**2)));
     }
   }
 
@@ -969,7 +969,7 @@ export default class CoriolisForceScreenView extends ScreenView {
   public override step(dt: number): void {
     // console.log(dt)
     if (!document.hidden) {
-      this.model.timer += dt;
+      this.model.timer += dt*this.model.simSpeed;
     }
     if (this.model.timer <= 10) {
       // console.log(dt)
@@ -988,15 +988,16 @@ export default class CoriolisForceScreenView extends ScreenView {
         this.arrowGroup.remove(this.testCorArrow)
       }
 
-      this.refCenArrowDir = new THREE.Vector3(this.puckIRef.position.x - this.disk.position.x, this.puckIRef.position.y - this.disk.position.y, 0);
-      let adjustedRefCenForce = Math.abs(this.model.graphData.getCen(this.model.timer) / this.maxRefCen)
+      // this.refCenArrowDir = new THREE.Vector3(this.model.graphData.getCenY(this.model.timer), this.model.graphData.getCenX(this.model.timer), 0);
+      this.refCenArrowDir = new THREE.Vector3(this.model.graphData.getCenX(this.model.timer), this.model.graphData.getCenY(this.model.timer), 0);
+      let adjustedRefCenForce = Math.abs(Math.sqrt((this.model.graphData.getCenX(this.model.timer)**2)+(this.model.graphData.getCenY(this.model.timer)**2)) / this.maxRefCen)
       this.refCenArrowDir.normalize();
       const origin = this.puckIRef.position;
       const hex = 0xff00ff;
       this.refCenArrow = new THREE.ArrowHelper(this.refCenArrowDir, origin, adjustedRefCenForce * 50, hex, adjustedRefCenForce * 20, adjustedRefCenForce * 10);
-      this.refCorArrowDir = new THREE.Vector3(this.model.graphData.getV_Y(this.model.timer), this.model.graphData.getV_X(this.model.timer), 0);
+      this.refCorArrowDir = new THREE.Vector3(this.model.graphData.getCorX(this.model.timer), this.model.graphData.getCorY(this.model.timer), 0);
       this.refCorArrowDir.normalize();
-      const magnitude = Math.abs(this.model.graphData.getCor(this.model.timer) / this.maxRefCor)
+      const magnitude = Math.abs(Math.sqrt((this.model.graphData.getCorX(this.model.timer)**2)+(this.model.graphData.getCorY(this.model.timer)**2)) / this.maxRefCor)
       this.refCorArrow = new THREE.ArrowHelper(this.refCorArrowDir, origin, magnitude * 50, '#027320', magnitude * 20, magnitude * 10);
       this.refCorArrow.line.material = new THREE.LineDashedMaterial({
         color: '#027320',
@@ -1006,15 +1007,16 @@ export default class CoriolisForceScreenView extends ScreenView {
         gapSize: 1,
       })
       this.refCorArrow.line.computeLineDistances()
-      this.testCenArrowDir = new THREE.Vector3(this.puckITest.position.x - this.disk.position.x, this.puckITest.position.y - this.disk.position.y, 0);
-      let adjustedTestCenForce = Math.abs(this.model.graphDataTest.getCen(this.model.timer) / this.maxTestCen)
+      // this.testCenArrowDir = new THREE.Vector3(this.model.graphDataTest.getCenX(this.model.timer), this.model.graphDataTest.getCenY(this.model.timer), 0);
+      this.testCenArrowDir = new THREE.Vector3(this.model.graphDataTest.getCenX(this.model.timer), this.model.graphDataTest.getCenY(this.model.timer), 0);
+      let adjustedTestCenForce = Math.abs(Math.sqrt((this.model.graphDataTest.getCenX(this.model.timer)**2)+(this.model.graphDataTest.getCenY(this.model.timer)**2)) / this.maxTestCen)
       this.testCenArrowDir.normalize();
       const originTest = this.puckITest.position;
       // const hex = 0xff00ff;
       this.testCenArrow = new THREE.ArrowHelper(this.testCenArrowDir, originTest, adjustedTestCenForce * 50, hex, adjustedTestCenForce * 20, adjustedTestCenForce * 10);
       this.testCorArrowDir = new THREE.Vector3(this.model.graphDataTest.getV_Y(this.model.timer), this.model.graphDataTest.getV_X(this.model.timer), 0);
       this.testCorArrowDir.normalize();
-      const magnitudeTest = Math.abs(this.model.graphDataTest.getCor(this.model.timer) / this.maxTestCor)
+      const magnitudeTest = Math.abs(Math.sqrt(this.model.graphDataTest.getCorX(this.model.timer)**2+this.model.graphDataTest.getCorY(this.model.timer)**2) / this.maxTestCor)
       this.testCorArrow = new THREE.ArrowHelper(this.testCorArrowDir, originTest, magnitudeTest * 50, '#027320', magnitudeTest * 20, magnitudeTest * 10);
       this.testCorArrow.line.material = new THREE.LineDashedMaterial({
         color: '#027320',
@@ -1109,18 +1111,18 @@ export default class CoriolisForceScreenView extends ScreenView {
       // } else 
       if (Math.sqrt(this.model.graphData.getX(this.model.timer) ** 2 + this.model.graphData.getY(this.model.timer) ** 2) <= 165) {
         this.refDistanceCenterGraph.element.children[9].setAttribute('cx', this.xScaleD(this.model.timer));
-        this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(this.model.graphData.getCor(this.model.timer)));
+        this.refDistanceCenterGraph.element.children[9].setAttribute('cy', this.yScaleD(Math.sqrt(this.model.graphData.getCorX(this.model.timer)**2+this.model.graphData.getCorY(this.model.timer)**2)));
         this.refTangentialVelocityGraph.element.children[9].setAttribute('cx', this.xScaleTv(this.model.timer));
-        this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(this.model.graphData.getCen(this.model.timer)));
+        this.refTangentialVelocityGraph.element.children[9].setAttribute('cy', this.yScaleTv(Math.sqrt(this.model.graphData.getCenX(this.model.timer)**2+this.model.graphData.getCenY(this.model.timer)**2)));
 
 
       }
       if (Math.sqrt(this.model.graphDataTest.getX(this.model.timer) ** 2 + this.model.graphDataTest.getY(this.model.timer) ** 2) <= 165) {
         if (this.model.xEQ !== "" && this.model.yEQ !== "" && this.model.v_xEQ !== "" && this.model.v_yEQ !== "") {
           this.refDistanceCenterGraph.element.children[7].setAttribute('cx', this.xScaleD(this.model.timer));
-          this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(this.model.graphDataTest.getCor(this.model.timer)));
+          this.refDistanceCenterGraph.element.children[7].setAttribute('cy', this.yScaleD(Math.sqrt(this.model.graphDataTest.getCorX(this.model.timer)**2+this.model.graphDataTest.getCorY(this.model.timer)**2)));
           this.refTangentialVelocityGraph.element.children[7].setAttribute('cx', this.xScaleTv(this.model.timer));
-          this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(this.model.graphDataTest.getCen(this.model.timer)));
+          this.refTangentialVelocityGraph.element.children[7].setAttribute('cy', this.yScaleTv(Math.sqrt(this.model.graphDataTest.getCenX(this.model.timer)**2+this.model.graphDataTest.getCenY(this.model.timer)**2)));
         }
 
 

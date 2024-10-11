@@ -5,10 +5,10 @@ export function drawCoriolis(globalData, graphLen, divID, type, size, testData, 
   const margin = { top: size / 35, right: 30, bottom: size / (35 / 3), left: 60 };
   const width = size - margin.left - margin.right;
   const height = size - margin.top - margin.bottom;
-  const minX = d3.min(globalData.data, (d) => d.cor)
-  const maxX = d3.max(globalData.data, (d) => d.cor)
-  const minXTest = d3.min(testData.data, (d) => d.cor)
-  const maxXTest = d3.max(testData.data, (d) => d.cor)
+  const minX = d3.min(globalData.data, (d) => Math.sqrt(d.corx**2 + d.cory**2))
+  const maxX = d3.max(globalData.data, (d) => Math.sqrt(d.corx**2 + d.cory**2))
+  const minXTest = d3.min(testData.data, (d) => Math.sqrt(d.corx**2 + d.cory**2))
+  const maxXTest = d3.max(testData.data, (d) => Math.sqrt(d.corx**2 + d.cory**2))
   // Declare the x (horizontal position) scale.
   let x;
   let y;
@@ -61,7 +61,7 @@ export function drawCoriolis(globalData, graphLen, divID, type, size, testData, 
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.cor) })
+      .y(function (d) { return y(Math.sqrt(d.corx**2 + d.cory**2)) })
     )
   svg
     .append("path")
@@ -71,7 +71,7 @@ export function drawCoriolis(globalData, graphLen, divID, type, size, testData, 
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.cor) })
+      .y(function (d) { return y(Math.sqrt(d.corx**2 + d.cory**2)) })
     )
   svg.append("text")
     .attr("transform", "rotate(-90)")
@@ -155,10 +155,10 @@ export function drawCen(globalData, graphLen, divID, type, size, testData, testL
   const margin = { top: size / 35, right: 30, bottom: size / (35 / 3), left: 60 };
   const width = size - margin.left - margin.right;
   const height = size - margin.top - margin.bottom;
-  const minX = d3.min(globalData.data, (d) => d.cen)
-  const maxX = d3.max(globalData.data, (d) => d.cen)
-  const minXTest = d3.min(testData.data, (d) => d.cen)
-  const maxXTest = d3.max(testData.data, (d) => d.cen)
+  const minX = d3.min(globalData.data, (d) => Math.sqrt(d.cenx**2 + d.ceny**2))
+  const maxX = d3.max(globalData.data, (d) => Math.sqrt(d.cenx**2 + d.ceny**2))
+  const minXTest = d3.min(testData.data, (d) => Math.sqrt(d.cenx**2 + d.ceny**2))
+  const maxXTest = d3.max(testData.data, (d) => Math.sqrt(d.cenx**2 + d.ceny**2))
   // Declare the x (horizontal position) scale.
   let x;
   let y;
@@ -212,7 +212,7 @@ export function drawCen(globalData, graphLen, divID, type, size, testData, testL
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.cen) })
+      .y(function (d) { return y(Math.sqrt(d.cenx**2 + d.ceny**2)) })
       // .y(function (d) { return y(d.y) })
     )
   svg
@@ -223,7 +223,7 @@ export function drawCen(globalData, graphLen, divID, type, size, testData, testL
     .attr("stroke-width", 1.5)
     .attr("d", d3.line()
       .x(function (d) { return x(d.time) })
-      .y(function (d) { return y(d.cen) })
+      .y(function (d) { return y(Math.sqrt(d.cenx**2 + d.ceny**2)) })
       // .y(function (d) { return y(d.y) })
     )
   svg.append("text")

@@ -6,9 +6,9 @@ export class simData {
     }
 
 
-    insert(time, xI, yI, v_xI, v_yI, x, y, cor, cen, v_x, v_y) {
+    insert(time, xI, yI, v_xI, v_yI, x, y, corx,cory, cenx,ceny, v_x, v_y) {
         // console.log(time,x,y,v_x,v_y)
-        this.data.push(new dataPoint(time, xI, yI, v_xI, v_yI, x, y, cor, cen, v_x, v_y));
+        this.data.push(new dataPoint(time, xI, yI, v_xI, v_yI, x, y, corx,cory, cenx,ceny, v_x, v_y));
     }
     getX(time) {
         let dataIndex = (time / this.interval).toFixed(0);
@@ -32,7 +32,7 @@ export class simData {
 
         return this.data[dataIndex].y;
     }
-    getCen(time) {
+    getCenX(time) {
         let dataIndex = (time / this.interval).toFixed(0);
 
         if (dataIndex > this.data.length - 1) {
@@ -40,9 +40,19 @@ export class simData {
             // return 0;
         }
         // console.log(Math.sqrt(Math.pow(this.data[dataIndex].y, 2) + Math.pow(this.data[dataIndex].x, 2)))
-        return this.data[dataIndex].cen
+        return this.data[dataIndex].cenx
     }
-    getCor(time){
+    getCenY(time) {
+        let dataIndex = (time / this.interval).toFixed(0);
+
+        if (dataIndex > this.data.length - 1) {
+            dataIndex = this.data.length - 1;
+            // return 0;
+        }
+        // console.log(Math.sqrt(Math.pow(this.data[dataIndex].y, 2) + Math.pow(this.data[dataIndex].x, 2)))
+        return this.data[dataIndex].ceny
+    }
+    getCorX(time){
         let dataIndex = (time / this.interval).toFixed(0);
 
         if (dataIndex > this.data.length - 1) {
@@ -52,7 +62,19 @@ export class simData {
         // console.log(Math.sqrt(Math.pow(this.data[dataIndex].y, 2) + Math.pow(this.data[dataIndex].x, 2)))
         // console.log(this.data[dataIndex])
         // console.log(this.data[dataIndex].omega * 200)
-        return this.data[dataIndex].cor
+        return this.data[dataIndex].corx
+    }
+    getCorY(time){
+        let dataIndex = (time / this.interval).toFixed(0);
+
+        if (dataIndex > this.data.length - 1) {
+            dataIndex = this.data.length - 1;
+            // return 0;
+        }
+        // console.log(Math.sqrt(Math.pow(this.data[dataIndex].y, 2) + Math.pow(this.data[dataIndex].x, 2)))
+        // console.log(this.data[dataIndex])
+        // console.log(this.data[dataIndex].omega * 200)
+        return this.data[dataIndex].cory
     }
     getXI(time) {
         let dataIndex = (time / this.interval).toFixed(0);
@@ -101,7 +123,7 @@ export class simData {
 }
 
 class dataPoint {
-    constructor(time, xI, yI, v_xI, v_yI, x, y, cor, cen,v_x, v_y) {
+    constructor(time, xI, yI, v_xI, v_yI, x, y, corx,cory, cenx,ceny,v_x, v_y) {
         // this.time = time;
         // this.x = x;
         // this.y = y;
@@ -120,8 +142,10 @@ class dataPoint {
         this.v_yI = v_yI;
         this.xI = x;
         this.yI = y;
-        this.cor = cor;
-        this.cen = cen;
+        this.corx = corx;
+        this.cory = cory;
+        this.cenx = cenx;
+        this.ceny = ceny;
         this.v_x = v_x;
         this.v_y = v_y;
         // console.log(v_x,v_y)

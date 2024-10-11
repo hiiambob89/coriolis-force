@@ -91,14 +91,6 @@ function transformToInertial(x_r, y_r, vx_r, vy_r, theta, omega) {
     return [x_i, y_i, vx_i, vy_i];
 }
 
-// function transformToRotating(x_i, y_i, vx_i, vy_i, theta, omega) {
-//     let x_r = x_i * Math.cos(theta) + y_i * Math.sin(theta);
-//     let y_r = -x_i * Math.sin(theta) + y_i * Math.cos(theta);
-//     let vx_r = (vx_i + omega * y_i) * Math.cos(theta) + (vy_i - omega * x_i) * Math.sin(theta);
-//     let vy_r = -(vx_i + omega * y_i) * Math.sin(theta) + (vy_i - omega * x_i) * Math.cos(theta);
-//     return [x_r, y_r, vx_r, vy_r];
-// }
-
 function findDistance(x, y) {
     return Math.sqrt(x ** 2 + y ** 2);
 }
@@ -138,9 +130,25 @@ export function getGraphData(drag, dt, xinit, yinit, xdot, ydot, g, k, m, omega,
         //     [x_rotating, y_rotating] = transformToRotating(x_inertial, y_inertial, vx_inertial, vy_inertial, theta, omega);
         // }
         // console.log(y[2],y[3])
-        let Fcor = 2*omega*y[3]*(y[0]/(Math.sqrt((y[0]**2)+(y[1]**2))))-2*omega*y[2]*(y[1]/(Math.sqrt((y[0]**2)+(y[1]**2))))
-        let Fcen = (omega**2)*(y[0]/(Math.sqrt((y[0]**2)+(y[1]**2))))*(y[0])+(omega**2)*(y[1]/(Math.sqrt((y[0]**2)+(y[1]**2))))*(y[1])
-        graphVals.insert(t, x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating,Fcor,Fcen,y[2],y[3]);
+        let Fcor = Math.abs(2*omega*y[3]*(y[0]/(Math.sqrt((y[0]**2)+(y[1]**2))))-2*omega*y[2]*(y[1]/(Math.sqrt((y[0]**2)+(y[1]**2)))))
+        // let Fcorx = 2 * omega *(y[3]*Math.cos(omega*t)+y[2]*Math.sin(omega*t))
+        // let Fcory = 2 * omega * (y[3]*Math.sin(omega*t)-y[2]*Math.cos(omega*t))
+        // let Fcenx = (omega)*(y[0]*Math.cos(omega*t)-y[1]*Math.sin(omega*t))
+        // let Fceny = (omega)*(y[0]*Math.sin(omega*t)+y[1]*Math.cos(omega*t))
+        // let Fcorx = 2*omega*y[3]*(y[0]/(Math.sqrt((y[0]**2)+(y[1]**2))))
+        // let Fcory = -2*omega*y[2]*(y[1]/(Math.sqrt((y[0]**2)+(y[1]**2))))
+        let Fcorx = 2 * omega * y[3];  
+        let Fcory =  2 * omega * y[2];  
+        let Fcenx = (omega**2)*y[0]
+        let Fceny = -1*(omega**2)*y[1]
+        // let Fcorx = 2 * omega * vy_inertial;  
+        // let Fcory =  -2 * omega * vx_inertial;  
+        // let Fcenx = (omega**2)*x_inertial
+        // let Fceny = (omega**2)*y_inertial
+
+
+        // console.log("Values at time" + t+"x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating,Fcorx,Fcory,Fcenx,Fceny,y[2],y[3]="+x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating,Fcorx,Fcory,Fcenx,Fceny,y[2],y[3])
+        graphVals.insert(t, x_inertial, y_inertial, vx_inertial, vy_inertial, x_rotating, y_rotating,Fcorx,Fcory,Fcenx,Fceny,y[2],y[3]);
         
         t += dt;
 
