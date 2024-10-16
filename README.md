@@ -5,7 +5,7 @@ Coriolis Force
 Interactive Simulations</a>
 at the University of Colorado Boulder.
 
-*This simulation is under development and has not been published.*
+<a href="https://edwardslabusu.github.io/DynamicsLab/" target="_blank">Dynamics Lab Suite</a>
 
 ### Documentation
 
